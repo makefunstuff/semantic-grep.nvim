@@ -14,7 +14,7 @@ import {mkdir, readFile, rm, stat, writeFile} from 'node:fs/promises';
 import {isAbsolute, join, relative} from 'node:path';
 import {apiKeyOf} from './config.mjs';
 import {HttpEmbedder} from './embedder.mjs';
-import {IndexStore, indexPlace, PROJECT_DIR, removeIndex} from './index-store.mjs';
+import {IndexStore, indexPlace, PROJECT_DIR, removeIndex, removeLearned} from './index-store.mjs';
 import {importLines, piecesOf, TreeSitter, withoutImports} from './pieces.mjs';
 import {pieceText, SNIPPET_CHARS} from './rerank.mjs';
 
@@ -30,6 +30,10 @@ const HEAD_CHARS = 100;
 const RRF_K = 60;
 const LIST = 50; // of each ranking, how many go into the fusion
 const MEANING_BAND = 0.1; // meaning hits further than this below the best are left out: unrelated code scores close, too
+// A search kept (someone opened a piece for it) whose words mean at least this close to a new search's: the piece goes
+// first. EmbeddingGemma rates rewordings of one question 0.66 to 0.91, unrelated questions 0.59 (median) to 0.70 (95%).
+const PICK_NEAR = 0.75;
+const PICKED_PER_SEARCH = 3;
 // Words of a question that say nothing about where to look: left out of the word search, not the meaning's.
 const STOPWORDS = new Set('a an and are as at be but by can do does for from has have how i if in into is it its me my not of on or our so that the their them then there these this to was we were what when where which who why will with you your'.split(' '));
 // A line that is a comment, or only opens or closes one: a piece's head is the first line that is not.
@@ -144,12 +148,61 @@ export class ProjectIndex {
     }
     this.vectors = this.store.vectors(this.model, this.root);
     this.changed();
+    this.loadLearned();
   }
 
   changed() {
     this.waiting = null;
     this.matrix = null;
     this.byId = null;
+    this.byHash = null;
+  }
+
+  /** What was learned of the repository (see index-store.mjs): the searches kept, the notes, and their vectors. */
+  loadLearned() {
+    this.learnedAt = this.store.learnedVersion();
+    const rows = this.store.extras();
+    this.extrasById = new Map(rows.map(row => [row.id, row]));
+    this.notesByHash = new Map(rows.filter(row => row.kind === 'note').map(row => [row.hash, row]));
+    this.picks = rows.filter(row => row.kind === 'pick');
+    this.learnedVectors = this.store.learnedVectors(this.model);
+    this.matrix = null;
+  }
+
+  /** Loaded again when another connection (another Neovim, the notes command) learned something since. */
+  refreshLearned() {
+    if (this.store && !this.store.closed && this.store.learnedVersion() !== this.learnedAt) this.loadLearned();
+  }
+
+  /** The piece of this worktree a learned row is about: the one of its hash, else (a search kept) the one at its line. */
+  pieceOfExtra(row) {
+    this.byHash ??= new Map(this.pieces.map(piece => [piece.hash, piece]));
+    const exact = row.hash ? this.byHash.get(row.hash) : null;
+    if (exact || row.kind !== 'pick') return exact ?? null;
+    return (this.byFile.get(row.file) ?? []).find(piece => piece.from <= row.line && row.line <= piece.to) ?? null;
+  }
+
+  /** A learned row's vector, by what is embedded: a search's words, or a note with its piece. */
+  extraKey(row) { return createHash('sha1').update(row.kind === 'note' ? `note\n${row.hash}\n${row.text}` : `pick\n${row.text}`).digest('hex'); }
+
+  /** The learned rows still without a vector of the embedder's model: a note only once its piece is in this worktree. */
+  learnedPending() {
+    if (!this.embedder || !this.extrasById) return [];
+    return [...this.extrasById.values()].filter(row => !this.learnedVectors.has(this.extraKey(row)) && (row.kind === 'pick' || this.pieceOfExtra(row)));
+  }
+
+  /** Embeds what was learned and waits, a batch of it; false when none waits. */
+  async stepLearned() {
+    const todo = this.learnedPending().slice(0, 16);
+    if (!todo.length) return false;
+    const texts = todo.map(row => (row.kind === 'pick' ? this.embedder.query(row.text) : this.embedder.document(row.file, row.text, this.pieceOfExtra(row).name)));
+    const vectors = await this.embed(texts);
+    if (this.closed) return false;
+    const entries = todo.map((row, i) => [this.extraKey(row), vectors[i]]);
+    this.store.putLearnedVectors(this.model, entries);
+    for (const [key, vector] of entries) this.learnedVectors.set(key, vector);
+    this.matrix = null;
+    return true;
   }
 
   get pieces() { return [...this.byFile.values()].flat(); }
@@ -284,6 +337,8 @@ export class ProjectIndex {
   /** Embeds the next few pieces waiting; false when none waits. The list of those is made again once it runs out, or the files change. */
   async step() {
     if (this.closed) return false;
+    if (await this.stepLearned()) return true;
+    if (this.closed) return false;
     if (!this.waiting?.length) this.waiting = this.pending();
     const waiting = this.waiting; // a file read meanwhile makes a new list; this batch keeps to its own
     const batch = [];
@@ -334,13 +389,21 @@ export class ProjectIndex {
    * worktree: what the store has is loaded again, once.
    */
   wordRanking(query, limit = LIST) {
-    const ids = this.store.wordSearch(this.root, searchTerms(query), limit);
+    this.refreshLearned();
+    const terms = searchTerms(query);
+    const ids = this.store.wordSearch(this.root, terms, limit);
     let byId = this.byId ??= new Map(this.pieces.map(piece => [piece.id, piece]));
     if (ids.some(id => !byId.has(id)) && !this.reading) {
       this.load();
       byId = this.byId = new Map(this.pieces.map(piece => [piece.id, piece]));
     }
-    return ids.map(id => byId.get(id)).filter(Boolean);
+    const own = ids.map(id => byId.get(id)).filter(Boolean);
+    // What was learned with every word: a search kept goes first (these words found that piece before), a note's piece
+    // is fused with the code's ranking.
+    const learned = this.store.extraSearch(terms, limit).map(id => this.extrasById.get(id)).filter(Boolean);
+    const piecesOf = kind => learned.filter(row => row.kind === kind).map(row => this.pieceOfExtra(row)).filter(Boolean);
+    const noted = piecesOf('note');
+    return [...new Set([...piecesOf('pick'), ...(noted.length ? fuse([own, noted]) : own)])].slice(0, limit);
   }
 
   /** The vectors of the pieces that have one, in one array: compared with a search's vector in one pass. */
@@ -353,25 +416,56 @@ export class ProjectIndex {
       const vector = this.vectors.get(piece.hash);
       if (vector.length === size) data.set(vector, i * size);
     });
-    this.matrix = {pieces, size, data};
+    // A note's vector stands for its piece too, where it is the closer of the two.
+    const notes = [];
+    pieces.forEach((piece, i) => {
+      const note = this.notesByHash?.get(piece.hash);
+      const vector = note && this.learnedVectors.get(this.extraKey(note));
+      if (vector?.length === size) notes.push([i, vector]);
+    });
+    this.matrix = {pieces, size, data, notes};
     return this.matrix;
+  }
+
+  /** The pieces opened for searches kept whose words mean close to the query's vector `q`, closest first: `[piece, similarity]`. */
+  pickedFor(q) {
+    const best = new Map();
+    for (const row of this.picks ?? []) {
+      const vector = this.learnedVectors.get(this.extraKey(row));
+      if (vector?.length !== q.length) continue;
+      let sum = 0;
+      for (let j = 0; j < q.length; j++) sum += q[j] * vector[j];
+      if (sum < PICK_NEAR) continue;
+      const piece = this.pieceOfExtra(row);
+      if (piece && sum > (best.get(piece) ?? -Infinity)) best.set(piece, sum);
+    }
+    return [...best].sort((a, b) => b[1] - a[1]).slice(0, PICKED_PER_SEARCH);
   }
 
   /** The pieces closest in meaning to the query's vector `q`, best first, within the band below the best: `[piece, similarity]`. */
   meaningRanking(q, limit = LIST) {
-    const {pieces, size, data} = this.matrixOf();
+    this.refreshLearned();
+    const {pieces, size, data, notes} = this.matrixOf();
     if (!pieces.length || q.length !== size) return [];
     const scores = new Float32Array(pieces.length);
-    let best = -Infinity;
     for (let i = 0; i < pieces.length; i++) {
       let sum = 0;
       for (let j = 0, at = i * size; j < size; j++) sum += q[j] * data[at + j];
       scores[i] = sum;
-      if (sum > best) best = sum;
     }
+    for (const [i, vector] of notes) {
+      let sum = 0;
+      for (let j = 0; j < size; j++) sum += q[j] * vector[j];
+      if (sum > scores[i]) scores[i] = sum;
+    }
+    let best = -Infinity;
+    for (const score of scores) if (score > best) best = score;
     const near = [];
     for (let i = 0; i < pieces.length; i++) if (scores[i] >= best - MEANING_BAND) near.push([pieces[i], scores[i]]);
-    return near.sort((a, b) => b[1] - a[1]).slice(0, limit);
+    // Opened before for a search worded close to this one: first.
+    const picked = this.pickedFor(q);
+    const first = new Set(picked.map(([piece]) => piece));
+    return [...picked, ...near.filter(([piece]) => !first.has(piece)).sort((a, b) => b[1] - a[1])].slice(0, limit);
   }
 
   /**
@@ -400,12 +494,12 @@ export class ProjectIndex {
     return text?.trim() ? text : result.head ?? '';
   }
 
-  /** A piece as a search answers it: `{file, line, from, to, head, kind, name, meaning, words}`. */
+  /** A piece as a search answers it: `{file, line, from, to, head, kind, name, meaning, words, note}`. */
   async result(piece, {meaning = null, words = false} = {}) {
     const {line, head} = await this.headOf(piece);
     return {
       file: piece.file, line, from: piece.from, to: piece.to, head, kind: piece.kind, name: piece.name,
-      meaning: meaning === null ? null : Math.round(meaning * 1000) / 1000, words,
+      meaning: meaning === null ? null : Math.round(meaning * 1000) / 1000, words, note: this.notesByHash?.get(piece.hash)?.text ?? null,
     };
   }
 
@@ -529,7 +623,7 @@ export class Meaning {
       const first = !index.files.size;
       if (first) this.tell(root, {phase: 'reading', done: 0, total: null});
       await index.scan();
-      index.store.prune(index.model);
+      index.store.prune(index.embedder ? index.model : null);
       if (first) {
         const {chunks, embedded} = index.progress();
         index.told = this.state === 'on' && embedded < chunks;
@@ -579,7 +673,7 @@ export class Meaning {
       try {
         await index.scan();
         if (!index.closed) {
-          index.store.prune(index.model);
+          index.store.prune(index.embedder ? index.model : null);
           index.store.checkpoint();
           index.trim();
         }
@@ -606,7 +700,7 @@ export class Meaning {
         more = false;
         // The project searched last goes first; the others in the order their sessions came.
         projects: for (index of [...this.indexes.values()].toSorted((a, b) => (b.wantedAt ?? 0) - (a.wantedAt ?? 0))) {
-          const waiting = index.pending().length;
+          const waiting = index.pending().length + index.learnedPending().length;
           if (!waiting) continue;
           more = true;
           const build = {startedAt: this.now(), chunks: waiting, toldAt: this.now()};
@@ -722,7 +816,8 @@ export class Meaning {
   async reranked(index, query, results, options = {}) {
     const reranker = this.reranker;
     if (!reranker || (!options.prepare && results.length < 2)) return {results, rerank: null};
-    const textsOf = list => Promise.all(list.slice(0, reranker.top).map(async result => pieceText(result, await index.textOf(result, SNIPPET_CHARS))));
+    // A note goes first: a sentence on what the piece does says more in the model's few characters than its code.
+    const textsOf = list => Promise.all(list.slice(0, reranker.top).map(async result => pieceText(result, `${result.note ? `${result.note} | ` : ''}${await index.textOf(result, SNIPPET_CHARS)}`)));
     const done = options.prepare
       ? await reranker.rerank(query, [], {...options, prepare: async () => { const list = await options.prepare(); return {results: list, texts: await textsOf(list)}; }})
       : await reranker.rerank(query, results, {...options, texts: await textsOf(results)});
@@ -833,12 +928,83 @@ export class Meaning {
     return answer;
   }
 
-  /** A search booked, with its ranking behind ⏎. */
+  /**
+   * A search booked, with its ranking behind ⏎. One booked " in the picker" is what someone opened from the picker
+   * (the stdio server's "chosen", pairing-buddy's find_chosen): it is learned too (see `learn`).
+   */
   booked(root, query, results, how = '') {
+    if (how === ' in the picker' && results.length) this.learn(root, query, results).catch(error => this.log(`meaning: learning a search: ${error.message}`));
     const top = results[0];
     this.book(root, 'searched', `by meaning "${query}"${how}: ${results.length} result${results.length === 1 ? '' : 's'}${top ? `, first ${top.file}:${top.line}` : ''}`, {
       detail: {output: results.map(result => `${result.file}:${result.line}  ${result.meaning ?? '-'}${result.words ? ' +words' : ''}  ${result.head}`).join('\n')},
     });
+  }
+
+  /**
+   * The piece someone opened for `query` (`results`, a picker's choice, `{file, line|from}` each): kept, so the same
+   * search, or one worded close to it, finds that piece first, by its words and by their meaning. Kept per repository,
+   * across rebuilds; the newest searches only.
+   */
+  async learn(root, query, results) {
+    const text = String(query ?? '').trim();
+    const index = this.indexes.get(root);
+    if (!text || !index || this.disabled) return;
+    await index.loaded;
+    if (index.closed || !index.store) return;
+    for (const result of results.slice(0, PICKED_PER_SEARCH)) {
+      const line = Number(result?.line ?? result?.from);
+      if (typeof result?.file !== 'string' || !Number.isInteger(line)) continue;
+      const piece = (index.byFile.get(result.file) ?? []).find(each => each.from <= line && line <= each.to);
+      index.store.putPick({hash: piece?.hash ?? null, file: result.file, line: piece?.from ?? line, query: text, words: words(text).join(' '), at: this.now()});
+    }
+    index.loadLearned();
+    this.work(); // its words' vector
+  }
+
+  /**
+   * The pieces of `root` without a note, for a coding agent to write one each (see `addNotes`): `{pieces: [{hash, file,
+   * from, to, name, text}], pending, noted}`, at most `limit` of them; `pending` counts them all.
+   */
+  async pendingNotes(root, {limit = 50} = {}) {
+    const index = await this.indexOf(root);
+    if (!index) return {problem: UNOPENED, pieces: [], pending: 0, noted: 0};
+    await index.ready?.catch(() => {});
+    index.refreshLearned();
+    const seen = new Set();
+    const pieces = [];
+    let pending = 0;
+    for (const piece of index.pieces) {
+      if (seen.has(piece.hash) || index.notesByHash.has(piece.hash)) continue;
+      seen.add(piece.hash);
+      pending += 1;
+      if (pieces.length >= limit) continue;
+      const lines = await index.lines.get(piece.file);
+      const text = lines?.slice(piece.from - 1, piece.to).join('\n');
+      if (text === undefined || pieceHash(piece.file, text, piece.name) !== piece.hash) continue; // changed since: read again first
+      pieces.push({hash: piece.hash, file: piece.file, from: piece.from, to: piece.to, name: piece.name, text});
+    }
+    return {pieces, pending, noted: index.notesByHash.size};
+  }
+
+  /**
+   * Notes on pieces of `root`, `{hash, note}` each (an empty note removes one): searched by their words and meaning
+   * with their piece, and read by the reranker. A hash the index does not have (its code changed) is `unknown`.
+   */
+  async addNotes(root, notes, {source = 'agent'} = {}) {
+    const index = await this.indexOf(root);
+    if (!index) return {problem: UNOPENED, added: 0, unknown: []};
+    await index.ready?.catch(() => {});
+    let added = 0;
+    const unknown = [];
+    for (const each of Array.isArray(notes) ? notes : []) {
+      const piece = typeof each?.hash === 'string' && typeof each.note === 'string' ? index.pieceOfExtra({kind: 'note', hash: each.hash}) : null;
+      if (!piece) { unknown.push(each?.hash ?? null); continue; }
+      index.store.putNote({hash: piece.hash, file: piece.file, line: piece.from, note: each.note, words: words(each.note).join(' '), source: each.source ?? source, at: this.now()});
+      added += 1;
+    }
+    index.loadLearned();
+    this.work(); // the notes' vectors
+    return {added, unknown};
   }
 
   /** A rebuild (:SemanticGrep rebuild): the repository's index file is deleted and made again from the files, every vector too. */
@@ -899,7 +1065,7 @@ export class Meaning {
       if (index.store) paths.add(index.store.path);
       if (!index.failure) index.store?.release();
     }
-    for (const path of paths) removeIndex(path);
+    for (const path of paths) { removeIndex(path); removeLearned(path); } // off: what was learned of the code goes too
     await rm(join(this.dataDir, 'index'), {recursive: true, force: true});
     const removed = !this.embedding && this.provider ? await this.provider.turnOff() : null;
     if (this.embedding) {

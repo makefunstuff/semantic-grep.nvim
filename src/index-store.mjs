@@ -4,6 +4,10 @@
 // one repository embed a piece of code they share once. No copy of the code is kept; its lines are read from the files.
 // The file is in Neovim's data folder (semantic-grep/index/<repository>-<hash>.sqlite), or with index = "project" in the
 // repository as .semantic-grep/index.sqlite, listed in .git/info/exclude rather than .gitignore.
+//
+// What was learned about the repository's code lives beside it, in <index>.learned.sqlite, attached to the same
+// connection: the searches people made and the piece they opened ("pick"), and notes on pieces (a sentence a coding agent
+// wrote on what a piece does: "note"), with their words and vectors. A rebuild, or a new SCHEMA, keeps it.
 import {execFile} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {appendFileSync, mkdirSync, readFileSync, rmSync, statSync} from 'node:fs';
@@ -12,6 +16,11 @@ import {DatabaseSync} from 'node:sqlite';
 
 const SCHEMA = 4; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors
 export const PROJECT_DIR = '.semantic-grep';
+const MAX_PICKS = 5000; // the searches kept, newest first
+const NOTE_CHARS = 1000;
+
+/** Where what was learned of an index's repository is kept: beside the index file. */
+export const learnedPath = indexPath => indexPath.replace(/\.sqlite$/, '') + '.learned.sqlite';
 
 const git = (args, cwd) => new Promise(resolve => {
   execFile('git', args, {cwd}, (error, stdout) => resolve(error ? null : stdout.trim()));
@@ -113,7 +122,88 @@ export class IndexStore {
       search: this.db.prepare('SELECT p.id AS id FROM words JOIN pieces p ON p.id = words.rowid WHERE words MATCH ? AND p.tree = ? ORDER BY bm25(words) LIMIT ?'),
       getMeta: this.db.prepare('SELECT value FROM meta WHERE key = ?'),
       putMeta: this.db.prepare('INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)'),
-    };
+    };    this.setUpLearned();
+  }
+
+  setUpLearned() {
+    this.db.prepare('ATTACH DATABASE ? AS learned').run(learnedPath(this.path));
+    this.db.exec(`
+      PRAGMA learned.journal_mode = WAL;
+      CREATE TABLE IF NOT EXISTS learned.extras (id INTEGER PRIMARY KEY, kind TEXT NOT NULL, hash TEXT, file TEXT NOT NULL, line INTEGER NOT NULL, text TEXT NOT NULL, source TEXT, at INTEGER NOT NULL);
+      CREATE INDEX IF NOT EXISTS learned.extras_hash ON extras (kind, hash);
+      CREATE VIRTUAL TABLE IF NOT EXISTS learned.extras_words USING fts5 (body, content = '', contentless_delete = 1, tokenize = 'porter unicode61');
+      CREATE TABLE IF NOT EXISTS learned.vectors (model TEXT NOT NULL, key TEXT NOT NULL, vector BLOB NOT NULL, PRIMARY KEY (model, key));
+    `);
+    this.writes = 0; // what this connection wrote to it: data_version counts only the others'
+    Object.assign(this.statements, {
+      extras: this.db.prepare('SELECT id, kind, hash, file, line, text, source, at FROM learned.extras ORDER BY id'),
+      extraSearch: this.db.prepare('SELECT rowid AS id FROM learned.extras_words WHERE extras_words MATCH ? ORDER BY bm25(extras_words) LIMIT ?'),
+      noteOf: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'note' AND hash = ?"),
+      pickOf: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'pick' AND file = ? AND line = ? AND text = ?"),
+      putExtra: this.db.prepare('INSERT INTO learned.extras (kind, hash, file, line, text, source, at) VALUES (?, ?, ?, ?, ?, ?, ?)'),
+      touchExtra: this.db.prepare('UPDATE learned.extras SET at = ?, hash = coalesce(?, hash) WHERE id = ?'),
+      deleteExtra: this.db.prepare('DELETE FROM learned.extras WHERE id = ?'),
+      putExtraWords: this.db.prepare('INSERT INTO learned.extras_words (rowid, body) VALUES (?, ?)'),
+      deleteExtraWords: this.db.prepare('DELETE FROM learned.extras_words WHERE rowid = ?'),
+      oldPicks: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'pick' ORDER BY at DESC LIMIT -1 OFFSET ?"),
+      learnedVectors: this.db.prepare('SELECT key, vector FROM learned.vectors WHERE model = ?'),
+      putLearnedVector: this.db.prepare('INSERT OR REPLACE INTO learned.vectors (model, key, vector) VALUES (?, ?, ?)'),
+    });
+  }
+
+  /** What was learned: `{id, kind: "pick" | "note", hash, file, line, text, source, at}`, oldest first. */
+  extras() { return this.statements.extras.all(); }
+
+  /** Changes whenever anything learned changes, by this connection or another (another Neovim, the notes command). */
+  learnedVersion() { return `${this.db.prepare('PRAGMA learned.data_version').get().data_version}:${this.writes}`; }
+
+  dropExtra(id) {
+    this.statements.deleteExtraWords.run(id);
+    this.statements.deleteExtra.run(id);
+  }
+
+  /** A search and the piece opened for it (`hash`, and where it was): kept, the newest MAX_PICKS of them. */
+  putPick({hash = null, file, line, query, words: body, at = Date.now()}) {
+    this.transaction(() => {
+      const known = this.statements.pickOf.get(file, line, query);
+      if (known) this.statements.touchExtra.run(at, hash, known.id);
+      else {
+        const {lastInsertRowid} = this.statements.putExtra.run('pick', hash, file, line, query, 'pick', at);
+        this.statements.putExtraWords.run(lastInsertRowid, body);
+      }
+      for (const {id} of this.statements.oldPicks.all(MAX_PICKS)) this.dropExtra(id);
+      this.writes += 1;
+    });
+  }
+
+  /** A note on the piece of `hash` (one each: a new one replaces it; an empty one removes it). */
+  putNote({hash, file, line, note, words: body, source = null, at = Date.now()}) {
+    this.transaction(() => {
+      for (const {id} of this.statements.noteOf.all(hash)) this.dropExtra(id);
+      const text = String(note ?? '').trim().slice(0, NOTE_CHARS);
+      if (text) {
+        const {lastInsertRowid} = this.statements.putExtra.run('note', hash, file, line, text, source, at);
+        this.statements.putExtraWords.run(lastInsertRowid, body);
+      }
+      this.writes += 1;
+    });
+  }
+
+  /** The learned rows with every one of `terms` (each as a word's start), best first by BM25: their ids. */
+  extraSearch(terms, limit) {
+    if (!terms.length) return [];
+    return this.statements.extraSearch.all(matchOf(terms), limit).map(row => row.id);
+  }
+
+  /** The vectors of what was learned, by `model`: key -> Float32Array. */
+  learnedVectors(model) {
+    return new Map(this.statements.learnedVectors.all(model).map(row => [row.key, vectorOf(row.vector)]));
+  }
+
+  putLearnedVectors(model, entries) {
+    this.transaction(() => {
+      for (const [key, vector] of entries) this.statements.putLearnedVector.run(model, key, new Uint8Array(vector.buffer, vector.byteOffset, vector.byteLength));
+    });
   }
 
   transaction(work) {
@@ -192,9 +282,13 @@ export class IndexStore {
     return this.statements.search.all(matchOf(terms), tree, limit).map(row => row.id);
   }
 
-  /** Vectors no piece of any worktree has any more, or of another model, leave. */
-  prune(model) {
-    this.db.prepare('DELETE FROM vectors WHERE model != ? OR hash NOT IN (SELECT hash FROM pieces)').run(model);
+  /**
+   * Vectors no piece of any worktree has any more leave, and those of another model than `model`. Without a model (words
+   * only: the notes command, a Neovim without an embedding model) the other models' vectors stay: they are not its to drop.
+   */
+  prune(model = null) {
+    if (model) this.db.prepare('DELETE FROM vectors WHERE model != ? OR hash NOT IN (SELECT hash FROM pieces)').run(model);
+    else this.db.prepare('DELETE FROM vectors WHERE hash NOT IN (SELECT hash FROM pieces)').run();
   }
 
   /** Worktrees whose folders are gone leave the index, with their pieces. */
@@ -217,7 +311,7 @@ export class IndexStore {
 
   /** The write-ahead log folded into the file and emptied: after a build, it would otherwise stay as big as the build. */
   checkpoint() {
-    try { this.db.exec('PRAGMA wal_checkpoint(TRUNCATE)'); } catch {}
+    try { this.db.exec('PRAGMA wal_checkpoint(TRUNCATE); PRAGMA learned.wal_checkpoint(TRUNCATE)'); } catch {}
   }
 
   /** The file's size on disk (with its write-ahead log) and when a vector last came. */
@@ -246,7 +340,10 @@ export class IndexStore {
   }
 }
 
-/** Deletes an index file with its write-ahead log; the store must be closed. */
+/** Deletes an index file with its write-ahead log; the store must be closed. What was learned stays (see removeLearned). */
 export function removeIndex(path) {
   for (const suffix of ['', '-wal', '-shm']) rmSync(`${path}${suffix}`, {force: true});
 }
+
+/** Deletes what was learned beside an index file: the searches kept and the notes. */
+export function removeLearned(path) { removeIndex(learnedPath(path)); }

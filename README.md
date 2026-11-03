@@ -64,6 +64,27 @@ require('semantic-grep').setup({
 In the picker, `Enter` opens a piece at its line and `<C-q>` sends the list to quickfix in the order shown. A
 quickfix list sent before the rerank came is reordered in place when it comes (unless you changed it meanwhile).
 
+## It learns
+
+- **What you open.** When you pick a result, your search is kept with that piece, beside the index (a rebuild keeps
+  it). The same search, or one worded close to it, finds that piece first, by its words and by their meaning.
+- **Notes from a coding agent.** A sentence per piece on what it does, in the words you would search with, is
+  searched with its code and read by the reranker. Any agent can write them:
+
+  ```sh
+  # the plugin's bin/semantic-grep-server.mjs, e.g. with lazy.nvim:
+  alias semantic-grep-server='node ~/.local/share/nvim/lazy/semantic-grep.nvim/bin/semantic-grep-server.mjs'
+  semantic-grep-server notes pending --root . --limit 200 > pending.jsonl   # {hash, file, from, to, name, text}
+  semantic-grep-server notes put --root . < notes.jsonl                     # {hash, note}, one a line
+  ```
+
+  For example, in Claude Code: "Run `semantic-grep-server notes pending --root . --limit 200`, write a one or two
+  sentence note for each piece (what it does, what someone would be trying to do when they need it, in plain words,
+  keeping its identifiers), and pipe `{hash, note}` lines into `semantic-grep-server notes put --root .`; repeat until
+  none is pending." A note holds while its piece's code does not change; `pending` then lists it again. Both
+  commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
+  to the agent's model.
+
 ## Commands
 
 | | |

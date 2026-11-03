@@ -10,7 +10,9 @@
 //   search {root, query, limit?}                  -> found + {rerank}  meaning and words fused, then reranked
 //   saved {path}                                  -> {}                a file written in Neovim
 //   rebuild {root}                                -> {path}
-//   chosen {root, query, results}                 -> {}                the piece opened, for `book`
+//   chosen {root, query, results}                 -> {}                the piece opened: booked, and learned
+//   notes {root, limit?}                          -> {pieces, pending, noted} pieces without a note, for an agent
+//   addNotes {root, notes: [{hash, note}]}        -> {added, unknown}
 //   status {}                                     -> the Meaning's snapshot
 //   check {}                                      -> {embedding, rerank} the models asked once each, for :checkhealth
 // Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); progress {root, phase, done,
@@ -100,6 +102,12 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
     async chosen(params) {
       needed().booked(rootOf(params), queryOf(params), Array.isArray(params.results) ? params.results : [], ' in the picker');
       return {};
+    },
+    async notes(params) {
+      return needed().pendingNotes(rootOf(params), {limit: Number.isInteger(params.limit) ? params.limit : 50});
+    },
+    async addNotes(params) {
+      return needed().addNotes(rootOf(params), params.notes, {source: typeof params.source === 'string' ? params.source : 'agent'});
     },
     async status() {
       return needed().snapshot();

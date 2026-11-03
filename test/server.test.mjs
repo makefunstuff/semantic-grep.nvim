@@ -69,6 +69,12 @@ test('the server: words, meaning, the rerank and one fused list over JSON-RPC, a
     assert.deepEqual([check.embedding.ok, check.embedding.dimensions], [true, 256]);
     assert.deepEqual([check.rerank.ok, check.rerank.model, check.rerank.pieces], [true, 'fake-d1', 5]);
 
+    const pending = await server.call('notes', {root, limit: 1});
+    assert.equal(pending.pieces.length, 1);
+    assert.equal(pending.pending, 4);
+    assert.deepEqual(await server.call('addNotes', {root, notes: [{hash: pending.pieces[0].hash, note: 'a note'}]}), {added: 1, unknown: []});
+    assert.equal((await server.call('notes', {root})).pending, 3);
+
     const {path} = await server.call('rebuild', {root});
     assert.match(path, new RegExp(`^${dataDir}/index/server-project-\\w+-[0-9a-f]{8}\\.sqlite$`), 'pairing-buddy\'s place and name: one index for both');
     await until(async () => (await server.call('words', {root, query: 'quant'})).results.length === 1, 'the words again after the rebuild');
