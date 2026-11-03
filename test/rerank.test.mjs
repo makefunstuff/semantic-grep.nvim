@@ -13,7 +13,7 @@ import {test} from 'node:test';
 import {classify, llamaPrompt, softmax} from '../src/classify.mjs';
 import {rerankConfig} from '../src/config.mjs';
 import {Meaning} from '../src/meaning.mjs';
-import {FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder} from '../src/rerank.mjs';
+import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder} from '../src/rerank.mjs';
 import {fakeEmbedder} from './fake-embedder.mjs';
 import {fakeRerankChain, fakeReranker, fakeRerankServer} from './fake-reranker.mjs';
 import {scratch} from './helpers.mjs';
@@ -521,4 +521,29 @@ test('a host\'s own decision client (pi-ai\'s shape) reranks as the built-in one
   answers.push(() => ({stopReason: 'error', errorMessage: 'connection refused'}));
   assert.equal((await reranker.rerank('q', results)).why, 'error');
   assert.equal(reranker.available, false, 'it rests a minute');
+});
+
+test('rerank: a cross-encoder\'s /rerank scores each piece, Cohere\'s, Jina\'s and llama.cpp\'s shape or Voyage\'s, and every piece it read takes its place by them', async () => {
+  const scoresOf = documents => documents.map(text => (text.includes('waiter') ? 0.9 : text.includes('basket') ? 0.4 : 0.1));
+  const server = await fakeHttp({
+    '/v1/rerank': ({query, documents}) => (query === 'voyage' ? {data: scoresOf(documents).map((relevance_score, index) => ({index, relevance_score}))}
+      : {results: scoresOf(documents).map((relevance_score, index) => ({index, relevance_score})).sort((a, b) => b.relevance_score - a.relevance_score)}),
+  });
+  try {
+    const question = rerankQuestion(['a.js:1  one', 'b.js:2  the waiter']);
+    const answer = await classify({api: 'rerank', baseUrl: server.baseUrl, model: 'bge'}, {state: 'Search: tip', question}, {apiKey: 'jina-test'});
+    assert.deepEqual(answer.scores, {1: 0.1, 2: 0.9});
+    const [, body, authorization] = server.requests[0];
+    assert.deepEqual([body.model, body.query, body.documents, authorization], ['bge', 'tip', ['a.js:1  one', 'b.js:2  the waiter'], 'Bearer jina-test']);
+
+    const reranker = new Reranker({entries: rerankConfig({api: 'rerank', baseUrl: server.baseUrl, model: 'bge', top: 3})});
+    const results = ['first', 'the basket', 'the waiter', 'last'].map((head, i) => ({file: `${i}.js`, from: 1, line: 1, head}));
+    const done = await reranker.rerank('voyage', results);
+    assert.equal(done.ok, true);
+    assert.deepEqual(done.results.map(result => result.head), ['the waiter', 'the basket', 'first', 'last'], 'the three it read in its order, the fourth after them');
+    assert.deepEqual([done.results[0].rerank, done.moved], [0.9, 2], 'the basket stayed second');
+    assert.deepEqual(byScore([{file: 'a'}, {file: 'b'}, {file: 'c'}], [0.5, 0.5]).map(result => result.file), ['a', 'b', 'c'], 'equal scores keep their order');
+  } finally {
+    await server.close();
+  }
 });

@@ -48,7 +48,8 @@ require('semantic-grep').setup({
   -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv.
   embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
   -- A decision model, or a list of them best first (the next is asked when one fails or is slower than its
-  -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp' or 'openai' (Decisions API).
+  -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp', 'openai' (Decisions API) or
+  -- 'rerank' (a cross-encoder's /rerank: llama.cpp's --rerank, Cohere, Jina, Voyage; it reorders every piece it reads).
   -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows.
   rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
   picker = 'auto',          -- 'telescope', 'snacks', 'fzf-lua' or 'select'

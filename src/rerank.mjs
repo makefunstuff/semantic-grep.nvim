@@ -6,6 +6,9 @@
 // One rerank at a time: a model on a CPU may serve other work too, and a second question would only wait behind the
 // first. A rerank asked while one runs keeps its search's order ("busy").
 //
+// A cross-encoder (api "rerank": a /rerank endpoint, such as llama.cpp's with a reranker model, Cohere's, Jina's or
+// Voyage's) answers a relevance score for each piece instead: every piece it read takes its place by its score.
+//
 // It is optional and never in the way: off without a `rerank` entry, asked only where a list is settled (meaning came
 // in a picker, or vim.ui.select's one list), within `timeoutMs`. A model that is down, slow, or answers oddly (the
 // wrong shape, or no preference at all) keeps the order the search gave.
@@ -89,6 +92,15 @@ export function reorder(results, values) {
   const scored = results.map((result, i) => (i < values.length ? {...result, rerank: Math.round(values[i] * 1000) / 1000} : result));
   const best = values.indexOf(Math.max(...values));
   return [scored[best], ...scored.filter((_, i) => i !== best)];
+}
+
+/**
+ * `results` with their first `scores.length` in a cross-encoder's order, highest score first (equal ones keep theirs);
+ * the others after them as they were. Each of those first ones has its score as `rerank`.
+ */
+export function byScore(results, scores) {
+  const scored = results.slice(0, scores.length).map((result, i) => ({...result, rerank: Math.round(scores[i] * 1000) / 1000}));
+  return [...scored.map((result, i) => [result, scores[i], i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(([result]) => result), ...results.slice(scores.length)];
 }
 
 /** A host client's answer (pi-ai's shape: `{stopReason, errorMessage, answers}`) as classify's, or its error. */
@@ -244,6 +256,21 @@ export class Reranker {
         this.kept += 1;
         this.log(`reranker: ${endpoint.name}: ${asked.error}; the search's order stays`);
         return {...asked, ...about, results};
+      }
+      if (asked.answer.scores) { // a cross-encoder's: a score for each piece, all of them in its order
+        const scores = Array.from({length: n}, (_, i) => asked.answer.scores[String(i + 1)]);
+        if (scores.some(score => typeof score !== 'number' || !Number.isFinite(score))) {
+          this.kept += 1;
+          this.log(`reranker: ${endpoint.name}: no score for every piece; the search's order stays`);
+          return {ok: false, why: 'malformed', error: 'no score for every piece', ...about, results};
+        }
+        endpoint.down = null;
+        endpoint.answered += 1;
+        endpoint.msAnswered += asked.ms;
+        if (stale()) return {...aborted, ...about};
+        const reordered = byScore(results, scores);
+        const moved = reordered.slice(0, n).filter((result, i) => result.file !== results[i].file || result.from !== results[i].from).length;
+        return {ok: true, results: reordered, moved, ...about};
       }
       const found = probabilitiesOf(asked.answer, n);
       if (found.why === 'flat') { // an answer all the same: the model is up

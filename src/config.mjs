@@ -6,7 +6,7 @@ import {homedir} from 'node:os';
 export const RERANK_TOP = 10;
 export const RERANK_TIMEOUT_MS = 3000;
 export const FALLBACK_TIMEOUT_MS = 1000; // a model another follows in the list
-export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai'];
+export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai', 'rerank'];
 const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];
 
 const isObject = value => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -47,7 +47,8 @@ export function embeddingConfig(entry, name = 'embedding') {
 /**
  * The `rerank` entry: a decision model `{api, baseUrl, model, top?, timeoutMs?, ...key}`, or a list of them, best
  * first. `api` is "system-one" (POST <baseUrl>/systemone), "llama-cpp" (a chat model on llama.cpp's server, asked for
- * each answer's probability) or "openai" (OpenAI's Decisions API, POST <baseUrl>/decisions). Each comes back with its
+ * each answer's probability), "openai" (OpenAI's Decisions API, POST <baseUrl>/decisions) or "rerank" (a cross-encoder's
+ * POST <baseUrl>/rerank: llama.cpp's --rerank, Cohere, Jina, Voyage; it reorders every piece it reads). Each comes back with its
  * `top` (10) and `timeoutMs` (3 s; 1 s for one another follows). null without one: off.
  */
 export function rerankConfig(value, name = 'rerank') {
