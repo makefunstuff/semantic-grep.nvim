@@ -12,7 +12,7 @@ OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Oll
 ## Requirements
 
 - Neovim 0.10 or later (0.12 shows indexing progress in the statusline/fidget)
-- Node 22.13 or later (`node:sqlite`; no npm install, no native dependencies)
+- Node 22.16 or later (`node:sqlite` with FTS5; no npm install, no native dependencies)
 - git (or ripgrep) to list the project's files
 - Optional: [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (preferred),
   [snacks.nvim](https://github.com/folke/snacks.nvim)'s picker or [fzf-lua](https://github.com/ibhagwan/fzf-lua);

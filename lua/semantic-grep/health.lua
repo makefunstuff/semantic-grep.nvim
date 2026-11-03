@@ -23,11 +23,12 @@ function M.check()
   if own then
     local node = vim.system({config.node or 'node', '--version'}, {text = true}):wait()
     local version = node.code == 0 and vim.trim(node.stdout) or nil
-    local major = version and tonumber(version:match('^v(%d+)'))
+    local major, minor = (version or ''):match('^v(%d+)%.(%d+)')
+    major, minor = tonumber(major), tonumber(minor)
     if not version then
-      health.error(('cannot run %s'):format(config.node or 'node'), {'Install Node 22.13 or later, or set node = "/path/to/node" in setup()'})
-    elseif major < 22 then
-      health.error(('Node %s: 22.13 or later is needed (node:sqlite)'):format(version))
+      health.error(('cannot run %s'):format(config.node or 'node'), {'Install Node 22.16 or later, or set node = "/path/to/node" in setup()'})
+    elseif not major or major < 22 or (major == 22 and minor < 16) then
+      health.error(('Node %s: 22.16 or later is needed (node:sqlite with FTS5)'):format(version))
     else
       health.ok(('Node %s'):format(version))
     end
