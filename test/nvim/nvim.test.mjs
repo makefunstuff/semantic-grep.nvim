@@ -288,7 +288,7 @@ test('no model set up: the local model asked for once, its llama-server started,
   const step = name => lines.find(line => line.step === name);
   const [question, files] = step('asked').asked;
   assert.equal(question.prompt, 'semantic-grep: search by meaning needs a small model on this machine');
-  assert.deepEqual(question.items, ['Download EmbeddingGemma 2 (310 MB) for search by meaning', 'Not now', 'No, words only (:SemanticGrep download asks again)']);
+  assert.deepEqual(question.items, ['Download EmbeddingGemma 2 (310 MB) for search by meaning', 'Not now', 'No, words only (:SemanticGrep download fetches it later)']);
   assert.match(files.prompt, /^SemanticGrep files: basket sum/);
   assert.match(files.items[0], /^src\/cart\.js {2}2: export function total/, 'by its words meanwhile, at its best line');
   assert.deepEqual([step('files').state, step('files').first, step('files').running], ['on', 'src/deliver.js', true]);

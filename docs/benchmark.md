@@ -70,7 +70,9 @@ the picker's.
 
 Results on the `test` split (not tuned on), 2026-11-03: [`words`](../bench/results/words-2026-11-03-test.json) and
 [`laptop`](../bench/results/laptop-2026-11-03-test.json) over all six repositories (251 questions), `beefy` over hono,
-cobra and fd ([113 questions](../bench/results/beefy-2026-11-03-test-hono+cobra+fd.json)):
+cobra and fd ([113 questions](../bench/results/beefy-2026-11-03-test-hono+cobra+fd.json); the three the rerankers were
+chosen on, as its 8B model had to run on the CPU here). `cloud` has no numbers yet, for want of a key (see Profiles),
+nor the laptop with a reranker: none fits its wait (profiles.md).
 
 | profile, mode | file R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
 | --- | --- | --- | --- | --- | --- | --- |

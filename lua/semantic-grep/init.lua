@@ -132,7 +132,7 @@ function M.with_model(then_)
       end
       if not needs.model or vim.uv.fs_stat(declined_path()) then return then_() end
       local yes = ('Download %s (%d MB) for search by meaning'):format(needs.name or 'the model', math.floor((needs.bytes or 0) / 1e6 + 0.5))
-      local never = 'No, words only (:SemanticGrep download asks again)'
+      local never = 'No, words only (:SemanticGrep download fetches it later)'
       vim.ui.select({yes, 'Not now', never}, {prompt = 'semantic-grep: search by meaning needs a small model on this machine'}, function(choice)
         if choice == yes then M.download()
         elseif choice == never then
