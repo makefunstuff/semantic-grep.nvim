@@ -3,7 +3,9 @@
 `setup({profile = 'laptop'})` (or `'beefy'`, `'cloud'`) fills `embedding` and `rerank` with the models the
 [benchmark](benchmark.md) measured best for that kind of machine. What `embedding` and `rerank` set themselves goes
 over the profile's: `embedding = {baseUrl = 'http://127.0.0.1:9000/v1'}` moves it, another `model` drops the profile's
-settings for its own (prompts, band), `rerank = false` turns its reranker off, a list of rerankers is your own.
+settings for its own (prompts, band, a reranker's top and wait), a key of your own or another `baseUrl` drops the
+profile's key (it is never sent elsewhere), `rerank = false` turns its reranker off, a list of rerankers is your own.
+The laptop profile has no reranker: a `rerank` there is a whole entry of your own.
 
 | profile | embedding | reranker | MRR⁰ | search, p50 / p95 | memory |
 | --- | --- | --- | --- | --- | --- |
@@ -81,7 +83,7 @@ was measured on the GPU over all 372 questions, and the laptop's candidates were
 afresh on cobra and fd (1892 pieces, 123 questions). Each candidate is a profile of
 [`bench/candidates.json`](../bench/candidates.json) (`npm run bench -- --profiles bench/candidates.json --profile gpu-qwen8b`);
 the runs are in [`bench/results/profiles-2026-11-03/`](../bench/results/profiles-2026-11-03/), on this change's code
-(uncommitted then: their `changed` field lists the files).
+(uncommitted then: their `changed` field lists the changed files, not the new ones).
 
 ### Embedding models
 
@@ -108,8 +110,8 @@ pieces on the GPU; not run again: at that speed it is no candidate for a first b
 
 - **laptop: EmbeddingGemma 2.** The best of the small ones (fused MRR 0.600, recall@1 0.473), 15 ms a query on 4
   threads, 0.8 GB. EmbeddingGemma 300M is close (0.589) and a third faster to build (76 s against 108 s a thousand on
-  4 threads: a 10,000-piece project in 13 rather than 18 minutes); set `embedding = {model = 'embeddinggemma-300M'}`
-  for that. The code-specific small models (jina's, snowflake's, Qwen3 0.6B) did worse on these questions, which are
+  4 threads: a 10,000-piece project in 13 rather than 18 minutes); serve `embeddinggemma-300M-Q8_0.gguf` at 18120
+  instead (`--alias embeddinggemma-300M --pooling mean`) and set `embedding = {model = 'embeddinggemma-300M'}`. The code-specific small models (jina's, snowflake's, Qwen3 0.6B) did worse on these questions, which are
   worded the way people search, not like code.
 - **beefy: Qwen3-Embedding-8B.** The best on every number; 26 ms a query, 6.9 GB of a card. The 4B is 0.013 behind at
   5.7 GB and builds twice as fast.
@@ -141,9 +143,9 @@ docs/benchmark.md).
   0.630, recall@1 0.455 to 0.537) and takes 2.2 s. A laptop that can wait two seconds after the pause gains that:
   `rerank = {api = 'rerank', baseUrl = 'http://127.0.0.1:18121/v1', model = 'qwen3-reranker-0.6b', top = 10, chars = 500, timeoutMs = 4000}`
   with its server on 4 threads.
-- **beefy: Qwen3-Reranker-0.6B, top 20.** MRR 0.610 to 0.657 and recall@1 0.480 to 0.538 within the budget (p50
-  114 ms, the whole search); top 30 was no better and slower. Qwen3-Reranker-4B is much better (0.701, recall@1
-  0.614) at three times the time and 7 GB more: on a card with room, and a picker that may wait half a second,
+- **beefy: Qwen3-Reranker-0.6B, top 20.** MRR 0.610 to 0.657 and recall@1 0.480 to 0.538 at the budget: p50
+  114 ms for the whole search, p95 215 ms, a little over the 200; top 30 was no better and slower. Qwen3-Reranker-4B
+  is much better (0.701, recall@1 0.614) at three times the time and 4.2 GB more (6.9 GB against 2.7): on a card with room, and a picker that may wait half a second,
   `rerank = {model = 'qwen3-reranker-4b', top = 10, timeoutMs = 2000}` with its server at 18121 instead.
 - **Every piece it read in the cross-encoder's order.** The cross-encoders above all move the whole top `top`; the
   decision models only their first choice, when it stands out. The full order is what the numbers measure.
@@ -169,10 +171,16 @@ with a band wide enough to leave nothing out:
 | Qwen3-Embedding-8B | 0.12 | 0.79 | 0.34 / 0.78 | 0.67 |
 | jina-embeddings-v2-base-code | 0.15 | 0.79 | 0.19 / 0.78 | 0.60 |
 | snowflake-arctic-embed-l-v2.0 | 0.15 | 0.66 | 0.19 / 0.65 | 0.48 |
-| jina-code-embeddings-0.5b / 1.5b | 0.16 | 0.73 | 0.13 / 0.73 | 0.55 |
+| jina-code-embeddings-0.5b | 0.16 | 0.74 | 0.13 / 0.73 | 0.55 |
+| jina-code-embeddings-1.5b | 0.15 | 0.71 | 0.12 / 0.70 | 0.54 |
 
 They are known by the model's name (`src/embedder.mjs`); `band` and `pickNear` in the `embedding` entry set them for
-another model. A model not in the table keeps 0.1 and 0.75. The band leaves out what means little, so a search that
+another model. A model not in the table keeps 0.1 and 0.75. They were measured at each model's own number of
+dimensions: with fewer (`dimensions`), set them yourself.
+
+The learned picks go first only for a search worded close to the one they were opened for: with these values, other
+searches for the same lines reach it 6 to 14% of the time (EmbeddingGemma 2: 7%), the same search typed again always.
+EmbeddingGemma 2's earlier constants (0.1 and 0.75) let unrelated searches through: half of them reach 0.62. The band leaves out what means little, so a search that
 matches nothing well shows little; it costs a little of the right answers past it: on hono, cobra and fd the fused
 MRR is 0.586 with EmbeddingGemma 2's band against 0.591 with none, and 0.610 against 0.616 for Qwen3-Embedding-8B.
 The quality tables above are without it (`"band": 2`), so models are compared on their lists, not their bands; the

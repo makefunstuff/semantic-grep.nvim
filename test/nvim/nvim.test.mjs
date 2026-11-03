@@ -71,7 +71,7 @@ test(':checkhealth semantic-grep: Node, the embedding model, the rerank model an
     assert.match(text, /OK.*Node v\d+/);
     assert.match(text, /OK.*it answers: search by meaning is on/);
     assert.match(text, /OK.*embedding: embeddinggemma-2 at http:\S+ answers in \d+ ms, 256 numbers a piece/);
-    assert.match(text, /OK.*rerank: fake-d1 reranks 5 pieces in \d\.\d s \(a search waits up to 3\.0 s\)/);
+    assert.match(text, /OK.*rerank: fake-d1 reranks 5 pieces in (\d+ ms|\d\.\d s) \(a search waits up to 3\.0 s\)/);
     assert.match(text, new RegExp(`OK.*${root}: \\d+ files, \\d+ pieces`));
     assert.doesNotMatch(text, /ERROR/);
 

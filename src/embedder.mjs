@@ -14,6 +14,7 @@ export const queryText = query => `task: search result | query: ${query}`;
 // `{title}` is the piece's, see pieceTitle; a model whose prompt has no place for one reads it as the first line of the
 // piece), and how their similarities spread (see TUNING), each measured on the bench (bench/calibrate.mjs).
 const GEMMA = {query: 'task: search result | query: ', document: 'title: {title} | text: '};
+const JINA_CODE = {query: 'Find the most relevant code snippet given the following query:\n', document: 'Candidate code snippet:\n'};
 const QWEN3 = {query: 'Instruct: Given a question, find the code that answers it\nQuery: ', document: ''};
 const MODELS = [
   [/nomic-embed-code/i, {query: 'Represent this query for searching relevant code: ', document: ''}],
@@ -23,9 +24,10 @@ const MODELS = [
   [/qwen3-embedding-0\.6b/i, {...QWEN3, band: 0.14, pickNear: 0.79}],
   [/qwen3-embedding-4b/i, {...QWEN3, band: 0.12, pickNear: 0.78}],
   [/qwen3-embedding/i, {...QWEN3, band: 0.12, pickNear: 0.79}], // 8B
-  [/jina-code-embeddings/i, {query: 'Find the most relevant code snippet given the following query:\n', document: 'Candidate code snippet:\n', band: 0.16, pickNear: 0.73}],
+  [/jina-code-embeddings-1\.5b/i, {...JINA_CODE, band: 0.15, pickNear: 0.71}],
+  [/jina-code-embeddings/i, {...JINA_CODE, band: 0.16, pickNear: 0.74}], // 0.5b
   [/jina-embeddings-v2-base-code/i, {band: 0.15, pickNear: 0.79}],
-  [/snowflake-arctic-embed/i, {query: 'query: ', document: '', band: 0.15, pickNear: 0.66}],
+  [/snowflake-arctic-embed-l-v2/i, {query: 'query: ', document: '', band: 0.15, pickNear: 0.66}],
 ];
 // A model's similarities, unknown models' first: `band`, how far below the best a piece may mean and still be listed
 // (unrelated code scores close, too); `pickNear`, how close a kept search's words must mean to a new one's for the
@@ -130,6 +132,7 @@ export class HttpEmbedder {
         signal: AbortSignal.timeout(this.timeoutMs),
       });
     } catch (error) {
+      if (error.name === 'TimeoutError') throw new Error(`the embedding model at ${this.entry.baseUrl} took longer than ${this.timeoutMs} ms`);
       throw new Error(`the embedding model at ${this.entry.baseUrl} did not answer: ${error.cause?.code ?? error.message}`);
     }
     const text = await response.text();

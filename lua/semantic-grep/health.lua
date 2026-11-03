@@ -77,7 +77,8 @@ function M.check()
       end
       local before = #skipped > 0 and ('; first ' .. table.concat(skipped, ', ')) or ''
       if r.ok then
-        local text = ('rerank: %s reranks %d pieces in %.1f s (a search waits up to %.1f s)%s'):format(r.model or '?', r.pieces or 0, (r.ms or 0) / 1000, (r.timeoutMs or 0) / 1000, before)
+        local took = (r.ms or 0) < 1000 and ('%d ms'):format(r.ms or 0) or ('%.1f s'):format(r.ms / 1000)
+        local text = ('rerank: %s reranks %d pieces in %s (a search waits up to %.1f s)%s'):format(r.model or '?', r.pieces or 0, took, (r.timeoutMs or 0) / 1000, before)
         if r.right then health.ok(text) else health.warn(text .. ', but put the matching piece of the check below another') end
       elseif r.unreachable then
         health.error(('rerank: %s is unreachable: %s%s'):format(r.name or r.models or '?', r.error or '?', before), {start_it, 'Searches keep their own order; a model that fails is asked again a minute later'})

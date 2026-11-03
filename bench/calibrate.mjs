@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // A model's own thresholds (see src/embedder.mjs, tuningOf), measured on the bench's questions:
 //
-//   npm run bench:calibrate -- --profile NAME --run FILE [--profiles FILE] [--models DIR] [--llama-server PATH]
+//   npm run bench:calibrate -- --profile NAME --run FILE [--profiles FILE] [--questions FILE] [--models DIR] [--llama-server PATH]
 //
 // - band: how far below the best piece the first right one means, as a search by meaning finds it. FILE is a run of the
 //   profile with a band wide enough to leave nothing out (`"band": 2` in its embedding entry): the band is the 95th

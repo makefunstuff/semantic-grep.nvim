@@ -32,7 +32,6 @@ APIs); [docs/profiles.md](docs/profiles.md) has their numbers and how to run eac
     {'<M-s>', function() require('semantic-grep').find(require('semantic-grep').selected()) end, mode = 'x', desc = 'Search the selection by meaning'},
   },
   opts = {profile = 'laptop'}, -- or 'beefy', 'cloud': see docs/profiles.md to start its models
-
 }
 ```
 
