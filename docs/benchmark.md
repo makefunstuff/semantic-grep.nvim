@@ -124,23 +124,31 @@ been measured yet, for want of a key. With one:
 
 ## Results
 
-The baseline, 2026-11-03 (Node 25.2, 50 tree-sitter parsers); the runs, with every question's rank and time, are
+The baseline, 2026-11-03: each run from a fresh index, on this repository's commit `2f455a2` with nothing changed
+(Node 25.2, 50 tree-sitter parsers); the runs, with every question's rank and time, are
 [`words`](../bench/results/words-2026-11-03.json), [`laptop`](../bench/results/laptop-2026-11-03.json) and
 [`beefy`](../bench/results/beefy-2026-11-03.json). Machine: 12 cores, 125 GB, two RTX 5060 Ti 16 GB, shared with other
-work; every model at nice 19. The laptop's searches ran while other bench runs used the same CPU: its latencies are an
-upper bound.
+work; one run at a time, every model at nice 19. The words' latency is the `words` run's; within the other runs it is
+1 to 2 ms, the machine busy with their models.
 
 Overall, 372 questions:
 
 | | R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
 | --- | --- | --- | --- | --- | --- | --- |
-| words (any profile) | 0.097 | 0.140 | 0.142 | 0.115 | 0.2 | 0.7 |
-| laptop meaning | 0.446 | 0.755 | 0.825 | 0.575 | 14 | 20 |
+| words (the `words` run) | 0.097 | 0.140 | 0.142 | 0.115 | 0.2 | 0.7 |
+| laptop meaning | 0.446 | 0.755 | 0.825 | 0.575 | 14 | 18 |
 | laptop fused | 0.452 | 0.761 | 0.831 | 0.582 | 14 | 18 |
-| laptop rerank (d1-2B, CPU) | 0.511 | 0.782 | 0.831 | 0.625 | 2647 | 4617 |
-| beefy meaning | 0.460 | 0.766 | 0.820 | 0.585 | 19 | 25 |
-| beefy fused | 0.484 | 0.774 | 0.831 | 0.605 | 21 | 26 |
-| beefy rerank (Qwen3-Reranker-0.6B, GPU) | 0.489 | 0.812 | 0.855 | 0.625 | 87 | 273 |
+| laptop rerank (d1-2B, CPU) | 0.511 | 0.782 | 0.831 | 0.625 | 2633 | 4497 |
+| beefy meaning | 0.460 | 0.766 | 0.820 | 0.585 | 17 | 21 |
+| beefy fused | 0.484 | 0.774 | 0.831 | 0.605 | 18 | 23 |
+| beefy rerank (Qwen3-Reranker-0.6B, GPU) | 0.489 | 0.812 | 0.855 | 0.625 | 84 | 261 |
+
+MRR on the `test` split alone (251 questions; `dev` in brackets, 121):
+
+| | words | meaning | fused | rerank |
+| --- | --- | --- | --- | --- |
+| laptop | 0.105 (0.136) | 0.600 (0.523) | 0.606 (0.533) | 0.622 (0.630) |
+| beefy | 0.105 (0.136) | 0.593 (0.567) | 0.610 (0.593) | 0.630 (0.615) |
 
 MRR per repository:
 
@@ -164,8 +172,8 @@ MRR by style (vague 119, plain 137, multi-hop 116 questions):
 | beefy fused | 0.627 | 0.687 | 0.484 |
 | beefy rerank | 0.641 | 0.716 | 0.502 |
 
-A first build of all six (11,127 pieces): about 17 minutes on 4 CPU threads (EmbeddingGemma 300M), 5.5 minutes on
-the GPU (Qwen3-Embedding-4B); four pieces a request either way.
+A first build of all six (11,127 pieces): 16.6 minutes on 4 CPU threads (EmbeddingGemma 300M), 5.4 minutes on the
+GPU (Qwen3-Embedding-4B); four pieces a request either way.
 
 What it says:
 
@@ -175,14 +183,15 @@ What it says:
 - **Meaning does the work, and the small model holds up**: EmbeddingGemma 300M on a CPU (MRR 0.575) is within 0.01 of
   Qwen3-Embedding-4B on a GPU (0.585); fusing the words adds 0.01 to 0.02.
 - **The rerank helps, at a price**: d1-2B lifts MRR from 0.582 to 0.625 and recall@1 from 0.45 to 0.51, but takes
-  2.6 s (p50) to 4.6 s (p95) on 4 CPU threads, past the plugin's default `timeoutMs` of 3 s; 104 of its 372 answers
-  were flat (no piece stood out), and its order was kept. The cross-encoder on a GPU gives the same MRR in 87 ms
-  (p95 273 ms), and most to recall@5 (0.774 to 0.812).
+  2.6 s (p50) to 4.5 s (p95) on 4 CPU threads, past the plugin's default `timeoutMs` of 3 s; 104 of its 372 answers
+  were flat (no piece stood out), and the search's order was kept. The cross-encoder on a GPU gives the same MRR in
+  84 ms (p95 261 ms), and adds most to recall@5 (0.774 to 0.812).
 - **A cross-encoder needs to read the piece**: Qwen3-Reranker-0.6B reading 160 characters of each piece made the list
-  worse (dev MRR 0.593 to 0.488); 500 characters 0.595, 1200 0.615. 1200 is now the default for `api = 'rerank'`
-  (`chars` in the entry changes it).
+  worse; tried on the `dev` questions in one-off runs (not kept), its MRR was 0.488 at 160 characters, 0.595 at 500
+  and 0.615 at 1200, against the fused list's 0.593. 1200 is the default for `api = 'rerank'` now (`chars` in the
+  entry changes it); the `test` split, not tuned on, shows the same gain (0.610 to 0.630).
 - **Multi-hop questions are the hardest** for every mode (fused MRR 0.43 to 0.48 against 0.63 to 0.69).
-- 21 to 24 questions had nothing to rerank: meaning keeps only the pieces within 0.1 of the best, and some lists were
-  one piece long (a right one, each time).
+- 21 to 24 questions had nothing to rerank: meaning keeps only the pieces within 0.1 of the best, and those lists were
+  one piece long (a right one for all but 3 or 4 of them).
 
 Not measured yet: the cloud profiles (no key), a cross-encoder on the laptop's CPU, and EmbeddingGemma on a GPU.
