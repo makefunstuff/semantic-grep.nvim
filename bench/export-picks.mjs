@@ -19,7 +19,8 @@ const {flags} = options(process.argv.slice(2));
 const log = line => process.stderr.write(`${line}\n`);
 const emitWarning = process.emitWarning;
 process.emitWarning = function (warning, ...rest) {
-  if (/SQLite/.test(String(warning?.message ?? warning))) return;
+  const type = typeof rest[0] === 'string' ? rest[0] : rest[0]?.type;
+  if (type === 'ExperimentalWarning' && /SQLite/.test(String(warning?.message ?? warning))) return;
   return emitWarning.call(this, warning, ...rest);
 };
 const {DatabaseSync} = await import('node:sqlite');
@@ -36,28 +37,34 @@ const learned = learnedPath(place.path);
 if (!existsSync(learned)) throw new Error(`nothing learned for ${root} (no ${learned}): pick some results in the picker first`);
 
 const out = resolve(flags.out ?? join(cacheDir(flags.cache), 'private', `${basename(root)}-picks.jsonl`));
-const inside = dir => !relative(dir, out).startsWith('..');
+// Where it really goes, through links: the nearest folder of it that exists, resolved.
+const real = path => (existsSync(path) ? realpathSync(path) : join(real(dirname(path)), basename(path)));
+const inside = dir => !relative(realpathSync(dir), real(out)).startsWith('..');
 const here = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 if (inside(here) || inside(root)) throw new Error(`${out} is inside ${inside(here) ? 'semantic-grep' : 'the project'}: a private questions file goes elsewhere`);
 
 const db = new DatabaseSync(learned, {readOnly: true});
 const picks = db.prepare("SELECT hash, file, line, text FROM extras WHERE kind = 'pick' ORDER BY at").all();
 db.close();
-// Each pick's piece as the index has it (its lines), else the line it was opened at.
+// Each pick's piece as the index has it now (its lines).
 const index = existsSync(place.path) ? new DatabaseSync(place.path, {readOnly: true}) : null;
 const pieceOf = index?.prepare('SELECT line, last FROM pieces WHERE hash = ? AND tree = ? LIMIT 1');
-const lines = [];
-const seen = new Set();
+// One question a search: a search that opened several pieces has them all as answers.
+const questions = new Map();
+let stale = 0;
 for (const pick of picks) {
-  if (!existsSync(join(root, pick.file))) continue; // gone since
   const piece = pick.hash ? pieceOf?.get(pick.hash, place.tree) : null;
-  const question = {repo: root, query: pick.text, file: pick.file, from: piece?.line ?? pick.line, to: piece?.last ?? pick.line, style: 'pick', split: 'private'};
-  const key = `${question.query}\n${question.file}\n${question.from}`;
-  if (seen.has(key)) continue;
-  seen.add(key);
-  lines.push(JSON.stringify({id: `pick-${String(lines.length + 1).padStart(4, '0')}`, ...question}));
+  if (!piece || !existsSync(join(root, pick.file))) { // its code changed since, or is gone: where it was says nothing now
+    stale += 1;
+    continue;
+  }
+  const answer = {file: pick.file, from: piece.line, to: piece.last};
+  const known = questions.get(pick.text);
+  if (!known) questions.set(pick.text, {repo: root, query: pick.text, ...answer, style: 'pick', split: 'private'});
+  else if (![known, ...(known.also ?? [])].some(each => each.file === answer.file && each.from === answer.from)) (known.also ??= []).push(answer);
 }
+const lines = [...questions.values()].map((question, i) => JSON.stringify({id: `pick-${String(i + 1).padStart(4, '0')}`, ...question}));
 index?.close();
 mkdirSync(dirname(out), {recursive: true, mode: 0o700});
 writeFileSync(out, lines.length ? `${lines.join('\n')}\n` : '', {mode: 0o600});
-log(`${lines.length} searches with the piece opened for each (of ${picks.length} kept) in ${out}`);
+log(`${lines.length} searches with the pieces opened for them (of ${picks.length} picks kept; ${stale} whose piece changed since, left out) in ${out}`);

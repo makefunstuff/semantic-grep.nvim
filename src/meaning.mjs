@@ -817,7 +817,7 @@ export class Meaning {
     const reranker = this.reranker;
     if (!reranker || (!options.prepare && results.length < 2)) return {results, rerank: null};
     // A note goes first: a sentence on what the piece does says more in the model's few characters than its code.
-    const textsOf = list => Promise.all(list.slice(0, reranker.top).map(async result => pieceText(result, `${result.note ? `${result.note} | ` : ''}${await index.textOf(result, SNIPPET_CHARS)}`)));
+    const textsOf = list => Promise.all(list.slice(0, reranker.top).map(async result => pieceText(result, `${result.note ? `${result.note} | ` : ''}${await index.textOf(result, reranker.chars ?? SNIPPET_CHARS)}`, reranker.chars ?? SNIPPET_CHARS)));
     const done = options.prepare
       ? await reranker.rerank(query, [], {...options, prepare: async () => { const list = await options.prepare(); return {results: list, texts: await textsOf(list)}; }})
       : await reranker.rerank(query, results, {...options, texts: await textsOf(results)});

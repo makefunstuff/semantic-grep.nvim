@@ -5,13 +5,24 @@ import {spawn} from 'node:child_process';
 import {readdirSync, statSync} from 'node:fs';
 import {join} from 'node:path';
 
-/** Whether a llama.cpp (or any OpenAI-compatible) server answers at `baseUrl`. */
+/** Whether a llama.cpp server answers at `baseUrl`: "up", "loading" (503 while it loads its model) or null. */
 async function answers(baseUrl) {
   try {
     const response = await fetch(`${baseUrl.replace(/\/v1\/?$/, '')}/health`, {signal: AbortSignal.timeout(2000)});
-    return response.ok;
+    return response.ok ? 'up' : response.status === 503 ? 'loading' : null;
   } catch {
-    return false;
+    return null;
+  }
+}
+
+/** Waits while the server at `baseUrl` loads; `gone()` says why to stop waiting. */
+async function upAt(baseUrl, role, gone = () => null) {
+  const end = Date.now() + 300_000;
+  while (await answers(baseUrl) !== 'up') {
+    const why = gone();
+    if (why) throw new Error(`${role}: ${why}`);
+    if (Date.now() > end) throw new Error(`${role}: nothing came up at ${baseUrl}`);
+    await new Promise(resolve => setTimeout(resolve, 500));
   }
 }
 
@@ -37,15 +48,28 @@ function find(dir, name, depth = 4) {
  */
 export async function serveProfile(profile, {models, llamaServer = 'llama-server', env = {}, log = () => {}}) {
   const children = [];
+  const ended = child => child.exitCode !== null || child.signalCode !== null;
   const stop = async () => {
-    for (const child of children) child.kill('SIGTERM');
-    await Promise.all(children.map(child => (child.exitCode === null ? new Promise(resolve => child.once('exit', resolve)) : null)));
+    process.off('SIGINT', signalled);
+    process.off('SIGTERM', signalled);
+    for (const child of children) if (!ended(child)) child.kill('SIGTERM');
+    await Promise.all(children.map(child => (ended(child) || child.failed ? null : new Promise(resolve => child.once('exit', resolve)))));
   };
+  // Stopped with the bench, however it ends: a signal while one loads too.
+  const signalled = signal => { stop().finally(() => process.exit(128 + (signal === 'SIGINT' ? 2 : 15))); };
+  process.once('SIGINT', signalled);
+  process.once('SIGTERM', signalled);
   try {
     for (const [role, spec] of Object.entries(profile.serve ?? {})) {
       if (role === 'env') continue;
       const entry = profile[role];
-      if (!entry || await answers(entry.baseUrl)) continue;
+      if (!entry) continue;
+      const there = await answers(entry.baseUrl);
+      if (there) { // someone else's, used as it is: its model is whatever it serves
+        log(`${role}: a server answers at ${entry.baseUrl} already; it is used, as ${entry.model}`);
+        await upAt(entry.baseUrl, role);
+        continue;
+      }
       if (!models) throw new Error(`${role}: nothing answers at ${entry.baseUrl}, and no --models folder to start ${spec.gguf} from`);
       const gguf = find(models, spec.gguf);
       if (!gguf) throw new Error(`${role}: ${spec.gguf} is not under ${models}`);
@@ -55,21 +79,14 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
       const child = spawn('nice', ['-n', '19', llamaServer, ...args], {stdio: ['ignore', 'ignore', 'pipe'], env: {...process.env, ...profile.serve.env, ...env}});
       let tail = '';
       child.stderr.on('data', chunk => { tail = (tail + chunk).slice(-2000); });
+      child.on('error', error => { child.failed = error; });
       children.push(child);
-      const end = Date.now() + 300_000;
-      while (!await answers(entry.baseUrl)) {
-        if (child.exitCode !== null) throw new Error(`${role}: llama-server stopped (${child.exitCode}): ${tail.trim().split('\n').slice(-3).join(' ')}`);
-        if (Date.now() > end) throw new Error(`${role}: llama-server did not come up at ${entry.baseUrl}`);
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
+      await upAt(entry.baseUrl, role, () => (child.failed ? `cannot run ${llamaServer}: ${child.failed.message}`
+        : ended(child) ? `llama-server stopped (${child.exitCode ?? child.signalCode}): ${tail.trim().split('\n').slice(-3).join(' ')}` : null));
     }
   } catch (error) {
     await stop();
     throw error;
   }
-  // Stopped with the bench, however it ends.
-  const signalled = signal => { stop().finally(() => process.exit(128 + (signal === 'SIGINT' ? 2 : 15))); };
-  process.once('SIGINT', signalled);
-  process.once('SIGTERM', signalled);
   return {stop};
 }

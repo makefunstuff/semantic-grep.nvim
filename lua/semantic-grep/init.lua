@@ -8,7 +8,7 @@
 --
 -- Every field is optional: without `embedding` the word search works alone; without `rerank` nothing is reranked.
 -- Other fields: `data_dir` (where the index files go, default stdpath('data')/semantic-grep), `index` ('data', or
--- 'project' for .semantic-grep/ in the repository), `node` (the Node 22+ to run the server with), `debounce_ms` (the
+-- 'project' for .semantic-grep/ in the repository), `node` (the Node 22.16+ to run the server with), `debounce_ms` (the
 -- pause before meaning is asked, 150), `rerank_delay_ms` (how long meaning's list must stay before it is reranked, 0),
 -- `index_on_start` (index the project as Neovim starts rather than at the first search, false), `source` (below).
 --

@@ -5,6 +5,10 @@ import {homedir} from 'node:os';
 
 export const RERANK_TOP = 10;
 export const RERANK_TIMEOUT_MS = 3000;
+// Of each piece, the characters a reranker reads: a decision model's few (each costs it time, and 160 ranked as well as
+// 600), a cross-encoder's more (it reads each piece with the search on its own).
+export const DECISION_CHARS = 160;
+export const RERANK_CHARS = 160;
 export const FALLBACK_TIMEOUT_MS = 1000; // a model another follows in the list
 export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai', 'rerank'];
 const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];
@@ -65,7 +69,8 @@ export function rerankConfig(value, name = 'rerank') {
     keysOf(entry, label);
     if (top !== undefined && !(Number.isInteger(top) && top >= 2 && top <= 30)) throw new Error(`${label}.top must be a whole number from 2 to 30`);
     if (timeoutMs !== undefined && !(typeof timeoutMs === 'number' && timeoutMs > 0)) throw new Error(`${label}.timeoutMs must be a number of milliseconds`);
-    return {...entry, top: top ?? RERANK_TOP, timeoutMs: timeoutMs ?? (i < all.length - 1 ? FALLBACK_TIMEOUT_MS : RERANK_TIMEOUT_MS)};
+    if (entry.chars !== undefined && !(Number.isInteger(entry.chars) && entry.chars >= 40 && entry.chars <= 4000)) throw new Error(`${label}.chars must be a whole number from 40 to 4000`);
+    return {...entry, top: top ?? RERANK_TOP, chars: entry.chars ?? (entry.api === 'rerank' ? RERANK_CHARS : DECISION_CHARS), timeoutMs: timeoutMs ?? (i < all.length - 1 ? FALLBACK_TIMEOUT_MS : RERANK_TIMEOUT_MS)};
   });
 }
 

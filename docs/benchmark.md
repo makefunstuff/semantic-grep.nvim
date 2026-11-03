@@ -7,7 +7,7 @@ commit, 372 questions written the way people type them, each asked four ways.
 npm run bench:fetch                       # the repositories, into ~/.cache/semantic-grep-bench/repos
 npm run bench -- --profile words          # no model
 npm run bench -- --profile laptop --models /path/to/gguf --llama-server /path/to/llama-server
-npm run bench -- --profile beefy --models /path/to/gguf --compare bench/results/laptop-2026-11-03.json
+CUDA_VISIBLE_DEVICES=0 npm run bench -- --profile beefy --models /path/to/gguf --compare bench/results/laptop-2026-11-03.json
 ```
 
 ## What is measured
@@ -24,12 +24,17 @@ Each question is asked as the plugin asks it:
 A result answers a question when it is in the labelled file and its lines overlap the labelled range (or one of the
 question's `also` places). For each mode: **recall@1/5/10** (the share of questions answered within the first 1, 5,
 10 results), **MRR** (the mean of 1/rank of the first answer, 0 past 30 results) and the **p50/p95 latency** of the
-whole search in milliseconds, including embedding the question and the rerank. Per repository, overall, and by the
+whole search in milliseconds, including embedding the question and the rerank. A rerank the model could not give
+(it timed out, failed, or is resting a minute after a failure) keeps the fused order, as in the picker, and counts
+in `rerank` all the same; the run says how many were applied (`reranks:`). The local profiles give the reranker 20 s
+where the plugin's default is 3 s, so that the rerank is measured, not its timeout: its p95 says whether it fits a
+picker's wait, and the `timeoutMs` to set in `setup()`. Per repository, overall, and by the
 style of question. Each run is saved as JSON (`bench/results/<profile>-<date>.json`, with every question's rank and
-time), and `--compare FILE` prints the change against an earlier one.
+time; a run never overwrites an earlier one), and `--compare FILE` prints the change against an earlier one, and
+whether it asked the same questions.
 
 Flags: `--repos hono,flask`, `--split dev|test`, `--modes words,fused`, `--questions FILE`, `--out FILE`, `--fresh`
-(index again; otherwise a run reuses the vectors in the cache), `--parsers none` (cut pieces by indentation, not
+(index again; otherwise a run reuses the index and vectors in the cache), `--parsers none` (cut pieces by indentation, not
 Neovim's tree-sitter), `--profiles FILE` (your own profiles), `--cache DIR`.
 
 ## The corpus
@@ -92,7 +97,7 @@ piece was found (else you would not have opened it): they tell whether what work
 ## Profiles
 
 [`bench/profiles.json`](../bench/profiles.json); each entry is the plugin's `embedding` and `rerank` config, so a
-profile that measures well is one to copy into `setup()`. A local profile's `serve` says how to start its models:
+profile that measures well is one to copy into `setup()` (with the `timeoutMs` its p95 asks for). A local profile's `serve` says how to start its models:
 when nothing answers at its `baseUrl`, the bench starts `llama-server` (`--llama-server`, `$LLAMA_SERVER` or the one
 on the PATH) with the GGUF found under `--models` (or `$SEMANTIC_GREP_BENCH_MODELS`), at nice 19, and stops it at
 the end. A server already answering there is used as it is.
@@ -110,8 +115,10 @@ the end. A server already answering there is used as it is.
   `rerank-v3.5`) and **cloud-gemini** (`gemini-embedding-001` through Gemini's OpenAI-compatible endpoint, Jina's
   reranker). A key is named, never written: `apiKeyEnv`.
 
-The cloud profiles are configured and their wire formats tested with fakes (`test/bench.test.mjs`,
-`test/rerank.test.mjs`); they have not been measured yet, for want of a key. With one:
+The cloud profiles are configured, checked as valid configs with their keys named by environment variable
+(`test/bench.test.mjs`), and the /rerank answers of llama.cpp, Cohere, Jina and Voyage are tested against fakes
+(`test/rerank.test.mjs`); embeddings use the same OpenAI-shaped `/v1/embeddings` the local profiles do. They have not
+been measured yet, for want of a key. With one:
 `VOYAGE_API_KEY=… npm run bench -- --profile cloud`, and add the numbers below.
 
 ## Results

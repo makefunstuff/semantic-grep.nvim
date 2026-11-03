@@ -13,7 +13,7 @@ import {test} from 'node:test';
 import {classify, llamaPrompt, softmax} from '../src/classify.mjs';
 import {rerankConfig} from '../src/config.mjs';
 import {Meaning} from '../src/meaning.mjs';
-import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder} from '../src/rerank.mjs';
+import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder, SNIPPET_CHARS} from '../src/rerank.mjs';
 import {fakeEmbedder} from './fake-embedder.mjs';
 import {fakeRerankChain, fakeReranker, fakeRerankServer} from './fake-reranker.mjs';
 import {scratch} from './helpers.mjs';
@@ -413,7 +413,9 @@ test('a list of models: one question at a time across them, a new config keeps e
 test('config: "rerank" is a decision model entry, or a list best first, with top and timeoutMs; off without it', () => {
   assert.equal(rerankConfig(undefined), null);
   assert.equal(rerankConfig(false), null);
-  assert.deepEqual(rerankConfig({api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B'}), [{api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B', top: RERANK_TOP, timeoutMs: RERANK_TIMEOUT_MS}], 'one model is a list of one');
+  assert.deepEqual(rerankConfig({api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B'}), [{api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B', top: RERANK_TOP, chars: SNIPPET_CHARS, timeoutMs: RERANK_TIMEOUT_MS}], 'one model is a list of one');
+  assert.equal(rerankConfig({api: 'rerank', baseUrl: 'http://h/v1', model: 'bge', chars: 1200})[0].chars, 1200, 'how much of each piece it reads');
+  assert.throws(() => rerankConfig({api: 'rerank', baseUrl: 'http://h/v1', model: 'bge', chars: 10}), /rerank\.chars must be a whole number from 40 to 4000/);
   assert.equal(rerankConfig({api: 'llama-cpp', baseUrl: 'http://h/v1', model: 'm', top: 6, timeoutMs: 1500})[0].top, 6);
   assert.throws(() => rerankConfig({api: 'system-one', baseUrl: 'http://h/v1', model: 'm', top: 1}), /rerank\.top must be a whole number from 2 to 30/);
   assert.throws(() => rerankConfig({api: 'system-one', baseUrl: 'http://h/v1', model: 'm', timeoutMs: -1}), /rerank\.timeoutMs/);

@@ -33,7 +33,8 @@ if (!flags.profile || flags.help) {
 // node:sqlite says it is experimental on every run: not news here.
 const emitWarning = process.emitWarning;
 process.emitWarning = function (warning, ...rest) {
-  if (/SQLite/.test(String(warning?.message ?? warning))) return;
+  const type = typeof rest[0] === 'string' ? rest[0] : rest[0]?.type;
+  if (type === 'ExperimentalWarning' && /SQLite/.test(String(warning?.message ?? warning))) return;
   return emitWarning.call(this, warning, ...rest);
 };
 const {Meaning} = await import('../src/meaning.mjs');
@@ -47,11 +48,17 @@ const embedding = embeddingConfig(profile.embedding ?? null);
 const rerank = rerankConfig(profile.rerank ?? null);
 const modes = (flags.modes ? String(flags.modes).split(',') : MODES).filter(mode => MODES.includes(mode)
   && (embedding || !['meaning', 'fused'].includes(mode)) && (rerank || mode !== 'rerank'));
+if (!modes.length) throw new Error(`no mode to run: ${flags.modes ? `--modes ${flags.modes} with` : ''} profile ${flags.profile} (${MODES.join(', ')}; meaning and fused need an embedding model, rerank a reranker)`);
 const cache = cacheDir(flags.cache);
+// Read now: the run may be saved where it was.
+const before = flags.compare ? JSON.parse(readFileSync(resolve(flags.compare), 'utf8')) : null;
 
 // The questions, and the folder each repository is in.
 const questionsPath = resolve(flags.questions ?? join(HERE, 'questions.jsonl'));
 const questionsText = readFileSync(questionsPath, 'utf8');
+if (flags.out && relative(ROOT, questionsPath).startsWith('..') && !relative(ROOT, resolve(flags.out)).startsWith('..')) {
+  throw new Error(`${flags.out}: a run of private questions names your project's path; it is not saved in this repository`);
+}
 const wantedRepos = flags.repos ? new Set(String(flags.repos).split(',')) : null;
 const questions = questionsText.split('\n').filter(line => line.trim()).map(line => JSON.parse(line))
   .filter(question => (!wantedRepos || wantedRepos.has(question.repo)) && (!flags.split || question.split === flags.split));
@@ -70,7 +77,8 @@ const served = await serveProfile(profile, {models: flags.models ?? process.env.
 let meaning;
 try {
   // One data folder per embedding model: its vectors stay for the next run, and another model's never mix in.
-  const dataDir = join(cache, 'data', embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words');
+  // Pieces cut by indentation are another index than tree-sitter's.
+  const dataDir = join(cache, 'data', `${embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words'}${flags.parsers === 'none' ? '-indent' : ''}`);
   if (flags.fresh) rmSync(dataDir, {recursive: true, force: true});
   const parsers = flags.parsers === 'none' ? [] : neovimParsers();
   meaning = new Meaning({dataDir, embedding, reranker: rerank ? new Reranker({entries: rerank, log}) : null, log});
@@ -86,8 +94,8 @@ try {
     const indexMs = Date.now() - started;
     log(`${repo.name}: ${files} files, ${chunks} pieces, ready in ${(indexMs / 1000).toFixed(1)} s`);
     const asked = questions.filter(question => question.repo === repo.name);
-    // One search of each kind first, not timed: the models load, the matrix is made.
-    for (const mode of modes) await ask(mode, repo.root, asked[0].query);
+    // One search of each kind first, none of the questions, not timed: the models load, the matrix is made.
+    for (const mode of modes) await ask(mode, repo.root, 'where does it start');
     const rows = [];
     for (const question of asked) {
       const row = {id: question.id, repo: repo.name, style: question.style ?? null, split: question.split ?? null, rank: {}, ms: {}};
@@ -113,7 +121,7 @@ try {
     when: new Date().toISOString(),
     node: process.version,
     semanticGrep: gitHead(ROOT),
-    questions: {file: relative(ROOT, questionsPath).startsWith('..') ? 'private' : relative(ROOT, questionsPath), sha1: createHash('sha1').update(questionsText).digest('hex').slice(0, 12), count: perQuestion.length, split: flags.split ?? 'all'},
+    questions: {file: relative(ROOT, questionsPath).startsWith('..') ? 'private' : relative(ROOT, questionsPath), sha1: createHash('sha1').update(JSON.stringify(questions)).digest('hex').slice(0, 12), count: perQuestion.length, split: flags.split ?? 'all'},
     parsers: parsers.length,
     limit: LIMIT,
     overall: summary(perQuestion),
@@ -124,11 +132,14 @@ try {
   };
   print(result);
   const isPrivate = result.questions.file === 'private';
-  const out = resolve(flags.out ?? join(isPrivate ? join(cache, 'results') : join(HERE, 'results'), `${flags.profile}-${result.when.slice(0, 10)}${flags.split ? `-${flags.split}` : ''}.json`));
+  // Named by what it ran, and never over an earlier run: profile, day, split, repositories and modes when not all.
+  const name = [flags.profile, result.when.slice(0, 10), flags.split, flags.repos && repos.map(repo => basename(repo.name)).join('+'), flags.modes && modes.join('+')].filter(Boolean).join('-');
+  let out = flags.out && resolve(flags.out);
+  for (let n = 1; !out || (!flags.out && existsSync(out)); n++) out = join(isPrivate ? join(cache, 'results') : join(HERE, 'results'), `${name}${n > 1 ? `-${n}` : ''}.json`);
   mkdirSync(dirname(out), {recursive: true});
   writeFileSync(out, `${JSON.stringify(result, null, 1)}\n`);
   log(`saved ${out}`);
-  if (flags.compare) compare(result, JSON.parse(readFileSync(resolve(flags.compare), 'utf8')));
+  if (before) compare(result, before);
 } finally {
   await meaning?.close();
   await served.stop();

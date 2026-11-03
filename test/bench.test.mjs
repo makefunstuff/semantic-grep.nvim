@@ -87,7 +87,7 @@ test('picks exported: the searches made in a project and the piece opened, a pri
   }
   const out = join(scratch('bench-private-'), 'picks.jsonl');
   const {stderr} = await node('export-picks.mjs', ['--root', root, '--data-dir', dataDir, '--out', out]);
-  assert.match(stderr, /1 searches with the piece opened/);
+  assert.match(stderr, /1 searches with the pieces opened for them \(of 1 picks kept; 0 whose piece changed since/);
   const [question] = readFileSync(out, 'utf8').trim().split('\n').map(line => JSON.parse(line));
   assert.deepEqual(question, {id: 'pick-0001', repo: root, query: 'what the basket costs', file: 'src/cart.js', from: 1, to: 4, style: 'pick', split: 'private'});
   await assert.rejects(node('export-picks.mjs', ['--root', root, '--data-dir', dataDir, '--out', join(root, 'picks.jsonl')]), /inside the project/);

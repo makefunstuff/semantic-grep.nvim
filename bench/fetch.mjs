@@ -12,10 +12,11 @@ const {flags, rest} = options(process.argv.slice(2));
 const cache = cacheDir(flags.cache);
 const {repos} = JSON.parse(readFileSync(new URL('./corpus.json', import.meta.url), 'utf8'));
 const git = (cwd, ...args) => execFileSync('git', args, {cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit']}).trim();
+const head = dir => { try { return execFileSync('git', ['rev-parse', '--verify', '-q', 'HEAD'], {cwd: dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).trim(); } catch { return null; } };
 
 for (const repo of repos.filter(each => !rest.length || rest.includes(each.name))) {
   const dir = join(cache, 'repos', repo.name);
-  if (existsSync(join(dir, '.git')) && git(dir, 'rev-parse', 'HEAD') === repo.commit) {
+  if (existsSync(join(dir, '.git')) && head(dir) === repo.commit) { // a fetch cut short has no HEAD: fetched again
     process.stderr.write(`${repo.name}: at ${repo.commit.slice(0, 12)}\n`);
     continue;
   }
