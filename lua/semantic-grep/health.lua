@@ -54,11 +54,16 @@ function M.check()
   if err then
     health.error('the models could not be checked: ' .. err)
   else
+    local profile = checked.profile ~= vim.NIL and checked.profile or nil
+    if profile then health.info(('profile: %s (docs/profiles.md says how to run its models)'):format(profile)) end
+    local start_it = profile and ('Start it: docs/profiles.md, "%s"'):format(profile) or 'Start its server, or set its baseUrl in setup()'
     local e = checked.embedding
     if not e then
       health.warn('embedding: none, the word search works alone', {'Set embedding = {api = "openai", baseUrl = ..., model = ...} in setup() for search by meaning'})
     elseif e.ok then
       health.ok(('embedding: %s answers in %d ms, %d numbers a piece'):format(e.model or '?', e.ms or 0, e.dimensions or 0))
+    elseif e.unreachable then
+      health.error(('embedding: %s is unreachable: %s'):format(e.model or '?', e.error or '?'), {start_it, 'The words still rank; meaning comes back once it answers'})
     else
       health.error(('embedding: %s fails: %s'):format(e.model or '?', e.error or '?'), {'The words still rank; meaning comes back once it answers'})
     end
@@ -67,11 +72,15 @@ function M.check()
       health.info('rerank: off, searches keep the order of meaning and words')
     else
       local skipped = {}
-      for _, skip in ipairs(r.skipped or {}) do skipped[#skipped + 1] = ('%s %s (%s)'):format(skip.model, skip.why, skip.error or '') end
+      for _, skip in ipairs(r.skipped or {}) do
+        skipped[#skipped + 1] = skip.unreachable and ('%s is unreachable (%s)'):format(skip.name or skip.model, skip.error or '') or ('%s %s (%s)'):format(skip.model, skip.why, skip.error or '')
+      end
       local before = #skipped > 0 and ('; first ' .. table.concat(skipped, ', ')) or ''
       if r.ok then
         local text = ('rerank: %s reranks %d pieces in %.1f s (a search waits up to %.1f s)%s'):format(r.model or '?', r.pieces or 0, (r.ms or 0) / 1000, (r.timeoutMs or 0) / 1000, before)
         if r.right then health.ok(text) else health.warn(text .. ', but put the matching piece of the check below another') end
+      elseif r.unreachable then
+        health.error(('rerank: %s is unreachable: %s%s'):format(r.name or r.models or '?', r.error or '?', before), {start_it, 'Searches keep their own order; a model that fails is asked again a minute later'})
       else
         health.error(('rerank: %s fails: %s%s'):format(r.model or r.models or '?', r.error or '?', before), {'Searches keep their own order; a model that fails is asked again a minute later'})
       end

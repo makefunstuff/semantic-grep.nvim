@@ -1,0 +1,2130 @@
+{
+ "bench": 1,
+ "profile": "cpu-qwen06b",
+ "models": {
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28122/v1",
+   "model": "qwen3-embedding-0.6b"
+  },
+  "rerank": null
+ },
+ "servers": {
+  "embedding": {
+   "started": true,
+   "gguf": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+   "args": [
+    "--embedding",
+    "--pooling",
+    "last",
+    "--ctx-size",
+    "8192",
+    "--batch-size",
+    "2048",
+    "--ubatch-size",
+    "2048",
+    "--parallel",
+    "1",
+    "--gpu-layers",
+    "0",
+    "--threads",
+    "4"
+   ],
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "rssMB": 1885
+  }
+ },
+ "when": "2026-11-03T17:40:17.404Z",
+ "node": "v25.2.1",
+ "semanticGrep": "508cb0d",
+ "changed": [
+  "README.md",
+  "bench/run.mjs",
+  "bench/serve.mjs",
+  "lua/semantic-grep/health.lua",
+  "lua/semantic-grep/init.lua",
+  "lua/semantic-grep/server.lua",
+  "package.json",
+  "src/config.mjs",
+  "src/embedder.mjs",
+  "src/index.mjs",
+  "src/meaning.mjs",
+  "src/server.mjs",
+  "test/nvim/nvim.test.mjs",
+  "test/server.test.mjs"
+ ],
+ "questions": {
+  "file": "bench/questions.jsonl",
+  "sha1": "6dd74513d2e5",
+  "count": 123,
+  "split": "all"
+ },
+ "parsers": 50,
+ "limit": 30,
+ "overall": {
+  "meaning": {
+   "n": 123,
+   "recall1": 0.358,
+   "recall5": 0.626,
+   "recall10": 0.772,
+   "mrr": 0.491,
+   "p50": 46.3,
+   "p95": 58.1
+  }
+ },
+ "repos": {
+  "cobra": {
+   "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+   "files": 64,
+   "pieces": 1021,
+   "embedded": 1021,
+   "indexMs": 250518,
+   "msPer1k": 245365,
+   "questions": 59,
+   "modes": {
+    "meaning": {
+     "n": 59,
+     "recall1": 0.373,
+     "recall5": 0.661,
+     "recall10": 0.78,
+     "mrr": 0.51,
+     "p50": 45.2,
+     "p95": 57.4
+    }
+   }
+  },
+  "fd": {
+   "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
+   "files": 57,
+   "pieces": 871,
+   "embedded": 871,
+   "indexMs": 167167,
+   "msPer1k": 191925,
+   "questions": 64,
+   "modes": {
+    "meaning": {
+     "n": 64,
+     "recall1": 0.344,
+     "recall5": 0.594,
+     "recall10": 0.766,
+     "mrr": 0.473,
+     "p50": 47.6,
+     "p95": 60.1
+    }
+   }
+  }
+ },
+ "styles": {
+  "plain": {
+   "meaning": {
+    "n": 45,
+    "recall1": 0.444,
+    "recall5": 0.733,
+    "recall10": 0.844,
+    "mrr": 0.586,
+    "p50": 45.7,
+    "p95": 54
+   }
+  },
+  "vague": {
+   "meaning": {
+    "n": 39,
+    "recall1": 0.333,
+    "recall5": 0.692,
+    "recall10": 0.769,
+    "mrr": 0.489,
+    "p50": 41.2,
+    "p95": 50.2
+   }
+  },
+  "multi-hop": {
+   "meaning": {
+    "n": 39,
+    "recall1": 0.282,
+    "recall5": 0.436,
+    "recall10": 0.692,
+    "mrr": 0.382,
+    "p50": 51.1,
+    "p95": 63.7
+   }
+  }
+ },
+ "reranked": null,
+ "build": {
+  "pieces": 1892,
+  "ms": 417685,
+  "msPer1k": 220764
+ },
+ "perQuestion": [
+  {
+   "id": "cobra-001",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 8
+   },
+   "ms": {
+    "meaning": 51.1
+   },
+   "similarity": {
+    "best": 0.716,
+    "answer": 0.637
+   }
+  },
+  {
+   "id": "cobra-002",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 40.6
+   },
+   "similarity": {
+    "best": 0.664,
+    "answer": 0.645
+   }
+  },
+  {
+   "id": "cobra-003",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 57.4
+   },
+   "similarity": {
+    "best": 0.642,
+    "answer": 0.642
+   }
+  },
+  {
+   "id": "cobra-004",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 14
+   },
+   "ms": {
+    "meaning": 51.9
+   },
+   "similarity": {
+    "best": 0.669,
+    "answer": 0.611
+   }
+  },
+  {
+   "id": "cobra-005",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 60.2
+   },
+   "similarity": {
+    "best": 0.682,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-006",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 41.7
+   },
+   "similarity": {
+    "best": 0.666,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-007",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 41.2
+   },
+   "similarity": {
+    "best": 0.804,
+    "answer": 0.76
+   }
+  },
+  {
+   "id": "cobra-008",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 4
+   },
+   "ms": {
+    "meaning": 45.9
+   },
+   "similarity": {
+    "best": 0.648,
+    "answer": 0.572
+   }
+  },
+  {
+   "id": "cobra-009",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 4
+   },
+   "ms": {
+    "meaning": 50.7
+   },
+   "similarity": {
+    "best": 0.733,
+    "answer": 0.677
+   }
+  },
+  {
+   "id": "cobra-010",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 42.7
+   },
+   "similarity": {
+    "best": 0.715,
+    "answer": 0.611
+   }
+  },
+  {
+   "id": "cobra-011",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 44.6
+   },
+   "similarity": {
+    "best": 0.772,
+    "answer": 0.755
+   }
+  },
+  {
+   "id": "cobra-012",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 12
+   },
+   "ms": {
+    "meaning": 54.5
+   },
+   "similarity": {
+    "best": 0.651,
+    "answer": 0.557
+   }
+  },
+  {
+   "id": "cobra-013",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 39.9
+   },
+   "similarity": {
+    "best": 0.749,
+    "answer": 0.749
+   }
+  },
+  {
+   "id": "cobra-014",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 46.5
+   },
+   "similarity": {
+    "best": 0.725,
+    "answer": 0.725
+   }
+  },
+  {
+   "id": "cobra-015",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 47.1
+   },
+   "similarity": {
+    "best": 0.723,
+    "answer": 0.723
+   }
+  },
+  {
+   "id": "cobra-016",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 54.1
+   },
+   "similarity": {
+    "best": 0.74,
+    "answer": 0.74
+   }
+  },
+  {
+   "id": "cobra-017",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 44.7
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "cobra-018",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 43.9
+   },
+   "similarity": {
+    "best": 0.776,
+    "answer": 0.776
+   }
+  },
+  {
+   "id": "cobra-019",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 49.1
+   },
+   "similarity": {
+    "best": 0.737,
+    "answer": 0.732
+   }
+  },
+  {
+   "id": "cobra-020",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 7
+   },
+   "ms": {
+    "meaning": 39
+   },
+   "similarity": {
+    "best": 0.658,
+    "answer": 0.613
+   }
+  },
+  {
+   "id": "cobra-021",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 49.2
+   },
+   "similarity": {
+    "best": 0.713,
+    "answer": 0.694
+   }
+  },
+  {
+   "id": "cobra-022",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 9
+   },
+   "ms": {
+    "meaning": 49.2
+   },
+   "similarity": {
+    "best": 0.524,
+    "answer": 0.471
+   }
+  },
+  {
+   "id": "cobra-023",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 40.4
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.78
+   }
+  },
+  {
+   "id": "cobra-024",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 40.2
+   },
+   "similarity": {
+    "best": 0.808,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-025",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 8
+   },
+   "ms": {
+    "meaning": 46
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": 0.703
+   }
+  },
+  {
+   "id": "cobra-026",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 44.3
+   },
+   "similarity": {
+    "best": 0.742,
+    "answer": 0.717
+   }
+  },
+  {
+   "id": "cobra-027",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 52.1
+   },
+   "similarity": {
+    "best": 0.731,
+    "answer": 0.731
+   }
+  },
+  {
+   "id": "cobra-028",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 49.8
+   },
+   "similarity": {
+    "best": 0.752,
+    "answer": 0.752
+   }
+  },
+  {
+   "id": "cobra-029",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 40.6
+   },
+   "similarity": {
+    "best": 0.661,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-030",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 45.2
+   },
+   "similarity": {
+    "best": 0.667,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-031",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 44.6
+   },
+   "similarity": {
+    "best": 0.76,
+    "answer": 0.76
+   }
+  },
+  {
+   "id": "cobra-032",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 45.9
+   },
+   "similarity": {
+    "best": 0.666,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-033",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 44.2
+   },
+   "similarity": {
+    "best": 0.675,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-034",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 44.1
+   },
+   "similarity": {
+    "best": 0.623,
+    "answer": 0.607
+   }
+  },
+  {
+   "id": "cobra-035",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 40.1
+   },
+   "similarity": {
+    "best": 0.671,
+    "answer": 0.651
+   }
+  },
+  {
+   "id": "cobra-036",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 46.8
+   },
+   "similarity": {
+    "best": 0.606,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-037",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 44.3
+   },
+   "similarity": {
+    "best": 0.89,
+    "answer": 0.862
+   }
+  },
+  {
+   "id": "cobra-038",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 46.7
+   },
+   "similarity": {
+    "best": 0.806,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "cobra-039",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 7
+   },
+   "ms": {
+    "meaning": 49.4
+   },
+   "similarity": {
+    "best": 0.774,
+    "answer": 0.724
+   }
+  },
+  {
+   "id": "cobra-040",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 42.9
+   },
+   "similarity": {
+    "best": 0.728,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "cobra-041",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 45.1
+   },
+   "similarity": {
+    "best": 0.648,
+    "answer": 0.519
+   }
+  },
+  {
+   "id": "cobra-042",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 45.9
+   },
+   "similarity": {
+    "best": 0.767,
+    "answer": 0.767
+   }
+  },
+  {
+   "id": "cobra-043",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 44.4
+   },
+   "similarity": {
+    "best": 0.594,
+    "answer": 0.594
+   }
+  },
+  {
+   "id": "cobra-044",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 40.6
+   },
+   "similarity": {
+    "best": 0.666,
+    "answer": 0.666
+   }
+  },
+  {
+   "id": "cobra-045",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 53.9
+   },
+   "similarity": {
+    "best": 0.619,
+    "answer": 0.619
+   }
+  },
+  {
+   "id": "cobra-046",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 42.9
+   },
+   "similarity": {
+    "best": 0.509,
+    "answer": 0.484
+   }
+  },
+  {
+   "id": "cobra-047",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 42.6
+   },
+   "similarity": {
+    "best": 0.591,
+    "answer": 0.591
+   }
+  },
+  {
+   "id": "cobra-048",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 16
+   },
+   "ms": {
+    "meaning": 43.1
+   },
+   "similarity": {
+    "best": 0.466,
+    "answer": 0.41
+   }
+  },
+  {
+   "id": "cobra-049",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 58.1
+   },
+   "similarity": {
+    "best": 0.815,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "cobra-050",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 51.1
+   },
+   "similarity": {
+    "best": 0.807,
+    "answer": 0.731
+   }
+  },
+  {
+   "id": "cobra-051",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 43.5
+   },
+   "similarity": {
+    "best": 0.744,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-052",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 43
+   },
+   "similarity": {
+    "best": 0.766,
+    "answer": 0.732
+   }
+  },
+  {
+   "id": "cobra-053",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 20
+   },
+   "ms": {
+    "meaning": 51.5
+   },
+   "similarity": {
+    "best": 0.744,
+    "answer": 0.606
+   }
+  },
+  {
+   "id": "cobra-054",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 46.5
+   },
+   "similarity": {
+    "best": 0.667,
+    "answer": 0.667
+   }
+  },
+  {
+   "id": "cobra-055",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 50.2
+   },
+   "similarity": {
+    "best": 0.66,
+    "answer": 0.66
+   }
+  },
+  {
+   "id": "cobra-056",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 51.2
+   },
+   "similarity": {
+    "best": 0.622,
+    "answer": 0.622
+   }
+  },
+  {
+   "id": "cobra-057",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 39.9
+   },
+   "similarity": {
+    "best": 0.687,
+    "answer": 0.687
+   }
+  },
+  {
+   "id": "cobra-058",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 44.2
+   },
+   "similarity": {
+    "best": 0.635,
+    "answer": 0.611
+   }
+  },
+  {
+   "id": "cobra-059",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 46.6
+   },
+   "similarity": {
+    "best": 0.612,
+    "answer": 0.557
+   }
+  },
+  {
+   "id": "fd-001",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 15
+   },
+   "ms": {
+    "meaning": 47.5
+   },
+   "similarity": {
+    "best": 0.668,
+    "answer": 0.588
+   }
+  },
+  {
+   "id": "fd-002",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 54
+   },
+   "similarity": {
+    "best": 0.708,
+    "answer": 0.708
+   }
+  },
+  {
+   "id": "fd-003",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 52.7
+   },
+   "similarity": {
+    "best": 0.676,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-004",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 41.2
+   },
+   "similarity": {
+    "best": 0.766,
+    "answer": 0.766
+   }
+  },
+  {
+   "id": "fd-005",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 53.6
+   },
+   "similarity": {
+    "best": 0.707,
+    "answer": 0.707
+   }
+  },
+  {
+   "id": "fd-006",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 57.1
+   },
+   "similarity": {
+    "best": 0.62,
+    "answer": 0.614
+   }
+  },
+  {
+   "id": "fd-007",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 40.7
+   },
+   "similarity": {
+    "best": 0.567,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-008",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 50.8
+   },
+   "similarity": {
+    "best": 0.704,
+    "answer": 0.694
+   }
+  },
+  {
+   "id": "fd-009",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 7
+   },
+   "ms": {
+    "meaning": 44.9
+   },
+   "similarity": {
+    "best": 0.571,
+    "answer": 0.524
+   }
+  },
+  {
+   "id": "fd-010",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 52.1
+   },
+   "similarity": {
+    "best": 0.757,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-011",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 47.6
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.761
+   }
+  },
+  {
+   "id": "fd-012",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 49.5
+   },
+   "similarity": {
+    "best": 0.743,
+    "answer": 0.743
+   }
+  },
+  {
+   "id": "fd-013",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 50.5
+   },
+   "similarity": {
+    "best": 0.729,
+    "answer": 0.729
+   }
+  },
+  {
+   "id": "fd-014",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 38.5
+   },
+   "similarity": {
+    "best": 0.653,
+    "answer": 0.629
+   }
+  },
+  {
+   "id": "fd-015",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 48.5
+   },
+   "similarity": {
+    "best": 0.699,
+    "answer": 0.699
+   }
+  },
+  {
+   "id": "fd-016",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 8
+   },
+   "ms": {
+    "meaning": 51.1
+   },
+   "similarity": {
+    "best": 0.602,
+    "answer": 0.558
+   }
+  },
+  {
+   "id": "fd-017",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 40.6
+   },
+   "similarity": {
+    "best": 0.62,
+    "answer": 0.62
+   }
+  },
+  {
+   "id": "fd-018",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 8
+   },
+   "ms": {
+    "meaning": 51.5
+   },
+   "similarity": {
+    "best": 0.627,
+    "answer": 0.523
+   }
+  },
+  {
+   "id": "fd-019",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 7
+   },
+   "ms": {
+    "meaning": 55.1
+   },
+   "similarity": {
+    "best": 0.604,
+    "answer": 0.524
+   }
+  },
+  {
+   "id": "fd-020",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 35.8
+   },
+   "similarity": {
+    "best": 0.67,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-021",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 43.9
+   },
+   "similarity": {
+    "best": 0.65,
+    "answer": 0.65
+   }
+  },
+  {
+   "id": "fd-022",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 54.5
+   },
+   "similarity": {
+    "best": 0.558,
+    "answer": 0.558
+   }
+  },
+  {
+   "id": "fd-023",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 45.3
+   },
+   "similarity": {
+    "best": 0.644,
+    "answer": 0.644
+   }
+  },
+  {
+   "id": "fd-024",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 49.4
+   },
+   "similarity": {
+    "best": 0.605,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-025",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 50.2
+   },
+   "similarity": {
+    "best": 0.741,
+    "answer": 0.665
+   }
+  },
+  {
+   "id": "fd-026",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 40.2
+   },
+   "similarity": {
+    "best": 0.573,
+    "answer": 0.484
+   }
+  },
+  {
+   "id": "fd-027",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 45.7
+   },
+   "similarity": {
+    "best": 0.691,
+    "answer": 0.658
+   }
+  },
+  {
+   "id": "fd-028",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 9
+   },
+   "ms": {
+    "meaning": 48.7
+   },
+   "similarity": {
+    "best": 0.635,
+    "answer": 0.502
+   }
+  },
+  {
+   "id": "fd-029",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 41.2
+   },
+   "similarity": {
+    "best": 0.728,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "fd-030",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 42.9
+   },
+   "similarity": {
+    "best": 0.667,
+    "answer": 0.657
+   }
+  },
+  {
+   "id": "fd-031",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 50.1
+   },
+   "similarity": {
+    "best": 0.682,
+    "answer": 0.682
+   }
+  },
+  {
+   "id": "fd-032",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 5
+   },
+   "ms": {
+    "meaning": 42.2
+   },
+   "similarity": {
+    "best": 0.557,
+    "answer": 0.533
+   }
+  },
+  {
+   "id": "fd-033",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 50.6
+   },
+   "similarity": {
+    "best": 0.718,
+    "answer": 0.718
+   }
+  },
+  {
+   "id": "fd-034",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 14
+   },
+   "ms": {
+    "meaning": 63.7
+   },
+   "similarity": {
+    "best": 0.638,
+    "answer": 0.538
+   }
+  },
+  {
+   "id": "fd-035",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 34.9
+   },
+   "similarity": {
+    "best": 0.609,
+    "answer": 0.588
+   }
+  },
+  {
+   "id": "fd-036",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 45.2
+   },
+   "similarity": {
+    "best": 0.685,
+    "answer": 0.685
+   }
+  },
+  {
+   "id": "fd-037",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 43.3
+   },
+   "similarity": {
+    "best": 0.62,
+    "answer": 0.595
+   }
+  },
+  {
+   "id": "fd-038",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 40.7
+   },
+   "similarity": {
+    "best": 0.619,
+    "answer": 0.609
+   }
+  },
+  {
+   "id": "fd-039",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 53.7
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.768
+   }
+  },
+  {
+   "id": "fd-040",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 45.7
+   },
+   "similarity": {
+    "best": 0.714,
+    "answer": 0.714
+   }
+  },
+  {
+   "id": "fd-041",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 47.8
+   },
+   "similarity": {
+    "best": 0.713,
+    "answer": 0.713
+   }
+  },
+  {
+   "id": "fd-042",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 44.5
+   },
+   "similarity": {
+    "best": 0.74,
+    "answer": 0.74
+   }
+  },
+  {
+   "id": "fd-043",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 13
+   },
+   "ms": {
+    "meaning": 55.5
+   },
+   "similarity": {
+    "best": 0.695,
+    "answer": 0.593
+   }
+  },
+  {
+   "id": "fd-044",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 53.1
+   },
+   "similarity": {
+    "best": 0.663,
+    "answer": 0.625
+   }
+  },
+  {
+   "id": "fd-045",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "meaning": 4
+   },
+   "ms": {
+    "meaning": 43.1
+   },
+   "similarity": {
+    "best": 0.653,
+    "answer": 0.618
+   }
+  },
+  {
+   "id": "fd-046",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "meaning": 24
+   },
+   "ms": {
+    "meaning": 40.5
+   },
+   "similarity": {
+    "best": 0.746,
+    "answer": 0.608
+   }
+  },
+  {
+   "id": "fd-047",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "meaning": 5
+   },
+   "ms": {
+    "meaning": 46.5
+   },
+   "similarity": {
+    "best": 0.64,
+    "answer": 0.593
+   }
+  },
+  {
+   "id": "fd-048",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 40.5
+   },
+   "similarity": {
+    "best": 0.636,
+    "answer": 0.634
+   }
+  },
+  {
+   "id": "fd-049",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 49.2
+   },
+   "similarity": {
+    "best": 0.658,
+    "answer": 0.658
+   }
+  },
+  {
+   "id": "fd-050",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 3
+   },
+   "ms": {
+    "meaning": 46.9
+   },
+   "similarity": {
+    "best": 0.638,
+    "answer": 0.604
+   }
+  },
+  {
+   "id": "fd-051",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 4
+   },
+   "ms": {
+    "meaning": 46.3
+   },
+   "similarity": {
+    "best": 0.64,
+    "answer": 0.618
+   }
+  },
+  {
+   "id": "fd-052",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 51.2
+   },
+   "similarity": {
+    "best": 0.741,
+    "answer": 0.738
+   }
+  },
+  {
+   "id": "fd-053",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 2
+   },
+   "ms": {
+    "meaning": 57.2
+   },
+   "similarity": {
+    "best": 0.599,
+    "answer": 0.592
+   }
+  },
+  {
+   "id": "fd-054",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 16
+   },
+   "ms": {
+    "meaning": 40.9
+   },
+   "similarity": {
+    "best": 0.556,
+    "answer": 0.466
+   }
+  },
+  {
+   "id": "fd-055",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 60.1
+   },
+   "similarity": {
+    "best": 0.7,
+    "answer": 0.7
+   }
+  },
+  {
+   "id": "fd-056",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 6
+   },
+   "ms": {
+    "meaning": 58.7
+   },
+   "similarity": {
+    "best": 0.598,
+    "answer": 0.549
+   }
+  },
+  {
+   "id": "fd-057",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 10
+   },
+   "ms": {
+    "meaning": 52
+   },
+   "similarity": {
+    "best": 0.655,
+    "answer": 0.628
+   }
+  },
+  {
+   "id": "fd-058",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 81.3
+   },
+   "similarity": {
+    "best": 0.587,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-059",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 38.2
+   },
+   "similarity": {
+    "best": 0.567,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-060",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 12
+   },
+   "ms": {
+    "meaning": 44.4
+   },
+   "similarity": {
+    "best": 0.674,
+    "answer": 0.627
+   }
+  },
+  {
+   "id": "fd-061",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "meaning": 12
+   },
+   "ms": {
+    "meaning": 40.6
+   },
+   "similarity": {
+    "best": 0.527,
+    "answer": 0.437
+   }
+  },
+  {
+   "id": "fd-062",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 1
+   },
+   "ms": {
+    "meaning": 43.8
+   },
+   "similarity": {
+    "best": 0.642,
+    "answer": 0.642
+   }
+  },
+  {
+   "id": "fd-063",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "meaning": 0
+   },
+   "ms": {
+    "meaning": 61
+   },
+   "similarity": {
+    "best": 0.682,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-064",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "meaning": 8
+   },
+   "ms": {
+    "meaning": 49.2
+   },
+   "similarity": {
+    "best": 0.643,
+    "answer": 0.591
+   }
+  }
+ ]
+}

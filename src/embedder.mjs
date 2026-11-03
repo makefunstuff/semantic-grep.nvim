@@ -10,21 +10,42 @@ export const documentText = (title, text) => `title: ${title || 'none'} | text: 
 export const pieceTitle = (file, name) => [file, name].filter(Boolean).join(': ');
 export const queryText = query => `task: search result | query: ${query}`;
 
-// The prompts some embedding models were trained with, by their name: a search, and a piece of code. `{title}` is the
-// piece's (see pieceTitle); a model whose prompt has no place for one reads it as the first line of the piece.
-const PROMPTS = [
+// What some embedding models want, by their name: the prompts they were trained with (a search, and a piece of code;
+// `{title}` is the piece's, see pieceTitle; a model whose prompt has no place for one reads it as the first line of the
+// piece), and how their similarities spread (see TUNING), each measured on the bench (bench/calibrate.mjs).
+const GEMMA = {query: 'task: search result | query: ', document: 'title: {title} | text: '};
+const QWEN3 = {query: 'Instruct: Given a question, find the code that answers it\nQuery: ', document: ''};
+const MODELS = [
   [/nomic-embed-code/i, {query: 'Represent this query for searching relevant code: ', document: ''}],
   [/nomic-embed-text/i, {query: 'search_query: ', document: 'search_document: '}],
-  [/embedding-?gemma/i, {query: 'task: search result | query: ', document: 'title: {title} | text: '}],
-  [/qwen3-embedding/i, {query: 'Instruct: Given a question, find the code that answers it\nQuery: ', document: ''}],
+  [/embedding-?gemma-?2(?!\d)/i, {...GEMMA, band: 0.06, pickNear: 0.85}],
+  [/embedding-?gemma/i, {...GEMMA, band: 0.12, pickNear: 0.71}],
+  [/qwen3-embedding-0\.6b/i, {...QWEN3, band: 0.14, pickNear: 0.79}],
+  [/qwen3-embedding-4b/i, {...QWEN3, band: 0.12, pickNear: 0.78}],
+  [/qwen3-embedding/i, {...QWEN3, band: 0.12, pickNear: 0.79}], // 8B
+  [/jina-code-embeddings/i, {query: 'Find the most relevant code snippet given the following query:\n', document: 'Candidate code snippet:\n', band: 0.16, pickNear: 0.73}],
+  [/jina-embeddings-v2-base-code/i, {band: 0.15, pickNear: 0.79}],
+  [/snowflake-arctic-embed/i, {query: 'query: ', document: '', band: 0.15, pickNear: 0.66}],
 ];
+// A model's similarities, unknown models' first: `band`, how far below the best a piece may mean and still be listed
+// (unrelated code scores close, too); `pickNear`, how close a kept search's words must mean to a new one's for the
+// piece opened for it to go first (rewordings of one question against unrelated ones).
+export const TUNING = {band: 0.1, pickNear: 0.75};
 const HTTP_BATCH = 16;
 const HTTP_MS = 60_000;
 
+const knownOf = model => MODELS.find(([pattern]) => pattern.test(model ?? ''))?.[1] ?? {};
+
 /** The prompts for `entry.model`: the config's, else those it was trained with, else none. */
 export function promptsOf(entry) {
-  const known = PROMPTS.find(([pattern]) => pattern.test(entry.model))?.[1] ?? {query: '', document: ''};
-  return {query: entry.queryPrefix ?? known.query, document: entry.documentPrefix ?? known.document};
+  const known = knownOf(entry.model);
+  return {query: entry.queryPrefix ?? known.query ?? '', document: entry.documentPrefix ?? known.document ?? ''};
+}
+
+/** `{band, pickNear}` for `entry.model`: the config's, else the model's measured ones, else TUNING's. */
+export function tuningOf(entry) {
+  const known = knownOf(entry.model);
+  return {band: entry.band ?? known.band ?? TUNING.band, pickNear: entry.pickNear ?? known.pickNear ?? TUNING.pickNear};
 }
 
 /** `vector` at unit length. */
@@ -36,14 +57,15 @@ const unit = vector => {
 };
 
 /**
- * The config's `embedding` entry, `{baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, ...key}`, as an
- * embedder: `id` names its vectors in the index, `query(text)` and `document(file, text, name)` add the model's prompts,
- * `embed(texts, {urgent})` resolves their vectors.
+ * The config's `embedding` entry, `{baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, band?, pickNear?,
+ * ...key}`, as an embedder: `id` names its vectors in the index, `query(text)` and `document(file, text, name)` add the
+ * model's prompts, `embed(texts, {urgent})` resolves their vectors, `tuning` is its band and pickNear (tuningOf).
  */
 export class HttpEmbedder {
   constructor({entry, apiKey = () => apiKeyOf(entry), fetch = globalThis.fetch, log = () => {}, batch = HTTP_BATCH, timeoutMs = entry.timeoutMs ?? HTTP_MS}) {
     Object.assign(this, {entry, apiKey, fetch, log, batch, timeoutMs});
     this.prompts = promptsOf(entry);
+    this.tuning = tuningOf(entry);
     this.queue = [];
     this.running = false;
     this.embedded = 0;

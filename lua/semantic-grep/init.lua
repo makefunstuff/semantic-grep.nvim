@@ -1,12 +1,14 @@
 -- semantic-grep: search a project's code by its words and by what they mean, in a live picker.
 --
 --   require('semantic-grep').setup({
---     embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
---     rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
---     picker = 'auto', -- or 'telescope', 'snacks', 'fzf-lua', 'select'
+--     profile = 'laptop', -- or 'beefy', 'cloud': the embedding and rerank models measured for it (docs/profiles.md)
+--     embedding = {baseUrl = 'http://127.0.0.1:8092/v1'}, -- over the profile's; or a whole entry of your own
+--     rerank = false,     -- the profile's reranker off
+--     picker = 'auto',    -- or 'telescope', 'snacks', 'fzf-lua', 'select'
 --   })
 --
--- Every field is optional: without `embedding` the word search works alone; without `rerank` nothing is reranked.
+-- Every field is optional: without `embedding` (or a profile) the word search works alone; without `rerank` nothing
+-- is reranked. A profile's models are those of src/profiles.mjs; what `embedding` and `rerank` set goes over them.
 -- Other fields: `data_dir` (where the index files go, default stdpath('data')/semantic-grep), `index` ('data', or
 -- 'project' for .semantic-grep/ in the repository), `node` (the Node 22.16+ to run the server with), `debounce_ms` (the
 -- pause before meaning is asked, 150), `rerank_delay_ms` (how long meaning's list must stay before it is reranked, 0),
@@ -31,6 +33,7 @@
 local M = {}
 
 M.config = {
+  profile = nil,
   embedding = nil,
   rerank = nil,
   picker = 'auto',

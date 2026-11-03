@@ -3,7 +3,15 @@
     "about": "No model: SQLite FTS5 words only. What every machine has."
   },
   "laptop": {
-    "about": "Small models on the CPU (about 16 GB of RAM, no GPU), fast enough for a live picker: EmbeddingGemma 300M and the d1-2B decision model, both on llama.cpp.",
+    "about": "Small models on the CPU (about 16 GB of RAM, no GPU), fast enough for a live picker: EmbeddingGemma 2 on llama.cpp, 4 threads; no reranker (none on a CPU fits the picker's wait, see docs/profiles.md).",
+    "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28092/v1", "model": "embeddinggemma-2"},
+    "serve": {
+      "env": {"CUDA_VISIBLE_DEVICES": ""},
+      "embedding": {"gguf": "embeddinggemma-2-Q8_0.gguf", "args": ["--embedding", "--pooling", "mean", "--ctx-size", "8192", "--batch-size", "2048", "--ubatch-size", "2048", "--parallel", "1", "--gpu-layers", "0", "--threads", "4"]}
+    }
+  },
+  "laptop-d1": {
+    "about": "The laptop before profiles: EmbeddingGemma 300M and the d1-2B decision model (top 15) on the CPU; 2.6 s a rerank.",
     "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28092/v1", "model": "embeddinggemma-300M"},
     "rerank": {"api": "system-one", "baseUrl": "http://127.0.0.1:28091/v1", "model": "d1-2B", "top": 15, "timeoutMs": 20000},
     "serve": {
@@ -13,7 +21,16 @@
     }
   },
   "beefy": {
-    "about": "A workstation GPU (about 6 GB of a 16 GB card): Qwen3-Embedding-4B and the Qwen3-Reranker-0.6B cross-encoder, both on llama.cpp. Pick the card with CUDA_VISIBLE_DEVICES.",
+    "about": "A workstation GPU (about 10 GB of a 16 GB card): Qwen3-Embedding-8B and the Qwen3-Reranker-0.6B cross-encoder (top 20), both on llama.cpp. Pick the card with CUDA_VISIBLE_DEVICES.",
+    "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28094/v1", "model": "qwen3-embedding-8b"},
+    "rerank": {"api": "rerank", "baseUrl": "http://127.0.0.1:28093/v1", "model": "qwen3-reranker-0.6b", "top": 20, "timeoutMs": 20000},
+    "serve": {
+      "embedding": {"gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf", "args": ["--embedding", "--pooling", "last", "--ctx-size", "8192", "--batch-size", "2048", "--ubatch-size", "2048", "--parallel", "1", "--gpu-layers", "99"]},
+      "rerank": {"gguf": "qwen3-reranker-0.6b-q8_0.gguf", "args": ["--rerank", "--ctx-size", "16384", "--batch-size", "2048", "--ubatch-size", "2048", "--gpu-layers", "99"]}
+    }
+  },
+  "beefy-4b": {
+    "about": "The beefy profile before: Qwen3-Embedding-4B and Qwen3-Reranker-0.6B, top 30.",
     "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28094/v1", "model": "qwen3-embedding-4b"},
     "rerank": {"api": "rerank", "baseUrl": "http://127.0.0.1:28093/v1", "model": "qwen3-reranker-0.6b", "top": 30, "timeoutMs": 20000},
     "serve": {

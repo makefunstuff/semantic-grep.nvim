@@ -1,0 +1,1 @@
+{"model":"snowflake-arctic-embed-l-v2.0","band":0.15,"gaps":{"n":343,"p50":0.01,"p90":0.11,"p95":0.14},"pickNear":0.66,"rewordings":{"n":341,"p10":0.3,"p50":0.48,"through":0.09},"unrelated":{"n":11074,"p50":0.19,"p95":0.39,"p99":0.5,"p999":0.65,"max":0.8}}

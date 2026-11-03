@@ -105,13 +105,14 @@ on the PATH) with the GGUF found under `--models` (or `$SEMANTIC_GREP_BENCH_MODE
 the end. A server already answering there is used as it is.
 
 - **words**: no model.
-- **laptop**: CPU only (llama.cpp with `CUDA_VISIBLE_DEVICES=""`, 4 threads each), about 16 GB of RAM:
-  [EmbeddingGemma 300M](https://huggingface.co/ggml-org/embeddinggemma-300M-GGUF) Q8_0 and the d1-2B decision model
-  (`system-one`, top 15) — the setup the README suggests.
-- **beefy**: one GPU of 16 GB, about 6 GB of it: [Qwen3-Embedding-4B](https://huggingface.co/Qwen/Qwen3-Embedding-4B-GGUF)
-  Q8_0 and the [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF) cross-encoder
-  (`rerank`, `llama-server --rerank`, top 30, reading 1200 characters of each piece). Choose the card with
-  `CUDA_VISIBLE_DEVICES`.
+- **laptop**: CPU only (llama.cpp with `CUDA_VISIBLE_DEVICES=""`, 4 threads), about 16 GB of RAM:
+  [EmbeddingGemma 2](https://huggingface.co/ggml-org/embeddinggemma-2-GGUF) Q8_0, no reranker (see
+  [profiles.md](profiles.md)). **laptop-d1** is the one before: EmbeddingGemma 300M and the d1-2B decision model
+  (`system-one`, top 15), the baseline below.
+- **beefy**: one GPU of 16 GB, about 10 GB of it: [Qwen3-Embedding-8B](https://huggingface.co/Qwen/Qwen3-Embedding-8B-GGUF)
+  Q5_K_M and the [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF) cross-encoder
+  (`rerank`, `llama-server --rerank`, top 20, reading 1200 characters of each piece). Choose the card with
+  `CUDA_VISIBLE_DEVICES`. **beefy-4b** is the one before (Qwen3-Embedding-4B, the reranker at top 30), the baseline.
 - **cloud**: [Voyage](https://docs.voyageai.com/) `voyage-code-3` embeddings and `rerank-2.5`, the key in
   `$VOYAGE_API_KEY`. Voyage's `/v1/embeddings` takes OpenAI's shape; the prompts it adds for `input_type` are set as
   `queryPrefix`/`documentPrefix`. Also **cloud-openai** (`text-embedding-3-large` at 1024 dimensions, Cohere
@@ -128,7 +129,7 @@ been measured yet, for want of a key. With one:
 
 The baseline, 2026-11-03, on this change's code at its commit `2f455a2` with nothing uncommitted (the commits after it
 add only what a run records: these runs have no `servers` field yet) (Node 25.2, 50 tree-sitter parsers);
-`laptop` and `beefy` built their indexes afresh and started their own llama.cpp servers from the profiles' `serve`
+`laptop` and `beefy` (now `laptop-d1` and `beefy-4b`) built their indexes afresh and started their own llama.cpp servers from the profiles' `serve`
 entries (EmbeddingGemma 300M Q8_0 and d1-2B Q8_0 on the CPU; Qwen3-Embedding-4B Q8_0 and Qwen3-Reranker-0.6B Q8_0 on
 one GPU); the runs, with every question's rank and time, are
 [`words`](../bench/results/words-2026-11-03.json), [`laptop`](../bench/results/laptop-2026-11-03.json) and
@@ -199,4 +200,5 @@ What it says:
 - 21 to 24 questions had nothing to rerank: meaning keeps only the pieces within 0.1 of the best, and those lists were
   one piece long (a right one for all but 3 or 4 of them).
 
-Not measured yet: the cloud profiles (no key), a cross-encoder on the laptop's CPU, and EmbeddingGemma on a GPU.
+Not measured yet: the cloud profiles (no key). Every candidate model since, and the three profiles that came of it,
+are in [profiles.md](profiles.md).

@@ -30,6 +30,7 @@
     "test:nvim": "node --test --test-concurrency=1 test/nvim/*.test.mjs",
     "bench": "node bench/run.mjs",
     "bench:fetch": "node bench/fetch.mjs",
-    "bench:export": "node bench/export-picks.mjs"
+    "bench:export": "node bench/export-picks.mjs",
+    "bench:calibrate": "node bench/calibrate.mjs"
   }
 }
