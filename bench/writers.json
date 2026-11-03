@@ -1,0 +1,96 @@
+{
+  "laptop-qwen3.5-2b": {
+    "about": "The laptop's writer: Qwen3.5-2B (Q4_K_M, 1.3 GB), reading 1500 characters of each piece. Its notes are the same on a CPU and a GPU; written here on the GPU, timed on 4 CPU threads apart (docs/notes.md).",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "http://127.0.0.1:28122/v1",
+      "model": "qwen3.5-2b",
+      "concurrency": 4,
+      "chars": 1500
+    },
+    "serve": {
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "notes": {
+        "gguf": "Qwen3.5-2B-Q4_K_M.gguf",
+        "args": [
+          "--ctx-size",
+          "8192",
+          "--parallel",
+          "4",
+          "--gpu-layers",
+          "99"
+        ]
+      }
+    }
+  },
+  "laptop-qwen3-4b": {
+    "about": "Qwen3-4B-Instruct-2507 (Q4_K_M, 2.5 GB), reading 1500 characters of each piece; written on the GPU, timed on 4 CPU threads apart.",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "http://127.0.0.1:28122/v1",
+      "model": "qwen3-4b-instruct-2507",
+      "concurrency": 4,
+      "chars": 1500
+    },
+    "serve": {
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "notes": {
+        "gguf": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "args": [
+          "--ctx-size",
+          "8192",
+          "--parallel",
+          "4",
+          "--gpu-layers",
+          "99"
+        ]
+      }
+    }
+  },
+  "beefy-qwen3.5-9b": {
+    "about": "The beefy writer: Qwen3.5-9B (Q4_K_M, 5.7 GB) on a GPU, reading 3000 characters of each piece. Measured here with 22 of its layers on the GPU, the rest on the CPU (the GPUs ran other work): a card with room is faster.",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "http://127.0.0.1:28122/v1",
+      "model": "qwen3.5-9b",
+      "concurrency": 4,
+      "chars": 3000
+    },
+    "serve": {
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "notes": {
+        "gguf": "Qwen3.5-9B-Q4_K_M.gguf",
+        "args": [
+          "--ctx-size",
+          "8192",
+          "--parallel",
+          "4",
+          "--gpu-layers",
+          "22"
+        ]
+      }
+    }
+  },
+  "cloud-haiku": {
+    "about": "The cloud writer: Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY, reading 3000 characters of each piece. Price: dollars a million tokens.",
+    "notes": {
+      "api": "anthropic",
+      "baseUrl": "https://api.anthropic.com/v1",
+      "model": "claude-haiku-5-5",
+      "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "sendCode": true,
+      "concurrency": 4,
+      "chars": 3000
+    },
+    "price": {
+      "input": 0.1,
+      "output": 0.5
+    }
+  }
+}

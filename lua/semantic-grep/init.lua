@@ -11,6 +11,9 @@
 -- MB, on the CPU): asked for once, downloaded into the data folder, served by the `llama-server` on PATH, which the
 -- plugin starts on a free port and stops (`local_model = {gguf = path, llama_server = path, threads = n}` changes
 -- what it runs, `false` or `embedding = false` keeps to the words alone). Without `rerank` nothing is reranked. A profile's models are those of src/profiles.mjs; what `embedding` and `rerank` set goes over them.
+-- `notes = true` (or an entry over the profile's writer, the laptop's without a profile) writes a note on each piece of
+-- code while nothing is searched, with a language model (src/notes.mjs, docs/notes.md); off by default. A writer not on
+-- this machine gets the code only with `sendCode = true`.
 -- Other fields: `data_dir` (where the index files go, default stdpath('data')/semantic-grep), `index` ('data', or
 -- 'project' for .semantic-grep/ in the repository), `node` (the Node 22.16+ to run the server with), `debounce_ms` (the
 -- pause before meaning is asked, 150), `rerank_delay_ms` (how long meaning's list must stay before it is reranked, 0),
@@ -38,6 +41,7 @@ M.config = {
   profile = nil,
   embedding = nil,
   rerank = nil,
+  notes = nil,
   local_model = nil,
   picker = 'auto',
   data_dir = nil,
@@ -67,6 +71,7 @@ function M.setup(opts)
   -- A list of rerank models stays a list: tbl_deep_extend would merge it with the one before by index.
   if opts.rerank ~= nil then M.config.rerank = opts.rerank end
   if opts.embedding ~= nil then M.config.embedding = opts.embedding end
+  if opts.notes ~= nil then M.config.notes = opts.notes end
   configured = true
   asked = false -- a new config: the local model is looked at again at the next search
   if source and source.stop then source.stop() end -- a new config: the server starts again with it at its next use

@@ -16,6 +16,7 @@ import {apiKeyOf} from './config.mjs';
 import {HttpEmbedder, tuningOf} from './embedder.mjs';
 import {IndexStore, indexPlace, PROJECT_DIR, removeIndex, removeLearned} from './index-store.mjs';
 import {importLines, piecesOf, TreeSitter, withoutImports} from './pieces.mjs';
+import {NO_NOTE, NotesWriter} from './notes.mjs';
 import {pieceText, SNIPPET_CHARS} from './rerank.mjs';
 
 const MAX_FILE_BYTES = 512 * 1024;
@@ -24,6 +25,9 @@ const BATCH = 4; // pieces per embedder call: a search waits for at most one bat
 const BOOKED_PIECES = 10; // a build this big is booked (`book`); a save's few pieces are not
 export const MAX_PIECES = 20_000; // per project, about 45 min of a first build on two cores; files past it are left out
 export const RESCAN_MS = 10 * 60_000;
+const NOTES_TICK_MS = 15_000; // how often the notes writer looks whether it may write
+const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests
+const NOTES_BATCH = 4; // pieces a writer's lane takes at a time: a search waits for one piece at most
 const PARSE_GROUP = 200; // files per headless Neovim of tree-sitter
 const PROGRESS_MS = 2000; // how often a build in progress tells the editors how far it is
 const HEAD_CHARS = 100;
@@ -618,7 +622,7 @@ const UNOPENED = 'the search index cannot be opened (see :checkhealth semantic-g
  * picker's once it settles (`rerank`).
  */
 export class Meaning {
-  constructor({dataDir, config = {}, embedding = null, reranker = null, log = () => {}, book = () => {}, progress = () => {}, fetch = globalThis.fetch, embedder = null, provider = null, treeSitter = null, now = Date.now}) {
+  constructor({dataDir, config = {}, embedding = null, reranker = null, notes = null, writer = null, log = () => {}, book = () => {}, progress = () => {}, fetch = globalThis.fetch, embedder = null, provider = null, treeSitter = null, now = Date.now}) {
     Object.assign(this, {dataDir, config, embedding, reranker, log, book, fetch, now, provider});
     this.reranking = new Map(); // an asker (a Neovim) -> the turn of its latest picker rerank: an older one is stale
     this.tell = progress;
@@ -635,6 +639,16 @@ export class Meaning {
     this.working = false;
     this.timer = setInterval(() => this.rescan().catch(error => log(`meaning: ${error.message}`)), RESCAN_MS);
     this.timer.unref?.();
+    // The notes writer (notes.mjs): off without a `notes` entry. It writes while nothing is searched (see writeNotes).
+    this.writer = writer ?? (notes ? new NotesWriter({entry: notes, fetch, log}) : null);
+    this.activeAt = this.now();
+    this.noting = null; // {abort} while the writer writes
+    this.notesRestUntil = 0;
+    this.notesFailed = new Set(); // pieces the writer gave no note for, this session: not asked again until the next
+    if (this.writer) {
+      this.notesTimer = setInterval(() => this.writeNotes().catch(error => log(`meaning: notes: ${error.message}`)), NOTES_TICK_MS);
+      this.notesTimer.unref?.();
+    }
   }
 
   /**
@@ -815,11 +829,20 @@ export class Meaning {
     if (this.building && this.building !== index) this.reorder = true;
   }
 
+  /** Someone searches: the notes writer stops what it writes (its model's CPU or GPU is the search's), and waits. */
+  active() {
+    this.activeAt = this.now();
+    this.noting?.abort();
+  }
+
   /** The index of `root`, opened if it had no session yet, with what is on disk loaded (its scan may still run). */
-  async indexOf(root) {
+  async indexOf(root, {quiet = false} = {}) {
     const index = this.open(root);
     if (!index) return null;
-    this.want(index);
+    if (!quiet) {
+      this.want(index);
+      this.active();
+    }
     try {
       await index.loaded; // what is on disk; a scan under way is not waited for
     } catch {
@@ -1054,8 +1077,8 @@ export class Meaning {
    * The pieces of `root` without a note, for a coding agent to write one each (see `addNotes`): `{pieces: [{hash, file,
    * from, to, name, text}], pending, noted}`, at most `limit` of them; `pending` counts them all.
    */
-  async pendingNotes(root, {limit = 50} = {}) {
-    const index = await this.indexOf(root);
+  async pendingNotes(root, {limit = 50, quiet = false, skip = null} = {}) {
+    const index = await this.indexOf(root, {quiet});
     if (!index) return {problem: UNOPENED, pieces: [], pending: 0, noted: 0};
     await index.ready?.catch(() => {});
     index.refreshLearned();
@@ -1063,7 +1086,7 @@ export class Meaning {
     const pieces = [];
     let pending = 0;
     for (const piece of index.pieces) {
-      if (seen.has(piece.hash) || index.notesByHash.has(piece.hash)) continue;
+      if (seen.has(piece.hash) || index.notesByHash.has(piece.hash) || skip?.has(piece.hash)) continue;
       seen.add(piece.hash);
       pending += 1;
       if (pieces.length >= limit) continue;
@@ -1079,8 +1102,8 @@ export class Meaning {
    * Notes on pieces of `root`, `{hash, note}` each (an empty note removes one): searched by their words and meaning
    * with their piece, and read by the reranker. A hash the index does not have (its code changed) is `unknown`.
    */
-  async addNotes(root, notes, {source = 'agent'} = {}) {
-    const index = await this.indexOf(root);
+  async addNotes(root, notes, {source = 'agent', quiet = false} = {}) {
+    const index = await this.indexOf(root, {quiet});
     if (!index) return {problem: UNOPENED, added: 0, unknown: []};
     await index.ready?.catch(() => {});
     let added = 0;
@@ -1094,6 +1117,53 @@ export class Meaning {
     index.loadLearned();
     this.work(); // the notes' vectors
     return {added, unknown};
+  }
+
+  /**
+   * The notes writer's turn (every NOTES_TICK_MS): when nothing was searched for its `idleMs` and no project is being
+   * embedded, it writes a note for each piece of the open projects that has none (the project searched last first), a
+   * few pieces at a time, and stops as soon as someone searches. A batch it got no note for at all rests it a few
+   * minutes; a piece it got none for is left until the next session. Resolves how many notes it wrote.
+   */
+  async writeNotes({idle = () => this.now() - this.activeAt >= this.writer.entry.idleMs} = {}) {
+    // A first build (or a checkout's) goes first: its pieces' vectors are the search's. The notes' own vectors are not.
+    const building = () => this.working && [...this.indexes.values()].some(index => index.store && !index.closed && index.pending().length);
+    if (!this.writer || this.noting || building() || this.disabled) return 0;
+    if (this.now() < this.notesRestUntil || !idle()) return 0;
+    const controller = new AbortController();
+    this.noting = controller;
+    let written = 0;
+    try {
+      for (const index of [...this.indexes.values()].toSorted((a, b) => (b.wantedAt ?? 0) - (a.wantedAt ?? 0))) {
+        const started = this.now();
+        let here = 0;
+        while (!controller.signal.aborted && !building() && idle() && this.indexes.get(index.root) === index && !index.closed) {
+          const {pieces, pending, problem} = await this.pendingNotes(index.root, {limit: this.writer.entry.concurrency * NOTES_BATCH, quiet: true, skip: this.notesFailed});
+          if (problem || !pieces.length) break;
+          const {notes, errors} = await this.writer.write(pieces, {signal: controller.signal});
+          if (notes.length) { // those written before a search stopped it too
+            await this.addNotes(index.root, notes, {source: this.writer.name, quiet: true});
+            here += notes.length;
+          }
+          if (controller.signal.aborted) break;
+          const noted = new Set(notes.map(note => note.hash));
+          // A model that answered with no note is asked of other pieces; one that did not answer rests.
+          const unanswered = errors.some(error => !error.endsWith(NO_NOTE));
+          if (!notes.length && unanswered) {
+            this.notesRestUntil = this.now() + NOTES_REST_MS;
+            this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(NOTES_REST_MS)}`);
+            break;
+          }
+          if (!unanswered) for (const piece of pieces) if (!noted.has(piece.hash)) this.notesFailed.add(piece.hash);
+          if (pending <= pieces.length) break;
+        }
+        written += here;
+        if (here) this.book(index.root, 'noted', `wrote ${here} note${here === 1 ? '' : 's'} with ${this.writer.entry.model} in ${seconds(this.now() - started)}`);
+      }
+      return written;
+    } finally {
+      this.noting = null;
+    }
   }
 
   /** A rebuild (:SemanticGrep rebuild): the repository's index file is deleted and made again from the files, every vector too. */
@@ -1179,7 +1249,8 @@ export class Meaning {
   snapshot() {
     return {
       state: this.state, model: this.modelName, embedding: this.embedding ? {model: this.embedding.model, baseUrl: this.embedding.baseUrl, dimensions: this.embedding.dimensions ?? null} : null,
-      problem: this.problem, rerank: this.reranker?.snapshot() ?? null, msPerChunk: this.embedder?.msPerText ?? null,
+      problem: this.problem, rerank: this.reranker?.snapshot() ?? null,
+      notes: this.writer ? {model: this.writer.about, written: this.writer.written, resting: this.now() < this.notesRestUntil, writing: !!this.noting} : null, msPerChunk: this.embedder?.msPerText ?? null,
       ...(this.provider?.snapshot ? this.provider.snapshot() : {}),
       treeSitter: this.treeSitter.missing ? 'no nvim' : 'nvim',
       indexes: [...this.indexes.values()].filter(index => index.store && !index.closed).map(index => index.progress()),
@@ -1188,6 +1259,8 @@ export class Meaning {
 
   async close() {
     clearInterval(this.timer);
+    clearInterval(this.notesTimer);
+    this.noting?.abort();
     for (const root of [...this.indexes.keys()]) await this.leave(root);
     this.embedder?.close?.();
   }

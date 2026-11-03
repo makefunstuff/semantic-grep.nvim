@@ -107,7 +107,7 @@ function M.new(config)
       end
     end
     send({jsonrpc = '2.0', id = hello, method = 'initialize', params = {
-      dataDir = M.data_dir(config), profile = config.profile, embedding = config.embedding, rerank = config.rerank, index = config.index,
+      dataDir = M.data_dir(config), profile = config.profile, embedding = config.embedding, rerank = config.rerank, notes = config.notes, index = config.index,
       ['local'] = M.local_model(config),
       parsers = vim.api.nvim_get_runtime_file('parser/*', true),
     }})
