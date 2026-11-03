@@ -208,6 +208,7 @@ function M.on_progress(message)
       vim.notify('semantic-grep: ' .. text)
     end
   elseif message.phase == 'failed' then
+    told_quarter = -1
     vim.notify('semantic-grep: ' .. text, vim.log.levels.WARN) -- an older Neovim: only a failure
   end
 end

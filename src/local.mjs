@@ -103,6 +103,7 @@ export class LocalModel extends HttpEmbedder {
 
   /** Downloads the model unless it is there (`progress({phase: "downloading", done, total})`): `{runtime, model}`. */
   async turnOn({progress = () => {}} = {}) {
+    await this.sweep();
     if (this.hasModel()) return {runtime: false, model: false};
     if (this.own) throw new Error(`${this.path} is missing`);
     await this.fetchModel(progress);
@@ -119,20 +120,25 @@ export class LocalModel extends HttpEmbedder {
     return {local: {model: this.spec.model, path: this.path, downloaded: this.hasModel(), llamaServer: this.runtime(), wanted: this.llamaServer, running: !!this.child, port: this.port ?? null, downloading: this.downloading}};
   }
 
+  /** What a download stopped before its end left (Neovim quit meanwhile): gone, unless its process still fetches it. */
+  async sweep() {
+    const dir = join(this.path, '..');
+    const prefix = `${basename(this.path)}.`;
+    let names = [];
+    try { names = await readdir(dir); } catch { return; }
+    for (const name of names) {
+      const pid = Number(name.slice(prefix.length, -'.part'.length));
+      if (name.startsWith(prefix) && name.endsWith('.part') && !alive(pid)) await rm(join(dir, name), {force: true});
+    }
+  }
+
   /**
    * The file, from its url into a part of this process's own (another Neovim may fetch it at the same time), checked
    * by its size and hash, then put in place; a stall of STALL_MS fails it.
    */
   async fetchModel(progress) {
     const part = `${this.path}.${process.pid}.part`;
-    const dir = join(this.path, '..');
-    await mkdir(dir, {recursive: true});
-    // What a download stopped before its end left (Neovim quit meanwhile): gone, unless its process still fetches it.
-    const prefix = `${basename(this.path)}.`;
-    for (const name of await readdir(dir)) {
-      const pid = Number(name.slice(prefix.length, -'.part'.length));
-      if (name.startsWith(prefix) && name.endsWith('.part') && !alive(pid)) await rm(join(dir, name), {force: true});
-    }
+    await mkdir(join(this.path, '..'), {recursive: true});
     this.downloading = {done: 0, total: this.spec.bytes};
     const abort = new AbortController();
     let stall;
