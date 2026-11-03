@@ -501,6 +501,7 @@ export class Meaning {
     const failed = this.failures.get(root);
     if (failed && this.now() - failed.at < FAILED_MS) return failed.index; // not tried again on every key
     const index = new ProjectIndex({root, store: null, embedder: this.embedder, projectDir: this.config?.projectDir, treeSitter: this.treeSitter, log: this.log, now: this.now, onProgress: how => this.tell(root, how), embedding: () => this.state === 'on'});
+    index.wantedAt = 0; // a search, or a rebuild, sets it: the project last wanted is embedded first
     this.indexes.set(root, index);
     index.loaded = (async () => {
       const place = await indexPlace({dataDir: this.dataDir, root, where: this.config?.index, projectDir: this.config?.projectDir});
@@ -519,7 +520,11 @@ export class Meaning {
         index.told = this.state === 'on' && embedded < chunks;
         this.tell(root, {phase: index.told ? 'embedding' : 'done', done: embedded, total: chunks});
       }
-    }).then(() => { this.work(); }, error => {
+    }).then(() => {
+      // Searched while its files were still being read: now it has pieces waiting, it goes first.
+      if (this.building && this.building !== index && index.wantedAt > (this.building.wantedAt ?? 0)) this.reorder = true;
+      this.work();
+    }, error => {
       // An index file that cannot be opened (or read): this project goes without, and the next search tries again.
       this.log(`meaning: ${root}: ${error.message}`);
       index.closed = true;
@@ -584,7 +589,8 @@ export class Meaning {
     try {
       for (let more = true, passes = 0; more && passes < 10; passes++) { // a few passes at most: never a loop
         more = false;
-        for (index of [...this.indexes.values()]) {
+        // The project searched last goes first; the others in the order their sessions came.
+        projects: for (index of [...this.indexes.values()].toSorted((a, b) => (b.wantedAt ?? 0) - (a.wantedAt ?? 0))) {
           const waiting = index.pending().length;
           if (!waiting) continue;
           more = true;
@@ -596,13 +602,20 @@ export class Meaning {
             if (index.closed) return false; // closed under it: the session ended, or a rebuild
             throw error;
           });
-          while (this.indexes.get(index.root) === index && steps++ < most && await step()) {
+          this.building = index;
+          while (this.indexes.get(index.root) === index && !this.reorder && steps++ < most && await step()) {
             if (build.chunks >= BOOKED_PIECES && this.now() - build.toldAt > PROGRESS_MS) {
               build.toldAt = this.now();
               index.told = true;
               const {chunks, embedded} = index.progress();
               this.tell(index.root, {phase: 'embedding', done: embedded, total: chunks});
             }
+          }
+          this.building = null;
+          if (this.reorder) { // another project was searched: it goes first, and this one goes on after it
+            this.reorder = false;
+            passes--;
+            break projects;
           }
           if (this.indexes.get(index.root) !== index) continue;
           if (build.chunks < BOOKED_PIECES) {
@@ -627,13 +640,22 @@ export class Meaning {
       if (index) this.tell(index.root, {phase: 'failed', text: error.message});
     } finally {
       this.working = false;
+      this.building = null;
+      this.reorder = false;
     }
+  }
+
+  /** `index` is searched (or rebuilt): it goes first among the projects waiting, between two batches of another. */
+  want(index) {
+    index.wantedAt = this.now();
+    if (this.building && this.building !== index) this.reorder = true;
   }
 
   /** The index of `root`, opened if it had no session yet, with what is on disk loaded (its scan may still run). */
   async indexOf(root) {
     const index = this.open(root);
     if (!index) return null;
+    this.want(index);
     try {
       await index.loaded; // what is on disk; a scan under way is not waited for
     } catch {
@@ -815,7 +837,7 @@ export class Meaning {
     const roots = [...new Set([root, ...[...this.indexes.values()].filter(each => each.store?.path === path).map(each => each.root)])];
     for (const each of roots) await this.leave(each);
     removeIndex(path);
-    for (const each of roots) this.open(each);
+    for (const each of roots) { const reopened = this.open(each); if (reopened && each === root) this.want(reopened); }
     return path;
   }
 

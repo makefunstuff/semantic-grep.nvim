@@ -292,6 +292,30 @@ test('a project left while its batch embeds: the batch is dropped, and the other
   }
 });
 
+test('the project searched last is embedded first, between two batches of the one under way', async () => {
+  const big = project();
+  for (let i = 0; i < 200; i++) writeFileSync(join(big, 'src', `part${i}.js`), `// Part ${i} of the order.\nexport function part${i}(order) {\n  return order.cents + ${i}\n}\n`);
+  const small = project();
+  const dataDir = scratch('meaning-data-');
+  const embedder = fakeEmbedder();
+  const embed = embedder.embed;
+  embedder.embed = async (texts, options) => { await new Promise(resolve => setTimeout(resolve, 40)); return embed(texts, options); };
+  const meaning = new Meaning({dataDir, embedder});
+  const left = root => { const index = meaning.indexes.get(root); return index ? index.pending().length : null; };
+  try {
+    meaning.open(big);
+    await until(() => embedder.calls.length > 0, 'the big project under way');
+    meaning.open(small); // its session came second: it would wait for the big one
+    await meaning.words(small, 'cart');
+    await until(() => meaning.indexes.get(small)?.files.size && left(small) === 0, 'the searched project embedded');
+    assert.ok(left(big) > 0, 'the big project still had pieces waiting when the searched one was done');
+    await embedded(meaning, big);
+    assert.equal(meaning.problem, null);
+  } finally {
+    await meaning.close();
+  }
+});
+
 test('a save during a scan: one read at a time, and the newer text is the one kept', async () => {
   const root = project();
   const dataDir = scratch('meaning-data-');
