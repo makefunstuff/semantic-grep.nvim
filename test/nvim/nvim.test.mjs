@@ -52,9 +52,14 @@ test('on_progress takes a source\'s JSON nulls (vim.NIL) without an error', {ski
     require('semantic-grep').setup({})
     local ok, err = pcall(require('semantic-grep').on_progress, {root = vim.NIL, phase = 'embedding', done = vim.NIL, total = vim.NIL, text = vim.NIL})
     local ok2 = pcall(require('semantic-grep').on_progress, {phase = 'done', total = 12})
-    emit({ok = ok, ok2 = ok2, err = err and tostring(err) or ''})
+    -- A Neovim without progress messages (0.10, 0.11): a download is told at each quarter, and its end.
+    local told = {}
+    vim.notify = function(text) told[#told + 1] = text end
+    vim.api.nvim_echo = function() error('no progress messages here') end
+    for done = 0, 100, 10 do require('semantic-grep').on_progress({phase = 'downloading', done = done * 1e6, total = 100e6}) end
+    emit({ok = ok, ok2 = ok2, err = err and tostring(err) or '', told = told})
   `, {cwd: dir, dir});
-  assert.deepEqual(lines[0], {ok: true, ok2: true, err: ''});
+  assert.deepEqual(lines[0], {ok: true, ok2: true, err: '', told: [0, 30, 50, 80, 100].map(mb => `semantic-grep: downloading the model: ${mb} of 100 MB`)});
 });
 
 test(':checkhealth semantic-grep: Node, the embedding model, the rerank model and this project\'s index', {skip: !hasNvim && 'nvim not installed'}, async () => {

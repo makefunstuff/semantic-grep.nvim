@@ -6,10 +6,10 @@
 import {spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {createWriteStream, existsSync, statSync} from 'node:fs';
-import {mkdir, rename, rm} from 'node:fs/promises';
+import {mkdir, readdir, rename, rm} from 'node:fs/promises';
 import {createServer} from 'node:net';
 import {availableParallelism} from 'node:os';
-import {delimiter, isAbsolute, join} from 'node:path';
+import {basename, delimiter, isAbsolute, join} from 'node:path';
 import {HttpEmbedder} from './embedder.mjs';
 
 // Pinned by the repository's commit and the file's hash: what was measured is what is run.
@@ -40,6 +40,12 @@ export function onPath(name, path = process.env.PATH ?? '') {
   }
   return null;
 }
+
+/** Whether the process `pid` runs. */
+const alive = pid => {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try { process.kill(pid, 0); return true; } catch (error) { return error.code === 'EPERM'; }
+};
 
 /** A port of 127.0.0.1 that nothing listens on now. */
 export function freePort() {
@@ -119,7 +125,14 @@ export class LocalModel extends HttpEmbedder {
    */
   async fetchModel(progress) {
     const part = `${this.path}.${process.pid}.part`;
-    await mkdir(join(this.path, '..'), {recursive: true});
+    const dir = join(this.path, '..');
+    await mkdir(dir, {recursive: true});
+    // What a download stopped before its end left (Neovim quit meanwhile): gone, unless its process still fetches it.
+    const prefix = `${basename(this.path)}.`;
+    for (const name of await readdir(dir)) {
+      const pid = Number(name.slice(prefix.length, -'.part'.length));
+      if (name.startsWith(prefix) && name.endsWith('.part') && !alive(pid)) await rm(join(dir, name), {force: true});
+    }
     this.downloading = {done: 0, total: this.spec.bytes};
     const abort = new AbortController();
     let stall;

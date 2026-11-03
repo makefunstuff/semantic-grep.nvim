@@ -40,12 +40,15 @@ test('the download: once, its progress told, checked by size and hash, nothing l
   const dataDir = scratch('local-data-');
   const told = [];
   const model = new LocalModel({dataDir, spec, llamaServer: FAKE, fetch: downloadOf(bytes)});
+  mkdirSync(join(dataDir, 'models'), {recursive: true});
+  writeFileSync(join(dataDir, 'models', 'tiny.gguf.999999999.part'), 'left by a download Neovim quit');
   try {
     assert.equal(model.state(), 'off');
     assert.deepEqual(await model.needs(), {runtime: null, model: true, own: false, bytes: 4500, path: join(dataDir, 'models', 'tiny.gguf'), name: 'EmbeddingGemma 2'});
     assert.deepEqual(await model.turnOn({progress: how => told.push(how)}), {runtime: false, model: true});
     assert.deepEqual(readFileSync(model.path), Buffer.from(bytes));
     assert.deepEqual(told.at(-1), {phase: 'downloading', done: 4500, total: 4500});
+    assert.equal(existsSync(join(dataDir, 'models', 'tiny.gguf.999999999.part')), false, 'what a stopped one left is gone');
     assert.equal(model.state(), 'on');
     assert.deepEqual(await model.turnOn(), {runtime: false, model: false}, 'not again');
   } finally {

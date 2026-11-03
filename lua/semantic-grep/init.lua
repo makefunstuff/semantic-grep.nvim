@@ -149,7 +149,10 @@ function M.download()
   vim.fn.delete(declined_path())
   M.source().request('download', vim.empty_dict(), function(err, result)
     vim.schedule(function()
-      if err then return vim.notify('semantic-grep: ' .. err, vim.log.levels.ERROR) end
+      if err then
+        M.on_progress({phase = 'failed', text = err}) -- the progress message ends (on 0.12; older ones notify)
+        return
+      end
       if result and result.state == 'on' then vim.notify('semantic-grep: search by meaning is on; the project is being embedded') end
     end)
   end)
@@ -181,6 +184,7 @@ end
 
 -- How far a project's index is: Neovim's own progress message (0.12), which a statusline or fidget may show.
 local progress_id = nil
+local told_quarter = -1 -- a download's quarters said on a Neovim without progress messages
 function M.on_progress(message)
   -- A source's JSON nulls arrive as vim.NIL.
   local function num(value) return type(value) == 'number' and value or nil end
@@ -197,6 +201,12 @@ function M.on_progress(message)
   local ok, id = pcall(vim.api.nvim_echo, {{text}}, false, {kind = 'progress', id = progress_id, title = 'semantic-grep', status = status, percent = percent, source = 'semantic-grep'})
   if ok then
     progress_id = status == 'running' and id or nil
+  elseif message.phase == 'downloading' then -- an older Neovim: each quarter of a download, and its end
+    local quarter = math.floor((percent or 0) / 25)
+    if quarter ~= told_quarter or finished then
+      told_quarter = finished and -1 or quarter
+      vim.notify('semantic-grep: ' .. text)
+    end
   elseif message.phase == 'failed' then
     vim.notify('semantic-grep: ' .. text, vim.log.levels.WARN) -- an older Neovim: only a failure
   end

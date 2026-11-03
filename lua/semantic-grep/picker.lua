@@ -734,7 +734,11 @@ local function fzflua_files(query)
             fzf_cb(line(item))
           end
           fzf_cb()
-        end, function() return mine == latest end)
+        end, function()
+          if mine == latest then return true end
+          fzf_cb() -- a newer reload replaced it: this one ends
+          return false
+        end)
       end, debounce_ms())
     end
   end, {
