@@ -6,8 +6,16 @@ local M = {}
 local plugin_root = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':p:h:h:h')
 M.script = plugin_root .. '/bin/semantic-grep-server.mjs'
 
-local function data_dir(config)
+function M.data_dir(config)
   return vim.fn.fnamemodify(config.data_dir or (vim.fn.stdpath('data') .. '/semantic-grep'), ':p'):gsub('/$', '')
+end
+
+--- `local_model` of the config as the server takes it: false, or `{gguf, llamaServer, threads}` (nil for the defaults).
+function M.local_model(config)
+  local own = config.local_model
+  if own == false then return false end
+  if type(own) ~= 'table' then return nil end
+  return {gguf = own.gguf and vim.fn.fnamemodify(vim.fn.expand(own.gguf), ':p') or nil, llamaServer = own.llama_server and vim.fn.expand(own.llama_server) or nil, threads = own.threads}
 end
 
 --- A source on a server started with `config` (init.lua's).
@@ -99,7 +107,8 @@ function M.new(config)
       end
     end
     send({jsonrpc = '2.0', id = hello, method = 'initialize', params = {
-      dataDir = data_dir(config), profile = config.profile, embedding = config.embedding, rerank = config.rerank, index = config.index,
+      dataDir = M.data_dir(config), profile = config.profile, embedding = config.embedding, rerank = config.rerank, index = config.index,
+      ['local'] = M.local_model(config),
       parsers = vim.api.nvim_get_runtime_file('parser/*', true),
     }})
   end

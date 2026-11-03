@@ -33,6 +33,13 @@ const LIST = 50; // of each ranking, how many go into the fusion
 // kept (someone opened a piece for it) whose words mean at least the model's `pickNear` close to a new search's: the
 // piece goes first. Both are the model's own, measured on the bench (see embedder.mjs, tuningOf).
 const PICKED_PER_SEARCH = 3;
+// The files view: a file is ranked by the pieces it has among a search's first FILE_PIECES, each worth 1/(FILE_K +
+// rank), its best in full and each next one FILE_DECAY of the one before: the best piece first, and a small bonus for
+// several. Tuned on the bench's dev questions (docs/benchmark.md, "Files"); meaning's list there is not cut by the band,
+// the depth is, and the words alone take the pieces with any of them.
+export const FILE_PIECES = 60;
+const FILE_K = 5;
+const FILE_DECAY = 0.5;
 // Words of a question that say nothing about where to look: left out of the word search, not the meaning's.
 const STOPWORDS = new Set('a an and are as at be but by can do does for from has have how i if in into is it its me my not of on or our so that the their them then there these this to was we were what when where which who why will with you your'.split(' '));
 // A line that is a comment, or only opens or closes one: a piece's head is the first line that is not.
@@ -89,6 +96,25 @@ export function fuse(lists, k = RRF_K) {
   const scores = new Map();
   for (const list of lists) list.forEach((key, rank) => scores.set(key, (scores.get(key) ?? 0) + 1 / (k + rank + 1)));
   return [...scores].sort((a, b) => b[1] - a[1]).map(([key]) => key);
+}
+
+/**
+ * Ranked pieces (or results: anything with a `file`), best first, as files, best first: `[{file, score, hits, best}]`,
+ * `best` the file's first piece in the list, `hits` how many it has there. See FILE_PIECES.
+ */
+export function filesOf(ranked, {k = FILE_K, decay = FILE_DECAY} = {}) {
+  const files = new Map();
+  ranked.forEach((piece, rank) => {
+    const file = files.get(piece.file);
+    const worth = 1 / (k + rank + 1);
+    if (!file) files.set(piece.file, {file: piece.file, score: worth, hits: 1, best: piece, next: decay});
+    else {
+      file.score += worth * file.next;
+      file.next *= decay;
+      file.hits++;
+    }
+  });
+  return [...files.values()].sort((a, b) => b.score - a.score).map(({next, ...file}) => file);
 }
 
 /** The lines of the project's files, kept for the few files read last: a piece's head and its text to embed. */
@@ -390,10 +416,10 @@ export class ProjectIndex {
    * first by BM25. A piece the store has and this index does not was read by another Neovim's backend on the same
    * worktree: what the store has is loaded again, once.
    */
-  wordRanking(query, limit = LIST) {
+  wordRanking(query, limit = LIST, {any = false} = {}) {
     this.refreshLearned();
     const terms = searchTerms(query);
-    const ids = this.store.wordSearch(this.root, terms, limit);
+    const ids = this.store.wordSearch(this.root, terms, limit, any);
     let byId = this.byId ??= new Map(this.pieces.map(piece => [piece.id, piece]));
     if (ids.some(id => !byId.has(id)) && !this.reading) {
       this.load();
@@ -446,7 +472,7 @@ export class ProjectIndex {
   }
 
   /** The pieces closest in meaning to the query's vector `q`, best first, within the band below the best: `[piece, similarity]`. */
-  meaningRanking(q, limit = LIST) {
+  meaningRanking(q, limit = LIST, band = this.tuning.band) {
     this.refreshLearned();
     const {pieces, size, data, notes} = this.matrixOf();
     if (!pieces.length || q.length !== size) return [];
@@ -464,7 +490,6 @@ export class ProjectIndex {
     let best = -Infinity;
     for (const score of scores) if (score > best) best = score;
     const near = [];
-    const {band} = this.tuning;
     for (let i = 0; i < pieces.length; i++) if (scores[i] >= best - band) near.push([pieces[i], scores[i]]);
     // Opened before for a search worded close to this one: first.
     const picked = this.pickedFor(q);
@@ -530,6 +555,31 @@ export class ProjectIndex {
     const keywordSet = new Set(keyword);
     const ranked = fuse([meaning.map(([piece]) => piece), keyword]).slice(0, limit);
     return Promise.all(ranked.map(piece => this.result(piece, {meaning: similarity.get(piece) ?? null, words: keywordSet.has(piece)})));
+  }
+
+  /**
+   * The pieces a search of `mode` ranks for the files view, best first: 'words' (pieces with any of the words, by BM25:
+   * a sentence's words are seldom all in one piece), 'meaning' (the query's vector against every piece's, within `band`
+   * below the best, the model's by default) or 'fused' (meaning and the pieces with every word, by reciprocal rank).
+   * The words alone without an embedder.
+   */
+  async ranking(query, mode, {limit = LIST, band} = {}) {
+    if (mode === 'words' || !this.embedder) return this.wordRanking(query, limit, {any: true});
+    const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
+    const meaning = q ? this.meaningRanking(q, Math.max(LIST, limit), band).map(([piece]) => piece) : [];
+    if (mode === 'meaning') return meaning.slice(0, limit);
+    return fuse([meaning, this.wordRanking(query, Math.max(LIST, limit))]).slice(0, limit);
+  }
+
+  /**
+   * The files a search of `mode` (see ranking) finds, best first, each as its best piece's result with `score` and
+   * `hits` (its pieces among the first FILE_PIECES). `results` instead of a ranking: those, ranked as files.
+   */
+  async fileSearch(query, {mode = 'fused', limit = 20, results = null} = {}) {
+    const ranked = results ?? await this.ranking(query, mode, {limit: FILE_PIECES, band: 2});
+    return Promise.all(filesOf(ranked).slice(0, limit).map(async ({best, score, hits}) => ({
+      ...(results ? best : await this.result(best)), score: Math.round(score * 10000) / 10000, hits,
+    })));
   }
 
   /** How far the index is: files, pieces (by hash), how many have vectors, the file's bytes and when it changed. */
@@ -627,6 +677,7 @@ export class Meaning {
       const first = !index.files.size;
       if (first) this.tell(root, {phase: 'reading', done: 0, total: null});
       await index.scan();
+      index.scanned = true;
       index.store.prune(index.embedder ? index.model : null);
       if (first) {
         const {chunks, embedded} = index.progress();
@@ -782,7 +833,9 @@ export class Meaning {
   /** How far the index of `root` is, for a search's answer. */
   about(index) {
     const {chunks, embedded, capped, reading} = index.progress();
-    return {chunks, embedded, ...(capped ? {capped: MAX_PIECES} : {}), ...(reading ? {reading} : {})};
+    // A first build that has not listed its files yet is reading them too: a search then finds nothing, not for its words.
+    const listing = !reading && !index.scanned && !index.files.size ? {done: 0, total: null} : null;
+    return {chunks, embedded, ...(capped ? {capped: MAX_PIECES} : {}), ...(reading ?? listing ? {reading: reading ?? listing} : {})};
   }
 
   /** The word search in `root`: what a picker shows on every key. `{type: 'found', phase: 'words', results, ...}`. */
@@ -930,6 +983,38 @@ export class Meaning {
     Object.assign(answer, {ms: this.now() - started}, this.about(index));
     if (book) this.booked(root, query, answer.results);
     return answer;
+  }
+
+  /**
+   * The files a search in `root` finds, best first (ProjectIndex's fileSearch): `{query, state, results: [{file, line,
+   * from, to, head, score, hits, ...}], rerank?, ...why}`. `mode` is 'rerank' (the files view: fused, then the
+   * reranker's order when there is one), 'fused', 'words' or 'meaning'. Without meaning, the words alone, and why.
+   */
+  async files(root, query, {limit = 20, mode = 'rerank'} = {}) {
+    const answer = {query, state: this.state, results: []};
+    const index = await this.indexOf(root);
+    if (!index) return this.disabled ? answer : {...answer, problem: UNOPENED};
+    const started = this.now();
+    const on = this.state === 'on';
+    if (mode === 'words' || !on) answer.results = mode === 'meaning' ? [] : await index.fileSearch(query, {mode: 'words', limit});
+    else {
+      try {
+        const rerank = mode === 'rerank' && this.reranker?.available;
+        if (!rerank) answer.results = await index.fileSearch(query, {mode: mode === 'rerank' ? 'fused' : mode, limit});
+        else {
+          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: FILE_PIECES, band: 2})).map(piece => index.result(piece)));
+          const done = await this.reranked(index, query, pieces);
+          answer.rerank = done.rerank;
+          answer.results = await index.fileSearch(query, {limit, results: done.results});
+        }
+        this.recovered();
+      } catch (error) {
+        this.failed(error);
+        answer.problem = error.message;
+        answer.results = mode === 'meaning' ? [] : await index.fileSearch(query, {mode: 'words', limit});
+      }
+    }
+    return Object.assign(answer, {ms: this.now() - started}, this.about(index));
   }
 
   /**

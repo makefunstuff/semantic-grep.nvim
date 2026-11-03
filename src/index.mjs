@@ -1,6 +1,6 @@
 // semantic-grep's library: search a project's code by its words and by what they mean, with an optional rerank by a
 // decision model. A host (the stdio server in server.mjs, or another program) makes one Meaning and asks it.
-export {Meaning, ProjectIndex, MAX_PIECES, RESCAN_MS, fuse, indexable, pieceHash, projectFiles, searchTerms, words} from './meaning.mjs';
+export {Meaning, ProjectIndex, FILE_PIECES, MAX_PIECES, RESCAN_MS, filesOf, fuse, indexable, pieceHash, projectFiles, searchTerms, words} from './meaning.mjs';
 export {IndexStore, PROJECT_DIR, exclude, indexPlace, matchOf, removeIndex} from './index-store.mjs';
 export {PIECE, TreeSitter, blocks, cut, importLines, nameOf, piecesOf, split, withoutImports} from './pieces.mjs';
 export {HttpEmbedder, TUNING, documentText, pieceTitle, promptsOf, queryText, tuningOf} from './embedder.mjs';
@@ -9,3 +9,4 @@ export {classify} from './classify.mjs';
 export {RERANK_APIS, apiKeyOf, embeddingConfig, indexConfig, rerankConfig} from './config.mjs';
 export {PROFILES, profileConfig} from './profiles.mjs';
 export {serve} from './server.mjs';
+export {IDLE_MS, LOCAL_MODEL, LocalModel, freePort, onPath} from './local.mjs';

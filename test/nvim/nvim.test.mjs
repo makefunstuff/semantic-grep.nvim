@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {mkdirSync, realpathSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {test} from 'node:test';
 import {fakeEmbeddingServer} from '../fake-embedder.mjs';
 import {fakeRerankServer} from '../fake-reranker.mjs';
@@ -229,4 +230,88 @@ test('a registered source (another program\'s index) is asked instead of a serve
     emit({asked = asked, first = picker.manager:get_entry(1).value.file, own = #vim.fn.systemlist('pgrep -f semantic-grep-server.mjs -P ' .. vim.fn.getpid())})
   `, {cwd: root, dir, telescope: true});
   assert.deepEqual(lines[0], {asked: ['words', 'meaning'], first: 'src/tip.js', own: 0});
+});
+
+const FAKE_LLAMA = fileURLToPath(new URL('../fake-llama-server.mjs', import.meta.url));
+
+test('no model set up: the local model asked for once, its llama-server started, and the files view over it (select and Telescope)', {skip: (!hasNvim && 'nvim not installed') || (!hasTelescope && 'telescope.nvim and plenary.nvim not found')}, async () => {
+  const root = project();
+  const dir = scratch('nvim-');
+  const gguf = join(dir, 'mine.gguf');
+  writeFileSync(gguf, 'gguf');
+  const {lines} = await runNvim(`
+    -- No model downloaded and none of its own: asked, and "Not now" keeps to the words.
+    require('semantic-grep').setup({data_dir = ${JSON.stringify(join(dir, 'data'))}, picker = 'select', local_model = {llama_server = ${JSON.stringify(FAKE_LLAMA)}}})
+    local asked = {}
+    vim.ui.select = function(items, opts, on_choice)
+      asked[#asked + 1] = {prompt = opts.prompt, items = vim.tbl_map(opts.format_item or tostring, items)}
+      if #asked == 1 then return on_choice('Not now') end
+      on_choice(nil)
+    end
+    vim.cmd('SemanticGrep files basket sum')
+    until_(function() return #asked >= 2 end, 'the question, then the files')
+    emit({step = 'asked', asked = asked})
+
+    -- Its own model file: nothing asked, its llama-server started, the files by meaning.
+    require('semantic-grep').setup({data_dir = ${JSON.stringify(join(dir, 'data'))}, local_model = {gguf = ${JSON.stringify(gguf)}, llama_server = ${JSON.stringify(FAKE_LLAMA)}}})
+    local sg = require('semantic-grep')
+    local status
+    until_(function()
+      local err, result = sg.source().wait('files', {root = sg.root(), query = 'try again when sending fails'}, 5000)
+      status = result
+      return result and result.results[1] and result.results[1].file == 'src/deliver.js'
+    end, 'the files by meaning', 20000)
+    local _, snapshot = sg.source().wait('status', vim.empty_dict(), 5000)
+    emit({step = 'files', state = status.state, first = status.results[1].file, path = status.results[1].path, running = snapshot['local'].running})
+
+    local telescope = require('telescope')
+    telescope.setup({})
+    telescope.load_extension('semantic_grep')
+    local state = require('telescope.actions.state')
+    telescope.extensions.semantic_grep.files({default_text = 'the price of the basket in cents'})
+    local picker = state.get_current_picker(vim.api.nvim_get_current_buf())
+    until_(function() return picker.manager and picker.manager:num_results() > 0 end, 'the files in Telescope')
+    local shown = {}
+    for i = 1, picker.manager:num_results() do shown[#shown + 1] = picker.manager:get_entry(i).value.file end
+    local first = state.get_selected_entry().value
+    emit({step = 'telescope', shown = shown, title = require('semantic-grep.picker').last_files:title()})
+    vim.api.nvim_feedkeys(vim.keycode('<CR>'), 'x', false)
+    until_(function() return vim.api.nvim_buf_get_name(0) == first.path end, 'the file opened')
+    emit({step = 'opened', file = vim.fn.expand('%:t'), line = vim.api.nvim_win_get_cursor(0)[1], want = first.line})
+  `, {cwd: root, dir, telescope: true});
+  const step = name => lines.find(line => line.step === name);
+  const [question, files] = step('asked').asked;
+  assert.equal(question.prompt, 'semantic-grep: search by meaning needs a small model on this machine');
+  assert.deepEqual(question.items, ['Download EmbeddingGemma 2 (310 MB) for search by meaning', 'Not now', 'No, words only (:SemanticGrep download asks again)']);
+  assert.match(files.prompt, /^SemanticGrep files: basket sum/);
+  assert.match(files.items[0], /^src\/cart\.js {2}2: export function total/, 'by its words meanwhile, at its best line');
+  assert.deepEqual([step('files').state, step('files').first, step('files').running], ['on', 'src/deliver.js', true]);
+  assert.equal(step('files').path, join(root, 'src', 'deliver.js'));
+  assert.equal(new Set(step('telescope').shown).size, step('telescope').shown.length, 'a file once');
+  assert.ok(['src/cart.js', 'src/invoice.js', 'src/tip.js'].includes(step('telescope').shown[0]), step('telescope').shown.join(' '));
+  assert.match(step('telescope').title, /^SemanticGrep (files \(\d+ ms|: files)/);
+  assert.equal(step('opened').line, step('opened').want, 'Enter opens it at its best line');
+});
+
+test('no llama-server: said once at the first search, the words still work, and :checkhealth says how to get it', {skip: !hasNvim && 'nvim not installed'}, async () => {
+  const root = project();
+  const dir = scratch('nvim-');
+  const {lines} = await runNvim(`
+    require('semantic-grep').setup({data_dir = ${JSON.stringify(join(dir, 'data'))}, picker = 'select', local_model = {llama_server = 'llama-server-not-here'}})
+    local told, listed = {}, nil
+    vim.notify = function(text, level) told[#told + 1] = {text = text, level = level} end
+    vim.ui.select = function(items, opts, on_choice) listed = vim.tbl_map(opts.format_item or tostring, items); on_choice(nil) end
+    vim.cmd('SemanticGrep files quantity cart')
+    until_(function() return listed ~= nil end, 'the files')
+    vim.cmd('checkhealth semantic-grep')
+    emit({told = told, listed = listed, health = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\\n')})
+  `, {cwd: root, dir});
+  const [{told, listed, health}] = lines;
+  assert.equal(told.length, 1);
+  assert.match(told[0].text, /words only: llama-server-not-here is not on PATH/);
+  assert.match(listed[0], /^src\/cart\.js/);
+  assert.match(health, /WARNING.*embedding: llama-server-not-here is not on PATH/);
+  assert.match(health, /brew install llama\.cpp/);
+  assert.match(health, /embedding: EmbeddingGemma 2 \(310 MB\) is not downloaded yet/);
+  assert.match(health, /:SemanticGrep download fetches it/);
 });

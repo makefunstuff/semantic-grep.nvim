@@ -526,9 +526,259 @@ local function ui_select(query)
   return true
 end
 
+--- 'files' asked until the project's files are read (a first search on it answers before): `callback(answer)` with the
+--- first answer read in full, or the last after about 30 s. `still()` false stops it.
+local function ask_files(root, query, callback, still)
+  local tries = 0
+  local function go()
+    ask(root, query, 'files', function(message)
+      if still and not still() then return end
+      tries = tries + 1
+      if message.reading and message.reading ~= vim.NIL and tries < 100 then
+        if #(message.results or {}) > 0 then callback(message) end -- what it has so far
+        return vim.defer_fn(go, 300)
+      end
+      callback(message)
+    end)
+  end
+  go()
+end
+
+--- The files view: a search of the files that answer a sentence, best first, each at its best piece's line. Every
+--- change of the words asks again once typing stops for `debounce_ms`; the list is the newest answer. `changed()` is
+--- called with each.
+local Files = {}
+Files.__index = Files
+
+function Files.new(changed, root)
+  return setmetatable({root = root or sg().root(), query = nil, items = {}, info = {}, changed = changed, done = false}, Files)
+end
+
+function Files:set(query)
+  query = vim.trim(query or '')
+  if query == self.query then return end
+  self.query = query
+  if self.timer then self.timer:stop(); self.timer:close(); self.timer = nil end
+  if query == '' then
+    self.items, self.answered = {}, query
+    return self.changed(self)
+  end
+  local mine = turn()
+  self.asking = mine
+  self.timer = vim.uv.new_timer()
+  self.timer:start(debounce_ms(), 0, vim.schedule_wrap(function()
+    if self.timer then self.timer:close(); self.timer = nil end
+    if self.done or self.asking ~= mine then return end
+    ask_files(self.root, query, function(message)
+      self.items, self.info, self.answered = message.results or {}, message, query
+      self.changed(self)
+    end, function() return not self.done and self.asking == mine end)
+  end))
+end
+
+function Files:title()
+  local info = self.info or {}
+  local parts = {}
+  if info.state == 'off' then parts[#parts + 1] = 'words only: see :checkhealth semantic-grep'
+  elseif info.state == 'downloading' then parts[#parts + 1] = 'words only while its model comes'
+  elseif info.problem then parts[#parts + 1] = 'words only: ' .. info.problem
+  end
+  if info.state == 'on' and info.chunks and info.embedded and info.embedded < info.chunks and info.chunks > 0 then
+    parts[#parts + 1] = ('index %d%% built'):format(math.floor(100 * info.embedded / info.chunks))
+  end
+  if info.ms then parts[#parts + 1] = ('%d ms'):format(info.ms) end
+  return #parts > 0 and ('SemanticGrep files (%s)'):format(table.concat(parts, ' · ')) or 'SemanticGrep: files'
+end
+
+function Files:close()
+  self.done = true
+  if self.timer then self.timer:stop(); self.timer:close(); self.timer = nil end
+end
+
+local function file_label(item) return ('%s  %d: %s'):format(item.file, item.line or item.from, item.head or '') end
+
+local function files_to_quickfix(query, items)
+  vim.fn.setqflist({}, ' ', {title = 'SemanticGrep files: ' .. query, items = vim.tbl_map(function(item)
+    return {filename = item.path, lnum = item.line or item.from, col = 1, text = item.head or ''}
+  end, items)})
+  vim.cmd('botright copen')
+end
+
+--- The files view in Telescope (`:Telescope semantic_grep files`): `opts` as M.telescope's. False without Telescope.
+function M.telescope_files(opts)
+  opts = opts or {}
+  local ok, pickers = pcall(require, 'telescope.pickers')
+  if not ok then return false end
+  local conf, sorters = require('telescope.config').values, require('telescope.sorters')
+  local actions, action_state = require('telescope.actions'), require('telescope.actions.state')
+  local function entry(item)
+    return {value = item, display = file_label(item), ordinal = item.file, filename = item.path, path = item.path, lnum = item.line or item.from, col = 1, text = item.head}
+  end
+  local current, live
+  live = Files.new(function()
+    if not current or live.done then return end
+    pcall(function() current.prompt_border:change_title(live:title()) end)
+    current:refresh(nil, {reset_prompt = false})
+  end, opts.root)
+  M.last_files = live
+  local finder = setmetatable({entry_maker = entry, results = {}, close = function() end}, {
+    __call = function(self, prompt, process_result, process_complete)
+      prompt = vim.trim(prompt or '')
+      if prompt ~= live.query then live:set(prompt) end
+      if live.answered == prompt then
+        self.results = live.items
+        for _, item in ipairs(live.items) do
+          if process_result(entry(item)) then break end
+        end
+      end
+      process_complete()
+    end,
+  })
+  current = pickers.new(opts, vim.tbl_extend('force', opts, {
+    prompt_title = 'SemanticGrep: files',
+    results_title = 'Files',
+    default_text = vim.trim(opts.default_text or opts.query or ''),
+    finder = finder,
+    sorter = sorters.highlighter_only(opts),
+    previewer = piece_previewer(conf),
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:enhance({pre = function()
+        local selected = action_state.get_selected_entry()
+        if selected then chosen(live.root, live.query, {selected.value}) end
+      end})
+      actions.close:enhance({post = function() live:close() end})
+      for _, mode in ipairs({'i', 'n'}) do
+        map(mode, '<C-q>', function()
+          local items = live.items
+          actions.close(prompt_bufnr)
+          files_to_quickfix(live.query or '', items)
+        end)
+      end
+      if opts.attach_mappings then return opts.attach_mappings(prompt_bufnr, map) end
+      return true
+    end,
+  }))
+  current:find()
+  return true
+end
+
+local function snacks_files(query)
+  if not (rawget(_G, 'Snacks') and Snacks.picker) then return false end
+  local current, live
+  live = Files.new(function()
+    if live.resume then return live.resume() end
+    if not current or current.closed then return end
+    pcall(function() current.title = live:title(); current:update_titles() end)
+    current:find({refresh = true})
+  end)
+  M.last_files = live
+  current = Snacks.picker({
+    title = 'SemanticGrep: files',
+    search = query,
+    live = true,
+    supports_live = true,
+    finder = function(_, ctx)
+      local prompt = vim.trim(ctx.filter.search or '')
+      return function(cb)
+        local async = ctx.async
+        if prompt ~= live.query then async:schedule(function() live:set(prompt) end) end
+        if prompt ~= '' and live.answered ~= prompt then
+          live.resume = function()
+            live.resume = nil
+            pcall(async.resume, async)
+          end
+          async:suspend()
+        end
+        if live.answered ~= prompt or prompt == '' then return end
+        for index, item in ipairs(live.items) do
+          cb({idx = index, score = 0, text = file_label(item), file = item.path, pos = {item.line or item.from, 0}, line = item.head, value = item})
+        end
+      end
+    end,
+    format = 'file',
+    preview = 'file',
+    sort = {fields = {'idx'}},
+    matcher = {sort_empty = false},
+    confirm = function(p, item)
+      if item then chosen(live.root, live.query, {item.value}) end
+      p:close()
+      if item then open(item.value) end
+    end,
+    on_close = function() live:close() end,
+  })
+  return true
+end
+
+local function fzflua_files(query)
+  local ok, fzf = pcall(require, 'fzf-lua')
+  if not ok then return false end
+  local root = sg().root()
+  local line = function(item) return ('%s:%d:1:%s'):format(vim.fn.fnamemodify(item.path, ':~:.'), item.line or item.from, item.head or '') end
+  local latest, last_prompt, shown = 0, query, {}
+  fzf.fzf_live(function(args)
+    local prompt = vim.trim((type(args) == 'table' and args[1] or args) or '')
+    last_prompt = prompt
+    latest = latest + 1
+    local mine = latest
+    return function(fzf_cb)
+      if prompt == '' then return fzf_cb() end
+      vim.defer_fn(function()
+        if mine ~= latest then return fzf_cb() end
+        ask_files(root, prompt, function(message)
+          if message.reading and message.reading ~= vim.NIL then return end
+          for _, item in ipairs(message.results or {}) do
+            shown[line(item)] = item
+            fzf_cb(line(item))
+          end
+          fzf_cb()
+        end)
+      end, debounce_ms())
+    end
+  end, {
+    prompt = 'SemanticGrep files> ', query = query, previewer = 'builtin', file_icons = false, git_icons = false,
+    winopts = {title = ' SemanticGrep: files '}, exec_empty_query = false,
+    actions = {
+      ['default'] = function(selected, opts)
+        local item = shown[selected[1] or '']
+        if item then chosen(root, last_prompt, {item}) end
+        require('fzf-lua.actions').file_edit(selected, opts)
+      end,
+    },
+  })
+  return true
+end
+
+local function ui_select_files(query)
+  local root = sg().root()
+  local function search(words)
+    words = vim.trim(words or '')
+    if words == '' then return end
+    ask_files(root, words, function(message)
+      if message.reading and message.reading ~= vim.NIL then return end -- the full answer follows
+      local items = message.results or {}
+      if #items == 0 then
+        return vim.notify(message.problem and ('semantic-grep: ' .. message.problem) or ('semantic-grep: no file in the project for "%s"'):format(words), message.problem and vim.log.levels.WARN or nil)
+      end
+      vim.ui.select(items, {prompt = 'SemanticGrep files: ' .. words, format_item = file_label}, function(item)
+        if item then
+          chosen(root, words, {item})
+          open(item)
+        end
+      end)
+    end)
+  end
+  if query == '' then vim.ui.input({prompt = 'SemanticGrep files: '}, search) else search(query) end
+  return true
+end
+
 local PICKERS = {
   telescope = function(query) return M.telescope({default_text = query}) end,
   snacks = snacks, ['fzf-lua'] = fzflua, select = ui_select,
+}
+
+local FILE_PICKERS = {
+  telescope = function(query) return M.telescope_files({default_text = query}) end,
+  snacks = snacks_files, ['fzf-lua'] = fzflua_files, select = ui_select_files,
 }
 
 --- Opens the live picker, with `query` typed in it already. `opts.picker` is 'auto' (Telescope, else snacks.picker,
@@ -542,6 +792,17 @@ function M.find(query, opts)
   end
 end
 
+--- Opens the files view, with `query` typed in it already; `opts.picker` as find's.
+function M.files(query, opts)
+  query = vim.trim(query or '')
+  local picker = (opts or {}).picker or 'auto'
+  local order = picker == 'auto' and {'telescope', 'snacks', 'fzf-lua', 'select'} or {picker, 'select'}
+  for _, name in ipairs(order) do
+    if FILE_PICKERS[name] and FILE_PICKERS[name](query) then return end
+  end
+end
+
 M.Live = Live -- for the tests
+M.Files = Files
 
 return M

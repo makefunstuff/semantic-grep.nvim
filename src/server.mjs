@@ -2,12 +2,17 @@
 // one message a line: Neovim asks, the server answers each `id`, and tells Neovim of its own accord with notifications.
 //
 // Requests (params):
-//   initialize {dataDir, profile?, embedding?, rerank?, index?, projectDir?, parsers?}  -> {state, model, version}
+//   initialize {dataDir, profile?, embedding?, rerank?, index?, projectDir?, parsers?, local?}  -> {state, model, version}
+//                                                 without embedding (or false) and profile: the small local model
+//                                                 (local.mjs; local = {gguf?, llamaServer?, threads?}, or false)
+//   needs {}                                      -> {state, runtime, model, bytes, name, path} what the local model lacks
+//   download {}                                   -> {state}           the local model fetched (progress as it comes)
 //   open {root}                                   -> {state}           the project is indexed in the background
 //   words {root, query, limit?}                   -> found             on every key
 //   meaning {root, query, limit?}                 -> found             once typing stops
 //   rerank {root, query}                          -> found + {rerank}  once meaning came
 //   search {root, query, limit?}                  -> found + {rerank}  meaning and words fused, then reranked
+//   files {root, query, limit?}                   -> files             the files that answer it, best first
 //   saved {path}                                  -> {}                a file written in Neovim
 //   rebuild {root}                                -> {path}
 //   chosen {root, query, results}                 -> {}                the piece opened: booked, and learned
@@ -17,7 +22,8 @@
 //   check {}                                      -> {profile, embedding, rerank} the models asked once each, for :checkhealth
 // Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); progress {root, phase, done,
 // total, text}, log {text} and booked {root, kind, text} (to Neovim). `found` is `{phase, query, state, results:
-// [{file, path, line, from, to, head, kind, name, meaning, words, rerank?}], chunks, embedded, problem?, ms?, ...}`.
+// [{file, path, line, from, to, head, kind, name, meaning, words, rerank?}], chunks, embedded, problem?, ms?, ...}`;
+// `files` is the same with a result per file, its best piece's, with `score` and `hits` (its pieces in the ranking).
 // The server exits when its stdin closes: when Neovim goes.
 import {readFileSync} from 'node:fs';
 import {isAbsolute, join, relative} from 'node:path';
@@ -26,11 +32,32 @@ import {profileConfig} from './profiles.mjs';
 import {readLines, writeLine} from './jsonl.mjs';
 import {Meaning} from './meaning.mjs';
 import {Reranker} from './rerank.mjs';
+import {LocalModel} from './local.mjs';
 
 const VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 const WHO = 'nvim'; // one Neovim per server: the asker of every picker rerank
 // A model's failure that says nothing answers where it is: not started, or another address.
 const UNREACHABLE = /ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|ENETUNREACH|EAI_AGAIN|ECONNRESET|UND_ERR_CONNECT|did not answer|fetch failed/i;
+
+/** The `local` of initialize: `{gguf?, llamaServer?, threads?}`, checked; or nothing. */
+function localOf(local) {
+  if (local === undefined || local === null || local === true) return {};
+  if (typeof local !== 'object' || Array.isArray(local)) throw new Error('local_model must be a table: {gguf = ..., llama_server = ..., threads = ...}, or false');
+  const out = {};
+  if (local.gguf !== undefined) {
+    if (typeof local.gguf !== 'string' || !isAbsolute(local.gguf)) throw new Error('local_model.gguf must be an absolute path');
+    out.gguf = local.gguf;
+  }
+  if (local.llamaServer !== undefined) {
+    if (typeof local.llamaServer !== 'string' || !local.llamaServer) throw new Error('local_model.llama_server must be a command or a path');
+    out.llamaServer = local.llamaServer;
+  }
+  if (local.threads !== undefined) {
+    if (!(Number.isInteger(local.threads) && local.threads > 0)) throw new Error('local_model.threads must be a whole number above 0');
+    out.threads = local.threads;
+  }
+  return out;
+}
 
 /** Serves JSON-RPC on `input` and `output` until `input` ends. Resolves once it closed. */
 export function serve({input = process.stdin, output = process.stdout, meaningWith = {}} = {}) {
@@ -60,8 +87,12 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
       const {embedding, rerank} = profileConfig(params);
       profile = params.profile ?? null;
       const index = indexConfig(params.index);
+      // No embedding model named, nor a profile, nor turned off: the small one of local.mjs, served here.
+      const own = params.embedding === undefined && !params.profile && params.local !== false
+        ? new LocalModel({dataDir: params.dataDir, ...localOf(params.local), log}) : null;
       meaning = new Meaning({
         dataDir: params.dataDir, config: {index, ...(params.projectDir ? {projectDir: params.projectDir} : {})}, embedding,
+        ...(own ? {embedder: own, provider: own} : {}),
         reranker: rerank ? new Reranker({entries: rerank, log}) : null,
         log, progress: (root, how) => notify('progress', {root, ...how}), book: (root, kind, text) => notify('booked', {root, kind, text}),
         ...meaningWith,
@@ -91,6 +122,10 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
       const root = rootOf(params);
       return withPaths(root, await needed().search(root, queryOf(params), {limit: params.limit ?? 30, book: false}));
     },
+    async files(params) {
+      const root = rootOf(params);
+      return withPaths(root, await needed().files(root, queryOf(params), {limit: params.limit ?? 20}));
+    },
     async saved(params) {
       if (typeof params?.path !== 'string' || !isAbsolute(params.path)) throw new Error('path must be an absolute path');
       const m = needed();
@@ -113,12 +148,22 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
     async addNotes(params) {
       return needed().addNotes(rootOf(params), params.notes, {source: typeof params.source === 'string' ? params.source : 'agent'});
     },
+    async needs() {
+      const m = needed();
+      return {state: m.state, ...(await m.needs())};
+    },
+    async download() {
+      const m = needed();
+      await m.turnOn({progress: how => notify('progress', how)});
+      return {state: m.state};
+    },
     async status() {
       return needed().snapshot();
     },
     async check() {
       const m = needed();
-      const embedding = m.embedder ? await (async () => {
+      const missing = m.provider && m.state !== 'on' ? await m.needs() : null;
+      const embedding = missing ? {ok: false, local: missing, model: m.modelName} : m.embedder ? await (async () => {
         const started = Date.now();
         try {
           const [vector] = await m.embedder.embed([m.embedder.query('add two numbers')], {urgent: true});
@@ -132,7 +177,7 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
         Object.assign(rerank, {timeoutMs: m.reranker.timeoutMs, models: m.reranker.name, unreachable: !rerank.ok && UNREACHABLE.test(rerank.error ?? '')});
         for (const skip of rerank.skipped ?? []) skip.unreachable = UNREACHABLE.test(skip.error ?? '');
       }
-      return {profile, embedding, rerank};
+      return {profile, embedding, rerank, local: m.provider?.snapshot?.().local ?? null};
     },
   };
 

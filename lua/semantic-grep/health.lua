@@ -58,8 +58,25 @@ function M.check()
     if profile then health.info(('profile: %s (docs/profiles.md says how to run its models)'):format(profile)) end
     local start_it = profile and ('Start it: docs/profiles.md, "%s"'):format(profile) or 'Start its server, or set its baseUrl in setup()'
     local e = checked.embedding
-    if not e then
-      health.warn('embedding: none, the word search works alone', {'Set embedding = {api = "openai", baseUrl = ..., model = ...} in setup() for search by meaning'})
+    local own = checked['local'] ~= vim.NIL and checked['local'] or nil
+    if own then
+      health.info(('the local model: %s at %s%s'):format(own.model, own.path, own.running and (', its llama-server at 127.0.0.1:%d'):format(own.port) or ''))
+      if own.llamaServer and own.llamaServer ~= vim.NIL then health.ok('llama-server: ' .. own.llamaServer) end
+    end
+    local missing = e and e['local'] ~= vim.NIL and e['local'] or nil
+    if missing then
+      if missing.runtime and missing.runtime ~= vim.NIL then
+        health.warn(('embedding: %s is not on PATH: the word search works alone'):format(missing.runtime), {
+          'Install llama.cpp, which has llama-server: `brew install llama.cpp` (macOS, Linux), `winget install llama.cpp` (Windows), `nix profile install nixpkgs#llama-cpp`,',
+          'or a build from https://github.com/ggml-org/llama.cpp/releases with llama-server on PATH',
+          'or set local_model = {llama_server = "/path/to/llama-server"} in setup(); then restart Neovim',
+        })
+      end
+      if missing.model then
+        health.warn(('embedding: %s (%d MB) is not downloaded yet'):format(missing.name or 'the model', math.floor((missing.bytes or 0) / 1e6 + 0.5)), {':SemanticGrep download fetches it into ' .. (missing.path or 'the data folder')})
+      end
+    elseif not e then
+      health.warn('embedding: none, the word search works alone', {'Set embedding = {api = "openai", baseUrl = ..., model = ...} in setup() for search by meaning, or leave it out for the local model'})
     elseif e.ok then
       health.ok(('embedding: %s answers in %d ms, %d numbers a piece'):format(e.model or '?', e.ms or 0, e.dimensions or 0))
     elseif e.unreachable then

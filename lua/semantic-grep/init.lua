@@ -7,8 +7,10 @@
 --     picker = 'auto',    -- or 'telescope', 'snacks', 'fzf-lua', 'select'
 --   })
 --
--- Every field is optional: without `embedding` (or a profile) the word search works alone; without `rerank` nothing
--- is reranked. A profile's models are those of src/profiles.mjs; what `embedding` and `rerank` set goes over them.
+-- Every field is optional. Without `embedding` or a profile, a small model runs on this machine (EmbeddingGemma 2, 310
+-- MB, on the CPU): asked for once, downloaded into the data folder, served by the `llama-server` on PATH, which the
+-- plugin starts on a free port and stops (`local_model = {gguf = path, llama_server = path, threads = n}` changes
+-- what it runs, `false` or `embedding = false` keeps to the words alone). Without `rerank` nothing is reranked. A profile's models are those of src/profiles.mjs; what `embedding` and `rerank` set goes over them.
 -- Other fields: `data_dir` (where the index files go, default stdpath('data')/semantic-grep), `index` ('data', or
 -- 'project' for .semantic-grep/ in the repository), `node` (the Node 22.16+ to run the server with), `debounce_ms` (the
 -- pause before meaning is asked, 150), `rerank_delay_ms` (how long meaning's list must stay before it is reranked, 0),
@@ -36,6 +38,7 @@ M.config = {
   profile = nil,
   embedding = nil,
   rerank = nil,
+  local_model = nil,
   picker = 'auto',
   data_dir = nil,
   index = 'data',
@@ -47,6 +50,7 @@ M.config = {
 }
 
 local source -- the source asked, once made
+local external = false -- another program's (setup's `source`, or register_source): its models are its own
 local configured = false
 
 --- The project a search is in: the git worktree of Neovim's folder, else that folder, as its real path.
@@ -65,6 +69,7 @@ function M.setup(opts)
   configured = true
   if source and source.stop then source.stop() end -- a new config: the server starts again with it at its next use
   source = opts.source
+  external = opts.source ~= nil
   local group = vim.api.nvim_create_augroup('semantic-grep', {clear = true})
   vim.api.nvim_create_autocmd('BufWritePost', {
     group = group,
@@ -87,6 +92,7 @@ end
 function M.register_source(new)
   if source and source.stop and source ~= new then source.stop() end
   source = new
+  external = true
 end
 
 --- The source asked: the registered one, else this Neovim's own server, started now.
@@ -96,9 +102,56 @@ function M.source()
   return source
 end
 
+-- The local model (no `embedding`, no profile): asked for once, before the first search that would use it.
+local asked = false
+local function declined_path() return require('semantic-grep.server').data_dir(M.config) .. '/no-local-model' end
+
+--- `then_()` once the local model is there or not wanted: the first time, the person is asked to download it (the search
+--- opens meanwhile, by its words), or told what is missing for it.
+function M.with_model(then_)
+  if asked or M.config.embedding ~= nil or M.config.profile or M.config.local_model == false or external then return then_() end
+  asked = true
+  M.source().request('needs', vim.empty_dict(), function(err, needs)
+    vim.schedule(function()
+      if err or not needs or needs.state == 'on' or needs.state == 'downloading' then return then_() end
+      if needs.runtime and needs.runtime ~= vim.NIL then
+        vim.notify(('semantic-grep: search by words only: %s is not on PATH, and search by meaning needs it (:checkhealth semantic-grep says how to get it)'):format(needs.runtime), vim.log.levels.WARN)
+        return then_()
+      end
+      if not needs.model or vim.uv.fs_stat(declined_path()) then return then_() end
+      local yes = ('Download %s (%d MB) for search by meaning'):format(needs.name or 'the model', math.floor((needs.bytes or 0) / 1e6 + 0.5))
+      local never = 'No, words only (:SemanticGrep download asks again)'
+      vim.ui.select({yes, 'Not now', never}, {prompt = 'semantic-grep: search by meaning needs a small model on this machine'}, function(choice)
+        if choice == yes then M.download()
+        elseif choice == never then
+          vim.fn.mkdir(vim.fn.fnamemodify(declined_path(), ':h'), 'p')
+          vim.fn.writefile({'semantic-grep: the local model was declined; :SemanticGrep download fetches it'}, declined_path())
+        end
+        then_()
+      end)
+    end)
+  end)
+end
+
+--- :SemanticGrep download: the local model fetched now (its progress as Neovim's progress messages).
+function M.download()
+  vim.fn.delete(declined_path())
+  M.source().request('download', vim.empty_dict(), function(err, result)
+    vim.schedule(function()
+      if err then return vim.notify('semantic-grep: ' .. err, vim.log.levels.ERROR) end
+      if result and result.state == 'on' then vim.notify('semantic-grep: search by meaning is on; the project is being embedded') end
+    end)
+  end)
+end
+
 --- Opens the live picker with `query` typed in it already.
 function M.find(query)
-  require('semantic-grep.picker').find(query or '', {picker = M.config.picker})
+  M.with_model(function() require('semantic-grep.picker').find(query or '', {picker = M.config.picker}) end)
+end
+
+--- Opens the files view: the files a sentence is about, best first, each at its best piece.
+function M.files(query)
+  M.with_model(function() require('semantic-grep.picker').files(query or '', {picker = M.config.picker}) end)
 end
 
 --- The words selected in Visual mode, on one line, as a search.
@@ -124,10 +177,12 @@ function M.on_progress(message)
   message = {root = str(message.root), phase = str(message.phase), done = num(message.done), total = num(message.total), text = str(message.text)}
   local percent = message.total and message.total > 0 and math.floor(100 * (message.done or 0) / message.total) or nil
   local text = message.phase == 'reading' and 'reading the project for the word search'
+    or message.phase == 'downloading' and ('downloading the model: %d of %d MB'):format(math.floor((message.done or 0) / 1e6 + 0.5), math.floor((message.total or 0) / 1e6 + 0.5))
     or message.phase == 'embedding' and ('embedding pieces of code: %d of %d'):format(message.done or 0, message.total or 0)
     or message.phase == 'failed' and ('stopped: %s'):format(message.text or '')
     or ('%d pieces indexed'):format(message.total or 0)
-  local status = message.phase == 'done' and 'success' or message.phase == 'failed' and 'failed' or 'running'
+  local finished = message.phase == 'downloading' and message.total and message.done == message.total
+  local status = (message.phase == 'done' or finished) and 'success' or message.phase == 'failed' and 'failed' or 'running'
   local ok, id = pcall(vim.api.nvim_echo, {{text}}, false, {kind = 'progress', id = progress_id, title = 'semantic-grep', status = status, percent = percent, source = 'semantic-grep'})
   if ok then
     progress_id = status == 'running' and id or nil
@@ -136,15 +191,18 @@ function M.on_progress(message)
   end
 end
 
---- :SemanticGrep [words] | rebuild
+--- :SemanticGrep [words] | files [words] | rebuild | download
 function M.command(opts)
   local arg = vim.trim(opts.args or '')
   if arg == 'rebuild' then return M.rebuild() end
+  if arg == 'download' then return M.download() end
+  local files = arg == 'files' or vim.startswith(arg, 'files ')
+  if files then arg = vim.trim(arg:sub(6)) end
   if arg == '' and opts.range and opts.range > 0 then
     local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
     arg = vim.trim(table.concat(lines, ' '))
   end
-  M.find(arg)
+  if files then M.files(arg) else M.find(arg) end
 end
 
 return M
