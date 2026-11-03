@@ -6,9 +6,10 @@ import {homedir} from 'node:os';
 export const RERANK_TOP = 10;
 export const RERANK_TIMEOUT_MS = 3000;
 // Of each piece, the characters a reranker reads: a decision model's few (each costs it time, and 160 ranked as well as
-// 600), a cross-encoder's more (it reads each piece with the search on its own).
+// 600), a cross-encoder's more: Qwen3-Reranker-0.6B, top 30, on the bench's dev questions (MRR): the fused list 0.593;
+// reading 160 characters 0.488, 500 0.595, 1200 0.615.
 export const DECISION_CHARS = 160;
-export const RERANK_CHARS = 160;
+export const RERANK_CHARS = 1200;
 export const FALLBACK_TIMEOUT_MS = 1000; // a model another follows in the list
 export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai', 'rerank'];
 const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];

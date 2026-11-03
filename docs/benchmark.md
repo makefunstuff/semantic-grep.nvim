@@ -108,7 +108,8 @@ the end. A server already answering there is used as it is.
   (`system-one`, top 15) — the setup the README suggests.
 - **beefy**: one GPU of 16 GB, about 6 GB of it: [Qwen3-Embedding-4B](https://huggingface.co/Qwen/Qwen3-Embedding-4B-GGUF)
   Q8_0 and the [Qwen3-Reranker-0.6B](https://huggingface.co/ggml-org/Qwen3-Reranker-0.6B-Q8_0-GGUF) cross-encoder
-  (`rerank`, `llama-server --rerank`, top 30). Choose the card with `CUDA_VISIBLE_DEVICES`.
+  (`rerank`, `llama-server --rerank`, top 30, reading 1200 characters of each piece). Choose the card with
+  `CUDA_VISIBLE_DEVICES`.
 - **cloud**: [Voyage](https://docs.voyageai.com/) `voyage-code-3` embeddings and `rerank-2.5`, the key in
   `$VOYAGE_API_KEY`. Voyage's `/v1/embeddings` takes OpenAI's shape; the prompts it adds for `input_type` are set as
   `queryPrefix`/`documentPrefix`. Also **cloud-openai** (`text-embedding-3-large` at 1024 dimensions, Cohere
@@ -123,4 +124,65 @@ been measured yet, for want of a key. With one:
 
 ## Results
 
-RESULTS_HERE
+The baseline, 2026-11-03 (Node 25.2, 50 tree-sitter parsers); the runs, with every question's rank and time, are
+[`words`](../bench/results/words-2026-11-03.json), [`laptop`](../bench/results/laptop-2026-11-03.json) and
+[`beefy`](../bench/results/beefy-2026-11-03.json). Machine: 12 cores, 125 GB, two RTX 5060 Ti 16 GB, shared with other
+work; every model at nice 19. The laptop's searches ran while other bench runs used the same CPU: its latencies are an
+upper bound.
+
+Overall, 372 questions:
+
+| | R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
+| --- | --- | --- | --- | --- | --- | --- |
+| words (any profile) | 0.097 | 0.140 | 0.142 | 0.115 | 0.2 | 0.8 |
+| laptop meaning | 0.446 | 0.755 | 0.825 | 0.575 | 14 | 20 |
+| laptop fused | 0.452 | 0.761 | 0.831 | 0.582 | 14 | 18 |
+| laptop rerank (d1-2B, CPU) | 0.511 | 0.782 | 0.831 | 0.625 | 2647 | 4617 |
+| beefy meaning | 0.460 | 0.766 | 0.820 | 0.585 | 19 | 25 |
+| beefy fused | 0.484 | 0.774 | 0.831 | 0.605 | 21 | 26 |
+| beefy rerank (Qwen3-Reranker-0.6B, GPU) | 0.489 | 0.812 | 0.855 | 0.625 | 87 | 273 |
+
+MRR per repository:
+
+| | hono | telescope | flask | cobra | fd | vue-docs |
+| --- | --- | --- | --- | --- | --- | --- |
+| words | 0.111 | 0.079 | 0.134 | 0.158 | 0.047 | 0.168 |
+| laptop meaning | 0.609 | 0.488 | 0.524 | 0.580 | 0.576 | 0.692 |
+| laptop fused | 0.590 | 0.500 | 0.544 | 0.599 | 0.573 | 0.701 |
+| laptop rerank | 0.672 | 0.539 | 0.605 | 0.605 | 0.653 | 0.695 |
+| beefy meaning | 0.524 | 0.516 | 0.522 | 0.605 | 0.598 | 0.739 |
+| beefy fused | 0.565 | 0.540 | 0.567 | 0.617 | 0.589 | 0.748 |
+| beefy rerank | 0.556 | 0.563 | 0.548 | 0.688 | 0.652 | 0.741 |
+
+MRR by style (vague 119, plain 137, multi-hop 116 questions):
+
+| | vague | plain | multi-hop |
+| --- | --- | --- | --- |
+| words | 0.206 | 0.119 | 0.017 |
+| laptop fused | 0.628 | 0.676 | 0.426 |
+| laptop rerank | 0.682 | 0.714 | 0.461 |
+| beefy fused | 0.627 | 0.687 | 0.484 |
+| beefy rerank | 0.641 | 0.716 | 0.502 |
+
+A first build of all six (11,127 pieces): about 17 minutes on 4 CPU threads (EmbeddingGemma 300M), 5.5 minutes on
+the GPU (Qwen3-Embedding-4B); four pieces a request either way.
+
+What it says:
+
+- **Words alone find little of what people type**: recall@10 0.14, and 0.017 on multi-hop questions. A piece must have
+  every word of the question, and people's words are rarely the code's. In the picker the words are what shows on
+  every key; meaning is what finds.
+- **Meaning does the work, and the small model holds up**: EmbeddingGemma 300M on a CPU (MRR 0.575) is within 0.01 of
+  Qwen3-Embedding-4B on a GPU (0.585); fusing the words adds 0.01 to 0.02.
+- **The rerank helps, at a price**: d1-2B lifts MRR from 0.582 to 0.625 and recall@1 from 0.45 to 0.51, but takes
+  2.6 s (p50) to 4.6 s (p95) on 4 CPU threads, past the plugin's default `timeoutMs` of 3 s; 104 of its 372 answers
+  were flat (no piece stood out), and its order was kept. The cross-encoder on a GPU gives the same MRR in 87 ms
+  (p95 273 ms), and most to recall@5 (0.774 to 0.812).
+- **A cross-encoder needs to read the piece**: Qwen3-Reranker-0.6B reading 160 characters of each piece made the list
+  worse (dev MRR 0.593 to 0.488); 500 characters 0.595, 1200 0.615. 1200 is now the default for `api = 'rerank'`
+  (`chars` in the entry changes it).
+- **Multi-hop questions are the hardest** for every mode (fused MRR 0.43 to 0.48 against 0.63 to 0.69).
+- 21 to 24 questions had nothing to rerank: meaning keeps only the pieces within 0.1 of the best, and some lists were
+  one piece long (a right one, each time).
+
+Not measured yet: the cloud profiles (no key), a cross-encoder on the laptop's CPU, and EmbeddingGemma on a GPU.

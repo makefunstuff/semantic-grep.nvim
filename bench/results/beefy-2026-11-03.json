@@ -15,12 +15,12 @@
    "timeoutMs": 20000
   }
  },
- "when": "2026-11-03T14:58:55.138Z",
+ "when": "2026-11-03T15:05:34.511Z",
  "node": "v25.2.1",
- "semanticGrep": "a042387",
+ "semanticGrep": "b69c6ce",
  "questions": {
   "file": "bench/questions.jsonl",
-  "sha1": "0cd1eb1e8bf1",
+  "sha1": "165477f54fea",
   "count": 372,
   "split": "all"
  },
@@ -33,8 +33,8 @@
    "recall5": 0.14,
    "recall10": 0.142,
    "mrr": 0.115,
-   "p50": 1.3,
-   "p95": 2
+   "p50": 1.4,
+   "p95": 2.4
   },
   "meaning": {
    "n": 372,
@@ -42,8 +42,8 @@
    "recall5": 0.766,
    "recall10": 0.82,
    "mrr": 0.585,
-   "p50": 18.7,
-   "p95": 24.3
+   "p50": 18.9,
+   "p95": 25.1
   },
   "fused": {
    "n": 372,
@@ -52,16 +52,16 @@
    "recall10": 0.831,
    "mrr": 0.605,
    "p50": 20.5,
-   "p95": 24.9
+   "p95": 25.6
   },
   "rerank": {
    "n": 372,
-   "recall1": 0.403,
-   "recall5": 0.734,
-   "recall10": 0.812,
-   "mrr": 0.542,
-   "p50": 56.9,
-   "p95": 158.1
+   "recall1": 0.489,
+   "recall5": 0.812,
+   "recall10": 0.855,
+   "mrr": 0.625,
+   "p50": 87.1,
+   "p95": 272.7
   }
  },
  "repos": {
@@ -69,7 +69,7 @@
    "commit": "c91b60a251186fb024557c6d55a11d8e388f179c",
    "files": 572,
    "pieces": 4186,
-   "indexMs": 135580,
+   "indexMs": 66,
    "questions": 48,
    "modes": {
     "words": {
@@ -78,7 +78,7 @@
      "recall5": 0.125,
      "recall10": 0.125,
      "mrr": 0.111,
-     "p50": 1.2,
+     "p50": 1.4,
      "p95": 1.8
     },
     "meaning": {
@@ -87,8 +87,8 @@
      "recall5": 0.75,
      "recall10": 0.792,
      "mrr": 0.524,
-     "p50": 22.9,
-     "p95": 27.1
+     "p50": 24.2,
+     "p95": 28.2
     },
     "fused": {
      "n": 48,
@@ -97,16 +97,16 @@
      "recall10": 0.813,
      "mrr": 0.565,
      "p50": 24.6,
-     "p95": 30.1
+     "p95": 29.2
     },
     "rerank": {
      "n": 48,
-     "recall1": 0.333,
-     "recall5": 0.771,
-     "recall10": 0.854,
-     "mrr": 0.501,
-     "p50": 61.5,
-     "p95": 165.9
+     "recall1": 0.375,
+     "recall5": 0.833,
+     "recall10": 0.875,
+     "mrr": 0.556,
+     "p50": 95,
+     "p95": 300.4
     }
    }
   },
@@ -114,7 +114,7 @@
    "commit": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
    "files": 103,
    "pieces": 1558,
-   "indexMs": 38102,
+   "indexMs": 30,
    "questions": 71,
    "modes": {
     "words": {
@@ -123,8 +123,8 @@
      "recall5": 0.099,
      "recall10": 0.113,
      "mrr": 0.079,
-     "p50": 1,
-     "p95": 1.5
+     "p50": 1.1,
+     "p95": 1.7
     },
     "meaning": {
      "n": 71,
@@ -132,8 +132,8 @@
      "recall5": 0.69,
      "recall10": 0.761,
      "mrr": 0.516,
-     "p50": 18.8,
-     "p95": 21
+     "p50": 19.2,
+     "p95": 21.5
     },
     "fused": {
      "n": 71,
@@ -146,12 +146,12 @@
     },
     "rerank": {
      "n": 71,
-     "recall1": 0.408,
-     "recall5": 0.648,
-     "recall10": 0.718,
-     "mrr": 0.518,
-     "p50": 66.6,
-     "p95": 156.7
+     "recall1": 0.451,
+     "recall5": 0.69,
+     "recall10": 0.789,
+     "mrr": 0.563,
+     "p50": 105.8,
+     "p95": 263.6
     }
    }
   },
@@ -159,7 +159,7 @@
    "commit": "49943b5a94413a530761350f04e896f76e8d620e",
    "files": 227,
    "pieces": 1589,
-   "indexMs": 45141,
+   "indexMs": 34,
    "questions": 66,
    "modes": {
     "words": {
@@ -168,8 +168,8 @@
      "recall5": 0.197,
      "recall10": 0.197,
      "mrr": 0.134,
-     "p50": 1.3,
-     "p95": 1.9
+     "p50": 1.4,
+     "p95": 2.1
     },
     "meaning": {
      "n": 66,
@@ -177,8 +177,8 @@
      "recall5": 0.712,
      "recall10": 0.818,
      "mrr": 0.522,
-     "p50": 18.8,
-     "p95": 22.4
+     "p50": 19,
+     "p95": 21.8
     },
     "fused": {
      "n": 66,
@@ -186,17 +186,17 @@
      "recall5": 0.742,
      "recall10": 0.833,
      "mrr": 0.567,
-     "p50": 20.5,
-     "p95": 23.4
+     "p50": 20.6,
+     "p95": 23.1
     },
     "rerank": {
      "n": 66,
-     "recall1": 0.364,
-     "recall5": 0.697,
-     "recall10": 0.773,
-     "mrr": 0.503,
-     "p50": 54.8,
-     "p95": 155.6
+     "recall1": 0.379,
+     "recall5": 0.773,
+     "recall10": 0.833,
+     "mrr": 0.548,
+     "p50": 76.1,
+     "p95": 226.9
     }
    }
   },
@@ -204,7 +204,7 @@
    "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
    "files": 64,
    "pieces": 1021,
-   "indexMs": 27770,
+   "indexMs": 23,
    "questions": 59,
    "modes": {
     "words": {
@@ -213,8 +213,8 @@
      "recall5": 0.169,
      "recall10": 0.169,
      "mrr": 0.158,
-     "p50": 1.3,
-     "p95": 1.8
+     "p50": 1.4,
+     "p95": 2.1
     },
     "meaning": {
      "n": 59,
@@ -222,8 +222,8 @@
      "recall5": 0.763,
      "recall10": 0.797,
      "mrr": 0.605,
-     "p50": 17.5,
-     "p95": 18.9
+     "p50": 17.9,
+     "p95": 19.4
     },
     "fused": {
      "n": 59,
@@ -231,17 +231,17 @@
      "recall5": 0.78,
      "recall10": 0.831,
      "mrr": 0.617,
-     "p50": 19.5,
-     "p95": 21.6
+     "p50": 19.3,
+     "p95": 21.5
     },
     "rerank": {
      "n": 59,
-     "recall1": 0.458,
-     "recall5": 0.797,
+     "recall1": 0.593,
+     "recall5": 0.847,
      "recall10": 0.847,
-     "mrr": 0.589,
-     "p50": 55.5,
-     "p95": 159.1
+     "mrr": 0.688,
+     "p50": 80.1,
+     "p95": 262.9
     }
    }
   },
@@ -249,7 +249,7 @@
    "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
    "files": 57,
    "pieces": 871,
-   "indexMs": 18852,
+   "indexMs": 32,
    "questions": 64,
    "modes": {
     "words": {
@@ -258,8 +258,8 @@
      "recall5": 0.047,
      "recall10": 0.047,
      "mrr": 0.047,
-     "p50": 1.3,
-     "p95": 1.8
+     "p50": 1.5,
+     "p95": 2.3
     },
     "meaning": {
      "n": 64,
@@ -267,8 +267,8 @@
      "recall5": 0.797,
      "recall10": 0.828,
      "mrr": 0.598,
-     "p50": 17.7,
-     "p95": 19.1
+     "p50": 17.6,
+     "p95": 19.2
     },
     "fused": {
      "n": 64,
@@ -276,17 +276,17 @@
      "recall5": 0.781,
      "recall10": 0.828,
      "mrr": 0.589,
-     "p50": 19.6,
-     "p95": 21.5
+     "p50": 19.4,
+     "p95": 21.4
     },
     "rerank": {
      "n": 64,
-     "recall1": 0.375,
-     "recall5": 0.672,
-     "recall10": 0.797,
-     "mrr": 0.508,
-     "p50": 51.3,
-     "p95": 150.6
+     "recall1": 0.531,
+     "recall5": 0.781,
+     "recall10": 0.828,
+     "mrr": 0.652,
+     "p50": 63.7,
+     "p95": 235.3
     }
    }
   },
@@ -294,7 +294,7 @@
    "commit": "40aa88af0094f7bab4aaf786e55c748a6a251d88",
    "files": 437,
    "pieces": 1902,
-   "indexMs": 62736,
+   "indexMs": 44,
    "questions": 64,
    "modes": {
     "words": {
@@ -303,8 +303,8 @@
      "recall5": 0.203,
      "recall10": 0.203,
      "mrr": 0.168,
-     "p50": 1.6,
-     "p95": 2.2
+     "p50": 1.8,
+     "p95": 2.8
     },
     "meaning": {
      "n": 64,
@@ -312,8 +312,8 @@
      "recall5": 0.891,
      "recall10": 0.922,
      "mrr": 0.739,
-     "p50": 19.1,
-     "p95": 21.7
+     "p50": 19.7,
+     "p95": 22.2
     },
     "fused": {
      "n": 64,
@@ -322,16 +322,16 @@
      "recall10": 0.922,
      "mrr": 0.748,
      "p50": 21.1,
-     "p95": 23.6
+     "p95": 23.5
     },
     "rerank": {
      "n": 64,
-     "recall1": 0.469,
-     "recall5": 0.844,
-     "recall10": 0.906,
-     "mrr": 0.629,
-     "p50": 56.5,
-     "p95": 164.2
+     "recall1": 0.594,
+     "recall5": 0.969,
+     "recall10": 0.969,
+     "mrr": 0.741,
+     "p50": 92.2,
+     "p95": 292.7
     }
    }
   }
@@ -344,8 +344,8 @@
     "recall5": 0.269,
     "recall10": 0.277,
     "mrr": 0.206,
-    "p50": 1.4,
-    "p95": 2.1
+    "p50": 1.5,
+    "p95": 2.8
    },
    "meaning": {
     "n": 119,
@@ -353,8 +353,8 @@
     "recall5": 0.798,
     "recall10": 0.849,
     "mrr": 0.589,
-    "p50": 18.3,
-    "p95": 24.3
+    "p50": 18.4,
+    "p95": 25.2
    },
    "fused": {
     "n": 119,
@@ -362,17 +362,17 @@
     "recall5": 0.815,
     "recall10": 0.866,
     "mrr": 0.627,
-    "p50": 20.1,
-    "p95": 24.9
+    "p50": 20,
+    "p95": 25.5
    },
    "rerank": {
     "n": 119,
-    "recall1": 0.437,
-    "recall5": 0.773,
-    "recall10": 0.832,
-    "mrr": 0.583,
-    "p50": 54.4,
-    "p95": 152.6
+    "recall1": 0.504,
+    "recall5": 0.824,
+    "recall10": 0.874,
+    "mrr": 0.641,
+    "p50": 78.3,
+    "p95": 263
    }
   },
   "plain": {
@@ -382,8 +382,8 @@
     "recall5": 0.131,
     "recall10": 0.131,
     "mrr": 0.119,
-    "p50": 1.3,
-    "p95": 2
+    "p50": 1.5,
+    "p95": 2.3
    },
    "meaning": {
     "n": 137,
@@ -391,8 +391,8 @@
     "recall5": 0.869,
     "recall10": 0.876,
     "mrr": 0.672,
-    "p50": 18.6,
-    "p95": 23.5
+    "p50": 19,
+    "p95": 24.2
    },
    "fused": {
     "n": 137,
@@ -401,16 +401,16 @@
     "recall10": 0.891,
     "mrr": 0.687,
     "p50": 20.7,
-    "p95": 25.9
+    "p95": 24.6
    },
    "rerank": {
     "n": 137,
-    "recall1": 0.489,
-    "recall5": 0.803,
-    "recall10": 0.869,
-    "mrr": 0.616,
-    "p50": 54.5,
-    "p95": 156.5
+    "recall1": 0.599,
+    "recall5": 0.861,
+    "recall10": 0.905,
+    "mrr": 0.716,
+    "p50": 76.3,
+    "p95": 268.9
    }
   },
   "multi-hop": {
@@ -420,8 +420,8 @@
     "recall5": 0.017,
     "recall10": 0.017,
     "mrr": 0.017,
-    "p50": 1.3,
-    "p95": 1.9
+    "p50": 1.4,
+    "p95": 2.2
    },
    "meaning": {
     "n": 116,
@@ -429,7 +429,7 @@
     "recall5": 0.612,
     "recall10": 0.724,
     "mrr": 0.477,
-    "p50": 18.9,
+    "p50": 19.2,
     "p95": 25.8
    },
    "fused": {
@@ -438,17 +438,17 @@
     "recall5": 0.621,
     "recall10": 0.724,
     "mrr": 0.484,
-    "p50": 20.6,
-    "p95": 25
+    "p50": 20.9,
+    "p95": 25.8
    },
    "rerank": {
     "n": 116,
-    "recall1": 0.267,
-    "recall5": 0.612,
-    "recall10": 0.724,
-    "mrr": 0.412,
-    "p50": 70.3,
-    "p95": 165.7
+    "recall1": 0.345,
+    "recall5": 0.741,
+    "recall10": 0.776,
+    "mrr": 0.502,
+    "p50": 105.5,
+    "p95": 279.7
    }
   }
  },
@@ -469,10 +469,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 23.1,
-    "fused": 22.3,
-    "rerank": 34.6
+    "words": 1.1,
+    "meaning": 22.5,
+    "fused": 22.8,
+    "rerank": 39.2
    },
    "reranked": "applied"
   },
@@ -488,10 +488,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 22.6,
-    "fused": 31.1,
-    "rerank": 22.3
+    "words": 1.4,
+    "meaning": 24.4,
+    "fused": 29.7,
+    "rerank": 23.7
    },
    "reranked": "none"
   },
@@ -508,9 +508,9 @@
    },
    "ms": {
     "words": 1.1,
-    "meaning": 24.3,
-    "fused": 30.1,
-    "rerank": 172.8
+    "meaning": 26.3,
+    "fused": 25.8,
+    "rerank": 279.7
    },
    "reranked": "applied"
   },
@@ -526,10 +526,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 23,
-    "fused": 24.8,
-    "rerank": 116.6
+    "words": 1.1,
+    "meaning": 25.2,
+    "fused": 23.4,
+    "rerank": 193.5
    },
    "reranked": "applied"
   },
@@ -545,10 +545,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 25.1,
-    "fused": 26.2,
-    "rerank": 102.8
+    "words": 1.2,
+    "meaning": 24.1,
+    "fused": 25.8,
+    "rerank": 184.8
    },
    "reranked": "applied"
   },
@@ -564,10 +564,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 24.8,
-    "fused": 27.1,
-    "rerank": 118.7
+    "words": 1.2,
+    "meaning": 23.9,
+    "fused": 25.6,
+    "rerank": 212.6
    },
    "reranked": "applied"
   },
@@ -580,13 +580,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 6
+    "rerank": 2
    },
    "ms": {
-    "words": 2,
-    "meaning": 22.2,
-    "fused": 27.4,
-    "rerank": 99.1
+    "words": 1.6,
+    "meaning": 23.5,
+    "fused": 23.3,
+    "rerank": 147
    },
    "reranked": "applied"
   },
@@ -599,13 +599,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 5
+    "rerank": 6
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 28.4,
-    "fused": 31.9,
-    "rerank": 71
+    "words": 1.7,
+    "meaning": 22.9,
+    "fused": 24.5,
+    "rerank": 104.4
    },
    "reranked": "applied"
   },
@@ -618,13 +618,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 26,
-    "fused": 24.4,
-    "rerank": 81.5
+    "words": 1.3,
+    "meaning": 25,
+    "fused": 27.2,
+    "rerank": 116.3
    },
    "reranked": "applied"
   },
@@ -637,13 +637,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 4
+    "rerank": 3
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 20.9,
-    "fused": 23.1,
-    "rerank": 72.2
+    "words": 1.2,
+    "meaning": 24,
+    "fused": 24.3,
+    "rerank": 110.7
    },
    "reranked": "applied"
   },
@@ -656,13 +656,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 21,
-    "fused": 26.9,
-    "rerank": 38
+    "words": 1.8,
+    "meaning": 23.5,
+    "fused": 23.6,
+    "rerank": 47.9
    },
    "reranked": "applied"
   },
@@ -678,10 +678,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 21.4,
-    "fused": 24.4,
-    "rerank": 37.6
+    "words": 1,
+    "meaning": 22.7,
+    "fused": 24.1,
+    "rerank": 40.2
    },
    "reranked": "applied"
   },
@@ -697,10 +697,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 23.5,
-    "fused": 24.2,
-    "rerank": 164.9
+    "words": 1.2,
+    "meaning": 25.8,
+    "fused": 25.8,
+    "rerank": 274.7
    },
    "reranked": "applied"
   },
@@ -717,9 +717,9 @@
    },
    "ms": {
     "words": 1.3,
-    "meaning": 27.1,
-    "fused": 23.2,
-    "rerank": 57
+    "meaning": 21.5,
+    "fused": 25.5,
+    "rerank": 71.9
    },
    "reranked": "applied"
   },
@@ -732,13 +732,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 6
+    "rerank": 7
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 26.6,
-    "fused": 27,
-    "rerank": 83.9
+    "words": 1.6,
+    "meaning": 22.1,
+    "fused": 24.6,
+    "rerank": 112.6
    },
    "reranked": "applied"
   },
@@ -751,13 +751,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 26.7,
-    "fused": 24.8,
-    "rerank": 61.3
+    "words": 1.1,
+    "meaning": 23.9,
+    "fused": 24.5,
+    "rerank": 75.8
    },
    "reranked": "applied"
   },
@@ -770,13 +770,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 4
+    "rerank": 3
    },
    "ms": {
     "words": 0.9,
-    "meaning": 21.4,
-    "fused": 24.2,
-    "rerank": 57.3
+    "meaning": 22,
+    "fused": 26.3,
+    "rerank": 68.6
    },
    "reranked": "applied"
   },
@@ -792,10 +792,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 21.6,
-    "fused": 24.9,
-    "rerank": 50
+    "words": 1.7,
+    "meaning": 25.3,
+    "fused": 24.5,
+    "rerank": 55.8
    },
    "reranked": "applied"
   },
@@ -811,10 +811,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 26.3,
-    "fused": 29,
-    "rerank": 55.6
+    "words": 1,
+    "meaning": 24.2,
+    "fused": 26.3,
+    "rerank": 64.8
    },
    "reranked": "applied"
   },
@@ -827,13 +827,13 @@
     "words": 0,
     "meaning": 13,
     "fused": 13,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1,
-    "meaning": 25.8,
-    "fused": 24.9,
-    "rerank": 95.9
+    "words": 1.1,
+    "meaning": 22.8,
+    "fused": 23.7,
+    "rerank": 97.2
    },
    "reranked": "applied"
   },
@@ -846,13 +846,13 @@
     "words": 1,
     "meaning": 0,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 21.9,
-    "fused": 27.9,
-    "rerank": 52
+    "words": 1.6,
+    "meaning": 22.2,
+    "fused": 23.9,
+    "rerank": 69.9
    },
    "reranked": "applied"
   },
@@ -868,10 +868,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 23.5,
-    "fused": 24.2,
-    "rerank": 40.9
+    "words": 1.3,
+    "meaning": 21.9,
+    "fused": 23.6,
+    "rerank": 42.4
    },
    "reranked": "applied"
   },
@@ -887,10 +887,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 22.1,
-    "fused": 24.5,
-    "rerank": 52.9
+    "words": 1,
+    "meaning": 22.3,
+    "fused": 25.3,
+    "rerank": 60.7
    },
    "reranked": "applied"
   },
@@ -903,13 +903,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
     "words": 1,
-    "meaning": 21.5,
-    "fused": 22.7,
-    "rerank": 56
+    "meaning": 22.8,
+    "fused": 26.2,
+    "rerank": 73.8
    },
    "reranked": "applied"
   },
@@ -922,13 +922,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 5
+    "rerank": 3
    },
    "ms": {
-    "words": 1,
-    "meaning": 22.3,
-    "fused": 28.1,
-    "rerank": 61.5
+    "words": 1.5,
+    "meaning": 27.3,
+    "fused": 26.7,
+    "rerank": 81
    },
    "reranked": "applied"
   },
@@ -944,10 +944,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1,
-    "meaning": 22.4,
-    "fused": 24.6,
-    "rerank": 41.3
+    "words": 1.6,
+    "meaning": 25.4,
+    "fused": 24.5,
+    "rerank": 49.4
    },
    "reranked": "applied"
   },
@@ -963,10 +963,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 22.3,
-    "fused": 23.7,
-    "rerank": 40.1
+    "words": 2.4,
+    "meaning": 24.9,
+    "fused": 29,
+    "rerank": 52
    },
    "reranked": "applied"
   },
@@ -982,10 +982,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 21.2,
-    "fused": 24,
-    "rerank": 48.7
+    "words": 1.6,
+    "meaning": 25.4,
+    "fused": 24.6,
+    "rerank": 63.1
    },
    "reranked": "applied"
   },
@@ -1001,10 +1001,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 24.1,
-    "fused": 23.7,
-    "rerank": 169.9
+    "words": 1.3,
+    "meaning": 25.8,
+    "fused": 29.9,
+    "rerank": 301.9
    },
    "reranked": "applied"
   },
@@ -1017,13 +1017,13 @@
     "words": 3,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 21.5,
-    "fused": 23.7,
-    "rerank": 68.5
+    "words": 2.4,
+    "meaning": 24.7,
+    "fused": 23.9,
+    "rerank": 95
    },
    "reranked": "applied"
   },
@@ -1039,10 +1039,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 26.3,
-    "fused": 24.9,
-    "rerank": 50.6
+    "words": 1.6,
+    "meaning": 26.9,
+    "fused": 24.4,
+    "rerank": 66
    },
    "reranked": "applied"
   },
@@ -1055,13 +1055,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 9
+    "rerank": 4
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 27.7,
-    "fused": 24.1,
-    "rerank": 165.9
+    "words": 1.5,
+    "meaning": 24.2,
+    "fused": 24.9,
+    "rerank": 303.6
    },
    "reranked": "applied"
   },
@@ -1077,10 +1077,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 21.1,
-    "fused": 24.7,
-    "rerank": 36.4
+    "words": 1.3,
+    "meaning": 24,
+    "fused": 24.3,
+    "rerank": 35.3
    },
    "reranked": "applied"
   },
@@ -1096,10 +1096,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.8,
-    "meaning": 21.8,
+    "words": 1.4,
+    "meaning": 22.9,
     "fused": 24.6,
-    "rerank": 22.5
+    "rerank": 24
    },
    "reranked": "none"
   },
@@ -1115,10 +1115,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1,
-    "meaning": 22.5,
-    "fused": 26.1,
-    "rerank": 50.6
+    "words": 1.2,
+    "meaning": 23.9,
+    "fused": 28.1,
+    "rerank": 73.2
    },
    "reranked": "applied"
   },
@@ -1134,10 +1134,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.8,
-    "meaning": 22.6,
-    "fused": 23,
-    "rerank": 33.7
+    "words": 1.3,
+    "meaning": 26.2,
+    "fused": 24.2,
+    "rerank": 36.7
    },
    "reranked": "applied"
   },
@@ -1153,10 +1153,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 23.3,
-    "fused": 23.6,
-    "rerank": 96
+    "words": 1.5,
+    "meaning": 25.1,
+    "fused": 24.4,
+    "rerank": 147.7
    },
    "reranked": "applied"
   },
@@ -1169,13 +1169,13 @@
     "words": 0,
     "meaning": 15,
     "fused": 15,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 26.2,
-    "fused": 25,
-    "rerank": 122.1
+    "words": 1.7,
+    "meaning": 28.3,
+    "fused": 26.8,
+    "rerank": 205
    },
    "reranked": "applied"
   },
@@ -1191,10 +1191,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 24.6,
-    "fused": 26,
-    "rerank": 50.4
+    "words": 1.5,
+    "meaning": 28.2,
+    "fused": 29,
+    "rerank": 86.6
    },
    "reranked": "applied"
   },
@@ -1210,10 +1210,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 22.1,
-    "fused": 23.3,
-    "rerank": 59.1
+    "words": 1.6,
+    "meaning": 29.1,
+    "fused": 29.2,
+    "rerank": 96.1
    },
    "reranked": "applied"
   },
@@ -1226,13 +1226,13 @@
     "words": 0,
     "meaning": 8,
     "fused": 8,
-    "rerank": 18
+    "rerank": 5
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 22.9,
-    "fused": 24.8,
-    "rerank": 133.7
+    "words": 1.4,
+    "meaning": 26.3,
+    "fused": 26.6,
+    "rerank": 275.4
    },
    "reranked": "applied"
   },
@@ -1248,10 +1248,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 25.4,
-    "fused": 23,
-    "rerank": 75.9
+    "words": 1.6,
+    "meaning": 27,
+    "fused": 24.2,
+    "rerank": 95.8
    },
    "reranked": "applied"
   },
@@ -1267,10 +1267,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.1,
-    "meaning": 22.3,
-    "fused": 24.7,
-    "rerank": 92.3
+    "words": 1.7,
+    "meaning": 22,
+    "fused": 25.1,
+    "rerank": 120.1
    },
    "reranked": "applied"
   },
@@ -1287,9 +1287,9 @@
    },
    "ms": {
     "words": 1.7,
-    "meaning": 26.3,
-    "fused": 26.9,
-    "rerank": 114.5
+    "meaning": 27,
+    "fused": 24.4,
+    "rerank": 149.7
    },
    "reranked": "applied"
   },
@@ -1302,13 +1302,13 @@
     "words": 0,
     "meaning": 10,
     "fused": 10,
-    "rerank": 10
+    "rerank": 3
    },
    "ms": {
     "words": 1.4,
-    "meaning": 25.4,
-    "fused": 24,
-    "rerank": 74.4
+    "meaning": 26,
+    "fused": 28.2,
+    "rerank": 120.4
    },
    "reranked": "applied"
   },
@@ -1321,13 +1321,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 5
+    "rerank": 3
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 24.8,
-    "fused": 24.3,
-    "rerank": 160.2
+    "words": 1,
+    "meaning": 23.8,
+    "fused": 24.5,
+    "rerank": 300.4
    },
    "reranked": "applied"
   },
@@ -1343,10 +1343,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 22.8,
-    "fused": 29.2,
-    "rerank": 99.9
+    "words": 1.6,
+    "meaning": 25.6,
+    "fused": 25.6,
+    "rerank": 162.7
    },
    "reranked": "applied"
   },
@@ -1363,9 +1363,9 @@
    },
    "ms": {
     "words": 1.1,
-    "meaning": 21.7,
-    "fused": 23.5,
-    "rerank": 69.4
+    "meaning": 23.5,
+    "fused": 24,
+    "rerank": 104.3
    },
    "reranked": "applied"
   },
@@ -1381,10 +1381,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 20.3,
-    "fused": 18.3,
-    "rerank": 151.5
+    "words": 1.5,
+    "meaning": 20.6,
+    "fused": 20.5,
+    "rerank": 241.1
    },
    "reranked": "applied"
   },
@@ -1400,10 +1400,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 21.2,
-    "fused": 22,
-    "rerank": 115.7
+    "words": 1.2,
+    "meaning": 20.6,
+    "fused": 24,
+    "rerank": 191.4
    },
    "reranked": "applied"
   },
@@ -1419,10 +1419,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.6,
-    "fused": 20.5,
-    "rerank": 56.5
+    "words": 1.4,
+    "meaning": 21.8,
+    "fused": 21.4,
+    "rerank": 91.1
    },
    "reranked": "applied"
   },
@@ -1438,10 +1438,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19,
-    "fused": 19.6,
-    "rerank": 135.2
+    "words": 1.5,
+    "meaning": 19.5,
+    "fused": 22.6,
+    "rerank": 184.5
    },
    "reranked": "applied"
   },
@@ -1457,10 +1457,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 17,
-    "fused": 18.9,
-    "rerank": 37.1
+    "words": 1,
+    "meaning": 18.9,
+    "fused": 21.5,
+    "rerank": 46.8
    },
    "reranked": "applied"
   },
@@ -1476,10 +1476,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 19.7,
-    "fused": 20.8,
-    "rerank": 32
+    "words": 1.1,
+    "meaning": 18.4,
+    "fused": 21.2,
+    "rerank": 34.8
    },
    "reranked": "applied"
   },
@@ -1495,10 +1495,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 20.7,
-    "fused": 20.5,
-    "rerank": 85.8
+    "words": 1.2,
+    "meaning": 19.9,
+    "fused": 20.8,
+    "rerank": 118.4
    },
    "reranked": "applied"
   },
@@ -1511,13 +1511,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 5
+    "rerank": 4
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18.4,
-    "fused": 21.6,
-    "rerank": 83
+    "words": 1,
+    "meaning": 19.7,
+    "fused": 19.8,
+    "rerank": 111.1
    },
    "reranked": "applied"
   },
@@ -1530,13 +1530,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 6
+    "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.8,
-    "fused": 20.6,
-    "rerank": 101.5
+    "words": 1.4,
+    "meaning": 21.1,
+    "fused": 22.4,
+    "rerank": 129.5
    },
    "reranked": "applied"
   },
@@ -1552,10 +1552,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 19.7,
-    "fused": 20.4,
-    "rerank": 150.7
+    "words": 1.5,
+    "meaning": 21,
+    "fused": 22.4,
+    "rerank": 244.4
    },
    "reranked": "applied"
   },
@@ -1568,13 +1568,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 6
+    "rerank": 2
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18.5,
-    "fused": 21.1,
-    "rerank": 143
+    "words": 1.1,
+    "meaning": 19.4,
+    "fused": 20.6,
+    "rerank": 220.8
    },
    "reranked": "applied"
   },
@@ -1587,13 +1587,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 4
+    "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 17.7,
-    "fused": 19.2,
-    "rerank": 51.8
+    "words": 1.1,
+    "meaning": 18.6,
+    "fused": 20.6,
+    "rerank": 79.9
    },
    "reranked": "applied"
   },
@@ -1606,13 +1606,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 20.6,
-    "fused": 19.9,
-    "rerank": 50.9
+    "words": 1.1,
+    "meaning": 19.2,
+    "fused": 20.5,
+    "rerank": 77.3
    },
    "reranked": "applied"
   },
@@ -1628,10 +1628,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.6,
-    "fused": 21.1,
-    "rerank": 64
+    "words": 1.4,
+    "meaning": 19.5,
+    "fused": 19.7,
+    "rerank": 102.2
    },
    "reranked": "applied"
   },
@@ -1648,9 +1648,9 @@
    },
    "ms": {
     "words": 0.9,
-    "meaning": 17.8,
-    "fused": 18.8,
-    "rerank": 34.1
+    "meaning": 18,
+    "fused": 19.5,
+    "rerank": 39.4
    },
    "reranked": "applied"
   },
@@ -1666,10 +1666,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19.4,
-    "fused": 21.5,
-    "rerank": 156.7
+    "words": 1,
+    "meaning": 18.5,
+    "fused": 19.7,
+    "rerank": 241.7
    },
    "reranked": "applied"
   },
@@ -1685,10 +1685,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 21,
-    "fused": 23.9,
-    "rerank": 161
+    "words": 1.1,
+    "meaning": 21.8,
+    "fused": 23.3,
+    "rerank": 253.2
    },
    "reranked": "applied"
   },
@@ -1704,10 +1704,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 17.6,
-    "fused": 18.9,
-    "rerank": 53.8
+    "words": 1,
+    "meaning": 18,
+    "fused": 19.4,
+    "rerank": 76.9
    },
    "reranked": "applied"
   },
@@ -1724,9 +1724,9 @@
    },
    "ms": {
     "words": 1,
-    "meaning": 17.7,
-    "fused": 19.3,
-    "rerank": 18.3
+    "meaning": 18.2,
+    "fused": 19.6,
+    "rerank": 20
    },
    "reranked": "none"
   },
@@ -1739,13 +1739,13 @@
     "words": 0,
     "meaning": 9,
     "fused": 9,
-    "rerank": 11
+    "rerank": 6
    },
    "ms": {
-    "words": 0.8,
-    "meaning": 18,
-    "fused": 19.4,
-    "rerank": 87.8
+    "words": 0.9,
+    "meaning": 19.9,
+    "fused": 21.1,
+    "rerank": 142.8
    },
    "reranked": "applied"
   },
@@ -1758,13 +1758,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18,
-    "fused": 22.8,
-    "rerank": 40.9
+    "words": 1.5,
+    "meaning": 18.1,
+    "fused": 19.9,
+    "rerank": 46.9
    },
    "reranked": "applied"
   },
@@ -1777,13 +1777,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 1
+    "rerank": 4
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19.7,
-    "fused": 21.2,
-    "rerank": 114.5
+    "words": 1,
+    "meaning": 17.6,
+    "fused": 19.6,
+    "rerank": 187.1
    },
    "reranked": "applied"
   },
@@ -1796,13 +1796,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 4
+    "rerank": 6
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.7,
-    "fused": 20.1,
-    "rerank": 48.6
+    "words": 1.5,
+    "meaning": 21.8,
+    "fused": 22.4,
+    "rerank": 78.2
    },
    "reranked": "applied"
   },
@@ -1815,13 +1815,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 5
    },
    "ms": {
     "words": 1,
     "meaning": 18.6,
-    "fused": 21.5,
-    "rerank": 57.3
+    "fused": 19.7,
+    "rerank": 89.9
    },
    "reranked": "applied"
   },
@@ -1837,10 +1837,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 19.5,
-    "fused": 21.6,
-    "rerank": 29.8
+    "words": 0.9,
+    "meaning": 17.4,
+    "fused": 19,
+    "rerank": 34.7
    },
    "reranked": "applied"
   },
@@ -1856,10 +1856,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18.2,
-    "fused": 21.8,
-    "rerank": 33.9
+    "words": 1,
+    "meaning": 18.6,
+    "fused": 20,
+    "rerank": 35.7
    },
    "reranked": "applied"
   },
@@ -1875,10 +1875,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 19.2,
-    "fused": 20.6,
-    "rerank": 152.3
+    "words": 1.5,
+    "meaning": 19.6,
+    "fused": 20.3,
+    "rerank": 241.2
    },
    "reranked": "applied"
   },
@@ -1894,10 +1894,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
+    "words": 2.8,
     "meaning": 19.6,
-    "fused": 19.5,
-    "rerank": 138.5
+    "fused": 21.4,
+    "rerank": 263.6
    },
    "reranked": "applied"
   },
@@ -1910,13 +1910,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 12
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 20.5,
-    "fused": 21.1,
-    "rerank": 158.1
+    "words": 1,
+    "meaning": 21.5,
+    "fused": 23.4,
+    "rerank": 281.6
    },
    "reranked": "applied"
   },
@@ -1932,10 +1932,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 20.8,
-    "fused": 21.9,
-    "rerank": 155.2
+    "words": 1.1,
+    "meaning": 19,
+    "fused": 23.3,
+    "rerank": 236.1
    },
    "reranked": "applied"
   },
@@ -1951,10 +1951,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18,
-    "fused": 19.4,
-    "rerank": 29.4
+    "words": 1.3,
+    "meaning": 18.5,
+    "fused": 20.6,
+    "rerank": 45.7
    },
    "reranked": "applied"
   },
@@ -1967,13 +1967,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 5,
-    "rerank": 6
+    "rerank": 3
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.8,
-    "fused": 18.9,
-    "rerank": 49.3
+    "words": 1.5,
+    "meaning": 18.3,
+    "fused": 20.3,
+    "rerank": 94.5
    },
    "reranked": "applied"
   },
@@ -1986,13 +1986,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.3,
-    "fused": 22.3,
-    "rerank": 38.8
+    "words": 1.1,
+    "meaning": 19.4,
+    "fused": 22.9,
+    "rerank": 53.6
    },
    "reranked": "applied"
   },
@@ -2005,13 +2005,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18.3,
-    "fused": 19.4,
-    "rerank": 66.6
+    "words": 1.1,
+    "meaning": 19.7,
+    "fused": 22.5,
+    "rerank": 123.8
    },
    "reranked": "applied"
   },
@@ -2024,13 +2024,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 14
+    "rerank": 6
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 17.7,
-    "fused": 19.7,
-    "rerank": 88.9
+    "words": 1,
+    "meaning": 19.7,
+    "fused": 21.8,
+    "rerank": 153.7
    },
    "reranked": "applied"
   },
@@ -2043,13 +2043,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.6,
-    "fused": 19.3,
-    "rerank": 72
+    "words": 1.9,
+    "meaning": 18.9,
+    "fused": 22.1,
+    "rerank": 115.6
    },
    "reranked": "applied"
   },
@@ -2062,13 +2062,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19.9,
-    "fused": 20.3,
-    "rerank": 72.6
+    "words": 1,
+    "meaning": 20.1,
+    "fused": 19.8,
+    "rerank": 133.8
    },
    "reranked": "applied"
   },
@@ -2081,13 +2081,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 7
+    "rerank": 3
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 21.5,
-    "fused": 20.8,
-    "rerank": 68.3
+    "words": 1.1,
+    "meaning": 18.9,
+    "fused": 20.4,
+    "rerank": 123.2
    },
    "reranked": "applied"
   },
@@ -2103,10 +2103,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.3,
-    "fused": 19.2,
-    "rerank": 36.6
+    "words": 1.7,
+    "meaning": 20.2,
+    "fused": 21.2,
+    "rerank": 58.3
    },
    "reranked": "applied"
   },
@@ -2119,13 +2119,13 @@
     "words": 0,
     "meaning": 6,
     "fused": 6,
-    "rerank": 2
+    "rerank": 6
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 17.5,
-    "fused": 18.3,
-    "rerank": 117.6
+    "words": 1.3,
+    "meaning": 18.9,
+    "fused": 19.1,
+    "rerank": 217.3
    },
    "reranked": "applied"
   },
@@ -2138,13 +2138,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 19
+    "rerank": 6
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 20.8,
-    "fused": 24.3,
-    "rerank": 155.4
+    "words": 1.7,
+    "meaning": 19.3,
+    "fused": 20.2,
+    "rerank": 281.3
    },
    "reranked": "applied"
   },
@@ -2160,10 +2160,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 20.5,
-    "fused": 21.2,
-    "rerank": 50.7
+    "words": 1.4,
+    "meaning": 19.6,
+    "fused": 21.1,
+    "rerank": 73.2
    },
    "reranked": "applied"
   },
@@ -2176,13 +2176,13 @@
     "words": 1,
     "meaning": 4,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 17.6,
-    "fused": 21.8,
-    "rerank": 97.1
+    "words": 1.7,
+    "meaning": 17.5,
+    "fused": 19.2,
+    "rerank": 136.1
    },
    "reranked": "applied"
   },
@@ -2195,13 +2195,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 1
+    "rerank": 3
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.1,
-    "fused": 20.4,
-    "rerank": 72.2
+    "words": 1,
+    "meaning": 18.6,
+    "fused": 23.5,
+    "rerank": 97.7
    },
    "reranked": "applied"
   },
@@ -2214,13 +2214,13 @@
     "words": 0,
     "meaning": 25,
     "fused": 25,
-    "rerank": 13
+    "rerank": 20
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.9,
-    "fused": 20,
-    "rerank": 158.6
+    "words": 1.1,
+    "meaning": 20.7,
+    "fused": 20.9,
+    "rerank": 236.3
    },
    "reranked": "applied"
   },
@@ -2233,13 +2233,13 @@
     "words": 4,
     "meaning": 3,
     "fused": 2,
-    "rerank": 3
+    "rerank": 6
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.8,
-    "fused": 21.1,
-    "rerank": 92
+    "words": 1.7,
+    "meaning": 18.6,
+    "fused": 20.6,
+    "rerank": 157.6
    },
    "reranked": "applied"
   },
@@ -2255,10 +2255,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.3,
-    "fused": 21.1,
-    "rerank": 20.6
+    "words": 1.6,
+    "meaning": 20.2,
+    "fused": 22.6,
+    "rerank": 20.3
    },
    "reranked": "none"
   },
@@ -2275,9 +2275,9 @@
    },
    "ms": {
     "words": 0.9,
-    "meaning": 18.8,
-    "fused": 20.5,
-    "rerank": 37.7
+    "meaning": 18.9,
+    "fused": 20.2,
+    "rerank": 50.9
    },
    "reranked": "applied"
   },
@@ -2293,10 +2293,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19.2,
-    "fused": 21.1,
-    "rerank": 37.6
+    "words": 1.3,
+    "meaning": 20.3,
+    "fused": 20.3,
+    "rerank": 48.5
    },
    "reranked": "applied"
   },
@@ -2312,10 +2312,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 20.1,
-    "fused": 21.4,
-    "rerank": 20.9
+    "words": 1,
+    "meaning": 17.9,
+    "fused": 20.3,
+    "rerank": 23.8
    },
    "reranked": "none"
   },
@@ -2328,13 +2328,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 20.5,
-    "fused": 23.3,
-    "rerank": 38.1
+    "words": 1,
+    "meaning": 18,
+    "fused": 21.2,
+    "rerank": 52.1
    },
    "reranked": "applied"
   },
@@ -2350,10 +2350,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 20.2,
-    "fused": 22.2,
-    "rerank": 37.9
+    "words": 1,
+    "meaning": 18.4,
+    "fused": 21.2,
+    "rerank": 50.5
    },
    "reranked": "applied"
   },
@@ -2369,10 +2369,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 0.8,
-    "meaning": 17.2,
-    "fused": 20.6,
-    "rerank": 45.3
+    "words": 0.9,
+    "meaning": 17.4,
+    "fused": 20.5,
+    "rerank": 70.5
    },
    "reranked": "applied"
   },
@@ -2385,13 +2385,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 7
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.3,
-    "fused": 20.4,
-    "rerank": 65.3
+    "words": 1.1,
+    "meaning": 20,
+    "fused": 21.7,
+    "rerank": 113.1
    },
    "reranked": "applied"
   },
@@ -2407,10 +2407,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18,
-    "fused": 19.6,
-    "rerank": 66.3
+    "words": 1,
+    "meaning": 19.1,
+    "fused": 19.9,
+    "rerank": 105.5
    },
    "reranked": "applied"
   },
@@ -2427,9 +2427,9 @@
    },
    "ms": {
     "words": 0.9,
-    "meaning": 17.5,
-    "fused": 19.1,
-    "rerank": 56.7
+    "meaning": 20,
+    "fused": 21.6,
+    "rerank": 83.7
    },
    "reranked": "applied"
   },
@@ -2442,13 +2442,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.4,
-    "fused": 25.9,
-    "rerank": 64.6
+    "words": 1.4,
+    "meaning": 20.2,
+    "fused": 21.4,
+    "rerank": 93.9
    },
    "reranked": "applied"
   },
@@ -2461,13 +2461,13 @@
     "words": 0,
     "meaning": 10,
     "fused": 10,
-    "rerank": 1
+    "rerank": 4
    },
    "ms": {
-    "words": 1,
-    "meaning": 19.9,
-    "fused": 19.8,
-    "rerank": 67.1
+    "words": 1.3,
+    "meaning": 20,
+    "fused": 22.5,
+    "rerank": 105.8
    },
    "reranked": "applied"
   },
@@ -2483,10 +2483,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
+    "words": 1.2,
     "meaning": 18,
-    "fused": 21.4,
-    "rerank": 89.3
+    "fused": 19.4,
+    "rerank": 113.3
    },
    "reranked": "applied"
   },
@@ -2502,10 +2502,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 19.1,
-    "fused": 20.3,
-    "rerank": 19.5
+    "words": 1,
+    "meaning": 20.6,
+    "fused": 20.7,
+    "rerank": 19.4
    },
    "reranked": "none"
   },
@@ -2518,13 +2518,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 6
+    "rerank": 3
    },
    "ms": {
     "words": 0.9,
-    "meaning": 18.2,
-    "fused": 19.8,
-    "rerank": 111
+    "meaning": 18.3,
+    "fused": 20.1,
+    "rerank": 143.6
    },
    "reranked": "applied"
   },
@@ -2540,10 +2540,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 19.4,
-    "fused": 20.8,
-    "rerank": 146
+    "words": 1.4,
+    "meaning": 17.7,
+    "fused": 18.9,
+    "rerank": 225
    },
    "reranked": "applied"
   },
@@ -2559,10 +2559,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19.8,
-    "fused": 21.7,
-    "rerank": 49.2
+    "words": 1.2,
+    "meaning": 18.6,
+    "fused": 20.1,
+    "rerank": 71.3
    },
    "reranked": "applied"
   },
@@ -2575,13 +2575,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 12
+    "rerank": 11
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.3,
-    "fused": 20,
-    "rerank": 76.8
+    "words": 1.8,
+    "meaning": 21.2,
+    "fused": 22.1,
+    "rerank": 124.3
    },
    "reranked": "applied"
   },
@@ -2597,10 +2597,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.1,
-    "fused": 22.3,
-    "rerank": 152.1
+    "words": 1.1,
+    "meaning": 20.5,
+    "fused": 22.8,
+    "rerank": 200.1
    },
    "reranked": "applied"
   },
@@ -2617,9 +2617,9 @@
    },
    "ms": {
     "words": 1,
-    "meaning": 19.4,
-    "fused": 22.4,
-    "rerank": 47.1
+    "meaning": 17.8,
+    "fused": 19.1,
+    "rerank": 77.5
    },
    "reranked": "applied"
   },
@@ -2632,13 +2632,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.9,
-    "fused": 19.7,
-    "rerank": 36
+    "words": 1,
+    "meaning": 18.2,
+    "fused": 19.9,
+    "rerank": 51
    },
    "reranked": "applied"
   },
@@ -2654,10 +2654,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18.1,
+    "words": 1,
+    "meaning": 18.6,
     "fused": 20.1,
-    "rerank": 47.6
+    "rerank": 74.5
    },
    "reranked": "applied"
   },
@@ -2673,10 +2673,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 17.7,
-    "fused": 20.9,
-    "rerank": 115.4
+    "words": 1.4,
+    "meaning": 17.4,
+    "fused": 19.5,
+    "rerank": 168.9
    },
    "reranked": "applied"
   },
@@ -2689,13 +2689,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 21
+    "rerank": 2
    },
    "ms": {
     "words": 1.4,
-    "meaning": 21.3,
+    "meaning": 20.6,
     "fused": 22.5,
-    "rerank": 156.5
+    "rerank": 268.9
    },
    "reranked": "applied"
   },
@@ -2708,13 +2708,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 24
+    "rerank": 20
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 19.6,
-    "fused": 21.7,
-    "rerank": 155.3
+    "words": 1.3,
+    "meaning": 19.5,
+    "fused": 20,
+    "rerank": 219.1
    },
    "reranked": "applied"
   },
@@ -2731,9 +2731,9 @@
    },
    "ms": {
     "words": 1.2,
-    "meaning": 18.2,
-    "fused": 19.1,
-    "rerank": 39.2
+    "meaning": 20,
+    "fused": 20.6,
+    "rerank": 61.6
    },
    "reranked": "applied"
   },
@@ -2746,13 +2746,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 5,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
+    "words": 1.7,
     "meaning": 17.9,
-    "fused": 22.7,
-    "rerank": 81.4
+    "fused": 19.8,
+    "rerank": 149.1
    },
    "reranked": "applied"
   },
@@ -2768,10 +2768,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19,
-    "fused": 20.8,
-    "rerank": 93.7
+    "words": 1.8,
+    "meaning": 18.8,
+    "fused": 20.1,
+    "rerank": 158.4
    },
    "reranked": "applied"
   },
@@ -2787,10 +2787,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 20,
-    "fused": 20.1,
-    "rerank": 35.4
+    "words": 1.4,
+    "meaning": 17.9,
+    "fused": 19.6,
+    "rerank": 53.2
    },
    "reranked": "applied"
   },
@@ -2806,10 +2806,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 17.9,
-    "fused": 19.1,
-    "rerank": 50
+    "words": 1.1,
+    "meaning": 18.8,
+    "fused": 19.7,
+    "rerank": 58.5
    },
    "reranked": "applied"
   },
@@ -2822,13 +2822,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 1
+    "rerank": 3
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.5,
-    "fused": 20.5,
-    "rerank": 55.8
+    "words": 1.1,
+    "meaning": 20.2,
+    "fused": 20.6,
+    "rerank": 71.3
    },
    "reranked": "applied"
   },
@@ -2844,10 +2844,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18,
-    "fused": 21,
-    "rerank": 40.5
+    "words": 2.5,
+    "meaning": 20.8,
+    "fused": 22,
+    "rerank": 54.6
    },
    "reranked": "applied"
   },
@@ -2864,9 +2864,9 @@
    },
    "ms": {
     "words": 1.2,
-    "meaning": 20.2,
-    "fused": 19,
-    "rerank": 29.2
+    "meaning": 19.7,
+    "fused": 19.9,
+    "rerank": 36.7
    },
    "reranked": "applied"
   },
@@ -2882,10 +2882,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.5,
-    "fused": 20.3,
-    "rerank": 70.3
+    "words": 1.5,
+    "meaning": 20.9,
+    "fused": 20.9,
+    "rerank": 90.3
    },
    "reranked": "applied"
   },
@@ -2901,10 +2901,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.3,
-    "fused": 19.6,
-    "rerank": 69.5
+    "words": 1.4,
+    "meaning": 18.5,
+    "fused": 20,
+    "rerank": 95.5
    },
    "reranked": "applied"
   },
@@ -2920,10 +2920,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 20.6,
-    "fused": 22,
-    "rerank": 47.5
+    "words": 1.4,
+    "meaning": 19.6,
+    "fused": 19.2,
+    "rerank": 56.1
    },
    "reranked": "applied"
   },
@@ -2939,10 +2939,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 19,
-    "fused": 22.4,
-    "rerank": 78.9
+    "words": 1.2,
+    "meaning": 19.6,
+    "fused": 21.2,
+    "rerank": 98
    },
    "reranked": "applied"
   },
@@ -2955,13 +2955,13 @@
     "words": 2,
     "meaning": 13,
     "fused": 2,
-    "rerank": 23
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 24.9,
-    "fused": 26.8,
-    "rerank": 168.8
+    "words": 2.1,
+    "meaning": 20.1,
+    "fused": 22.3,
+    "rerank": 226.9
    },
    "reranked": "applied"
   },
@@ -2974,13 +2974,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 4
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 20.1,
-    "fused": 22.7,
-    "rerank": 40
+    "words": 2.8,
+    "meaning": 19,
+    "fused": 21.4,
+    "rerank": 51.4
    },
    "reranked": "applied"
   },
@@ -2996,10 +2996,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.3,
-    "fused": 21.5,
-    "rerank": 37.1
+    "words": 1.1,
+    "meaning": 18.5,
+    "fused": 22.2,
+    "rerank": 37.2
    },
    "reranked": "applied"
   },
@@ -3015,10 +3015,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 21,
-    "fused": 22.4,
-    "rerank": 40.5
+    "words": 1.3,
+    "meaning": 18.3,
+    "fused": 20,
+    "rerank": 40.1
    },
    "reranked": "applied"
   },
@@ -3034,10 +3034,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 20.8,
-    "fused": 20.5,
-    "rerank": 32.2
+    "words": 1.1,
+    "meaning": 17.5,
+    "fused": 21.1,
+    "rerank": 42.3
    },
    "reranked": "applied"
   },
@@ -3053,10 +3053,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.8,
-    "fused": 18.9,
-    "rerank": 31.7
+    "words": 1.5,
+    "meaning": 18.9,
+    "fused": 20.2,
+    "rerank": 42.4
    },
    "reranked": "applied"
   },
@@ -3069,13 +3069,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 21.5,
-    "fused": 24.2,
-    "rerank": 37
+    "words": 1.6,
+    "meaning": 18.3,
+    "fused": 20.7,
+    "rerank": 46.1
    },
    "reranked": "applied"
   },
@@ -3091,10 +3091,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 20.9,
-    "fused": 19.2,
-    "rerank": 33.9
+    "words": 1.5,
+    "meaning": 18,
+    "fused": 18.3,
+    "rerank": 41.6
    },
    "reranked": "applied"
   },
@@ -3110,10 +3110,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 19.9,
-    "fused": 20.3,
-    "rerank": 42
+    "words": 1.1,
+    "meaning": 18,
+    "fused": 19.9,
+    "rerank": 51.5
    },
    "reranked": "applied"
   },
@@ -3129,10 +3129,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.1,
-    "meaning": 19.4,
-    "fused": 20.9,
-    "rerank": 53.2
+    "words": 1.3,
+    "meaning": 17.9,
+    "fused": 19.8,
+    "rerank": 81.9
    },
    "reranked": "applied"
   },
@@ -3145,13 +3145,13 @@
     "words": 1,
     "meaning": 3,
     "fused": 1,
-    "rerank": 5
+    "rerank": 2
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 19.1,
-    "fused": 21.5,
-    "rerank": 54.8
+    "words": 2,
+    "meaning": 19.3,
+    "fused": 19.8,
+    "rerank": 81.1
    },
    "reranked": "applied"
   },
@@ -3168,9 +3168,9 @@
    },
    "ms": {
     "words": 1.1,
-    "meaning": 18.5,
-    "fused": 20.3,
-    "rerank": 57.3
+    "meaning": 18.2,
+    "fused": 19.5,
+    "rerank": 72.7
    },
    "reranked": "applied"
   },
@@ -3183,13 +3183,13 @@
     "words": 2,
     "meaning": 2,
     "fused": 2,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 20.6,
-    "fused": 22.9,
-    "rerank": 57.9
+    "words": 1.8,
+    "meaning": 17.9,
+    "fused": 19.5,
+    "rerank": 97.7
    },
    "reranked": "applied"
   },
@@ -3202,13 +3202,13 @@
     "words": 0,
     "meaning": 8,
     "fused": 8,
-    "rerank": 16
+    "rerank": 6
    },
    "ms": {
     "words": 1.2,
-    "meaning": 23.2,
-    "fused": 20.8,
-    "rerank": 91.3
+    "meaning": 19.6,
+    "fused": 21.7,
+    "rerank": 119.9
    },
    "reranked": "applied"
   },
@@ -3221,13 +3221,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
     "words": 1.4,
-    "meaning": 21,
-    "fused": 21.1,
-    "rerank": 48.4
+    "meaning": 18.7,
+    "fused": 22.8,
+    "rerank": 71.6
    },
    "reranked": "applied"
   },
@@ -3243,10 +3243,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 19,
-    "fused": 21,
-    "rerank": 101.6
+    "words": 1.5,
+    "meaning": 21.8,
+    "fused": 22.4,
+    "rerank": 134.5
    },
    "reranked": "applied"
   },
@@ -3262,10 +3262,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 2.2,
-    "meaning": 17.9,
-    "fused": 19.6,
-    "rerank": 155.6
+    "words": 2.1,
+    "meaning": 20.3,
+    "fused": 23.2,
+    "rerank": 293.8
    },
    "reranked": "applied"
   },
@@ -3278,13 +3278,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 18
+    "rerank": 3
    },
    "ms": {
     "words": 1.5,
-    "meaning": 22,
-    "fused": 24.2,
-    "rerank": 160.4
+    "meaning": 22.7,
+    "fused": 21,
+    "rerank": 243.1
    },
    "reranked": "applied"
   },
@@ -3297,13 +3297,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 8
+    "rerank": 5
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 22.2,
-    "fused": 20.1,
-    "rerank": 77.9
+    "words": 2,
+    "meaning": 19.2,
+    "fused": 19.2,
+    "rerank": 108.2
    },
    "reranked": "applied"
   },
@@ -3319,10 +3319,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.2,
-    "fused": 20.2,
-    "rerank": 31.7
+    "words": 1.2,
+    "meaning": 19,
+    "fused": 22.6,
+    "rerank": 39.9
    },
    "reranked": "applied"
   },
@@ -3335,13 +3335,13 @@
     "words": 2,
     "meaning": 2,
     "fused": 2,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.1,
-    "fused": 19,
-    "rerank": 65.7
+    "words": 2,
+    "meaning": 18.7,
+    "fused": 21.6,
+    "rerank": 124.1
    },
    "reranked": "applied"
   },
@@ -3357,10 +3357,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 19,
-    "fused": 19.8,
-    "rerank": 56.9
+    "words": 1.2,
+    "meaning": 20.7,
+    "fused": 22.4,
+    "rerank": 92.1
    },
    "reranked": "applied"
   },
@@ -3373,13 +3373,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 22.4,
-    "fused": 22.3,
-    "rerank": 152.8
+    "words": 1.8,
+    "meaning": 22,
+    "fused": 24.3,
+    "rerank": 180.3
    },
    "reranked": "applied"
   },
@@ -3395,10 +3395,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 24.3,
-    "fused": 23,
-    "rerank": 146.6
+    "words": 1.6,
+    "meaning": 20.3,
+    "fused": 22.3,
+    "rerank": 189
    },
    "reranked": "applied"
   },
@@ -3411,13 +3411,13 @@
     "words": 1,
     "meaning": 7,
     "fused": 1,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 20.8,
-    "fused": 21,
-    "rerank": 150.5
+    "words": 1.6,
+    "meaning": 19.7,
+    "fused": 21.1,
+    "rerank": 170.9
    },
    "reranked": "applied"
   },
@@ -3433,10 +3433,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.1,
-    "fused": 19.9,
-    "rerank": 30
+    "words": 2,
+    "meaning": 20.3,
+    "fused": 21.7,
+    "rerank": 38.9
    },
    "reranked": "applied"
   },
@@ -3449,13 +3449,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 4
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 19.8,
-    "fused": 19.9,
-    "rerank": 66
+    "words": 1.1,
+    "meaning": 20.1,
+    "fused": 20.9,
+    "rerank": 107.9
    },
    "reranked": "applied"
   },
@@ -3471,10 +3471,10 @@
     "rerank": 5
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.8,
-    "fused": 22.7,
-    "rerank": 105.1
+    "words": 1.1,
+    "meaning": 18.1,
+    "fused": 19.6,
+    "rerank": 169.5
    },
    "reranked": "applied"
   },
@@ -3490,10 +3490,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 19.3,
-    "fused": 21.9,
-    "rerank": 59.9
+    "words": 1.2,
+    "meaning": 17.8,
+    "fused": 19,
+    "rerank": 68.7
    },
    "reranked": "applied"
   },
@@ -3506,13 +3506,13 @@
     "words": 1,
     "meaning": 4,
     "fused": 1,
-    "rerank": 5
+    "rerank": 3
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.7,
-    "fused": 22.7,
-    "rerank": 64.5
+    "words": 1.7,
+    "meaning": 22.1,
+    "fused": 22.5,
+    "rerank": 88.9
    },
    "reranked": "applied"
   },
@@ -3525,13 +3525,13 @@
     "words": 0,
     "meaning": 10,
     "fused": 10,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
     "words": 1.6,
-    "meaning": 19.9,
-    "fused": 22.8,
-    "rerank": 100.9
+    "meaning": 21.3,
+    "fused": 23.2,
+    "rerank": 165.1
    },
    "reranked": "applied"
   },
@@ -3547,10 +3547,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.3,
-    "fused": 21.3,
-    "rerank": 32.1
+    "words": 1.4,
+    "meaning": 19.6,
+    "fused": 20.5,
+    "rerank": 34.4
    },
    "reranked": "applied"
   },
@@ -3566,10 +3566,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.9,
-    "fused": 21.3,
-    "rerank": 35.9
+    "words": 1.1,
+    "meaning": 19.2,
+    "fused": 21.2,
+    "rerank": 36.7
    },
    "reranked": "applied"
   },
@@ -3582,13 +3582,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.8,
-    "fused": 21.4,
-    "rerank": 35.1
+    "words": 1.2,
+    "meaning": 20.1,
+    "fused": 23.1,
+    "rerank": 34.5
    },
    "reranked": "applied"
   },
@@ -3601,13 +3601,13 @@
     "words": 0,
     "meaning": 6,
     "fused": 7,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 18.8,
-    "fused": 20.2,
-    "rerank": 51.3
+    "words": 1.3,
+    "meaning": 17.5,
+    "fused": 19.6,
+    "rerank": 70.5
    },
    "reranked": "applied"
   },
@@ -3623,10 +3623,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.7,
-    "fused": 19.9,
-    "rerank": 156.7
+    "words": 1.6,
+    "meaning": 19.1,
+    "fused": 21.9,
+    "rerank": 247.3
    },
    "reranked": "applied"
   },
@@ -3642,10 +3642,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.1,
-    "fused": 18.9,
-    "rerank": 18.2
+    "words": 1.6,
+    "meaning": 19.8,
+    "fused": 20.5,
+    "rerank": 20.5
    },
    "reranked": "none"
   },
@@ -3661,10 +3661,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.4,
-    "fused": 19.1,
-    "rerank": 100.1
+    "words": 2,
+    "meaning": 19.1,
+    "fused": 21.6,
+    "rerank": 181.1
    },
    "reranked": "applied"
   },
@@ -3680,10 +3680,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 20.7,
-    "fused": 20.8,
-    "rerank": 70.8
+    "words": 1.2,
+    "meaning": 18,
+    "fused": 19.7,
+    "rerank": 94.5
    },
    "reranked": "applied"
   },
@@ -3696,13 +3696,13 @@
     "words": 0,
     "meaning": 6,
     "fused": 6,
-    "rerank": 16
+    "rerank": 9
    },
    "ms": {
     "words": 1.1,
-    "meaning": 18,
-    "fused": 19.8,
-    "rerank": 150.8
+    "meaning": 19.1,
+    "fused": 19.5,
+    "rerank": 210.1
    },
    "reranked": "applied"
   },
@@ -3718,10 +3718,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.1,
-    "fused": 19,
-    "rerank": 54
+    "words": 1.6,
+    "meaning": 18,
+    "fused": 19.8,
+    "rerank": 89.8
    },
    "reranked": "applied"
   },
@@ -3737,10 +3737,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18,
-    "fused": 19.5,
-    "rerank": 19.9
+    "words": 1.5,
+    "meaning": 19.9,
+    "fused": 22.1,
+    "rerank": 19.5
    },
    "reranked": "none"
   },
@@ -3756,10 +3756,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 0.9,
-    "meaning": 18,
-    "fused": 21.4,
-    "rerank": 19.9
+    "words": 1,
+    "meaning": 17.7,
+    "fused": 20.6,
+    "rerank": 18.5
    },
    "reranked": "none"
   },
@@ -3772,13 +3772,13 @@
     "words": 0,
     "meaning": 8,
     "fused": 9,
-    "rerank": 7
+    "rerank": 6
    },
    "ms": {
     "words": 1.1,
-    "meaning": 18.9,
-    "fused": 19.8,
-    "rerank": 64.1
+    "meaning": 19.5,
+    "fused": 20.7,
+    "rerank": 99.7
    },
    "reranked": "applied"
   },
@@ -3794,10 +3794,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1,
-    "meaning": 17.5,
-    "fused": 18.9,
-    "rerank": 28.6
+    "words": 1.4,
+    "meaning": 18.3,
+    "fused": 19.6,
+    "rerank": 38.4
    },
    "reranked": "applied"
   },
@@ -3810,13 +3810,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.4,
+    "words": 1.4,
+    "meaning": 17.8,
     "fused": 18.8,
-    "rerank": 54.4
+    "rerank": 67.3
    },
    "reranked": "applied"
   },
@@ -3829,13 +3829,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.8,
-    "fused": 23.4,
-    "rerank": 54.6
+    "words": 1.1,
+    "meaning": 18.5,
+    "fused": 19.8,
+    "rerank": 76.1
    },
    "reranked": "applied"
   },
@@ -3851,10 +3851,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.5,
+    "words": 1.2,
+    "meaning": 19.1,
     "fused": 18.5,
-    "rerank": 30.3
+    "rerank": 38.3
    },
    "reranked": "applied"
   },
@@ -3867,13 +3867,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 9
+    "rerank": 7
    },
    "ms": {
     "words": 1.1,
-    "meaning": 17.5,
-    "fused": 19.1,
-    "rerank": 102.6
+    "meaning": 18,
+    "fused": 21.3,
+    "rerank": 154.9
    },
    "reranked": "applied"
   },
@@ -3886,13 +3886,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 5,
-    "rerank": 6
+    "rerank": 5
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18,
-    "fused": 19.5,
-    "rerank": 67.2
+    "words": 1.8,
+    "meaning": 19,
+    "fused": 20.8,
+    "rerank": 111.9
    },
    "reranked": "applied"
   },
@@ -3905,13 +3905,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 18.1,
-    "fused": 18.9,
-    "rerank": 36.4
+    "words": 1.9,
+    "meaning": 19.5,
+    "fused": 21.1,
+    "rerank": 37.5
    },
    "reranked": "applied"
   },
@@ -3924,13 +3924,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 20.3,
-    "fused": 21.2,
-    "rerank": 48
+    "words": 1.1,
+    "meaning": 18,
+    "fused": 18.7,
+    "rerank": 72.1
    },
    "reranked": "applied"
   },
@@ -3943,13 +3943,13 @@
     "words": 0,
     "meaning": 6,
     "fused": 6,
-    "rerank": 7
+    "rerank": 3
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.3,
-    "fused": 20.5,
-    "rerank": 65.7
+    "words": 1.2,
+    "meaning": 18.7,
+    "fused": 21.3,
+    "rerank": 93.2
    },
    "reranked": "applied"
   },
@@ -3962,13 +3962,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 5
+    "rerank": 2
    },
    "ms": {
     "words": 1.1,
-    "meaning": 18.7,
-    "fused": 21.4,
-    "rerank": 57.2
+    "meaning": 18.2,
+    "fused": 19.7,
+    "rerank": 86.2
    },
    "reranked": "applied"
   },
@@ -3981,13 +3981,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.3,
-    "fused": 19.5,
-    "rerank": 52.1
+    "words": 1.8,
+    "meaning": 18.6,
+    "fused": 19.1,
+    "rerank": 68.9
    },
    "reranked": "applied"
   },
@@ -4000,13 +4000,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 17.3,
-    "fused": 20.5,
-    "rerank": 35.7
+    "words": 1.3,
+    "meaning": 16.6,
+    "fused": 18.1,
+    "rerank": 45.3
    },
    "reranked": "applied"
   },
@@ -4022,10 +4022,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.2,
-    "fused": 20.1,
-    "rerank": 19.4
+    "words": 1.4,
+    "meaning": 19.1,
+    "fused": 22.3,
+    "rerank": 20.2
    },
    "reranked": "none"
   },
@@ -4038,13 +4038,13 @@
     "words": 1,
     "meaning": 0,
     "fused": 2,
-    "rerank": 7
+    "rerank": 1
    },
    "ms": {
     "words": 1.5,
-    "meaning": 18.5,
-    "fused": 20.2,
-    "rerank": 64
+    "meaning": 17.5,
+    "fused": 19.3,
+    "rerank": 109.6
    },
    "reranked": "applied"
   },
@@ -4060,10 +4060,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.8,
-    "fused": 19.5,
-    "rerank": 88.4
+    "words": 1.4,
+    "meaning": 17.9,
+    "fused": 19.2,
+    "rerank": 172.9
    },
    "reranked": "applied"
   },
@@ -4079,10 +4079,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.9,
-    "fused": 18.9,
-    "rerank": 32.2
+    "words": 1.2,
+    "meaning": 16.5,
+    "fused": 18,
+    "rerank": 38.2
    },
    "reranked": "applied"
   },
@@ -4095,13 +4095,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 4
+    "rerank": 3
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18,
-    "fused": 19.5,
-    "rerank": 80.9
+    "words": 1.3,
+    "meaning": 17.4,
+    "fused": 20.4,
+    "rerank": 109
    },
    "reranked": "applied"
   },
@@ -4117,10 +4117,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.7,
+    "words": 1.7,
+    "meaning": 18.5,
     "fused": 19,
-    "rerank": 55.4
+    "rerank": 80.1
    },
    "reranked": "applied"
   },
@@ -4133,13 +4133,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.8,
-    "fused": 21.5,
-    "rerank": 66.2
+    "words": 1.3,
+    "meaning": 17.4,
+    "fused": 18.6,
+    "rerank": 92.5
    },
    "reranked": "applied"
   },
@@ -4152,13 +4152,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 17.2,
-    "fused": 18.4,
-    "rerank": 31.5
+    "words": 1.4,
+    "meaning": 17.3,
+    "fused": 18.3,
+    "rerank": 41.4
    },
    "reranked": "applied"
   },
@@ -4171,13 +4171,13 @@
     "words": 1,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 3
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 17.1,
-    "fused": 18.6,
-    "rerank": 47.5
+    "words": 1.6,
+    "meaning": 17.9,
+    "fused": 20,
+    "rerank": 76.7
    },
    "reranked": "applied"
   },
@@ -4190,13 +4190,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 5
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.1,
-    "fused": 20.1,
-    "rerank": 112.7
+    "words": 1.3,
+    "meaning": 18.3,
+    "fused": 19.7,
+    "rerank": 194.3
    },
    "reranked": "applied"
   },
@@ -4212,10 +4212,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.1,
-    "fused": 18.5,
-    "rerank": 28.8
+    "words": 1.3,
+    "meaning": 16.5,
+    "fused": 17.6,
+    "rerank": 35.4
    },
    "reranked": "applied"
   },
@@ -4228,13 +4228,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.2,
-    "fused": 18.4,
-    "rerank": 162.2
+    "words": 1.2,
+    "meaning": 17.7,
+    "fused": 19.1,
+    "rerank": 316
    },
    "reranked": "applied"
   },
@@ -4247,13 +4247,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 8
+    "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.5,
-    "fused": 20.2,
-    "rerank": 67.6
+    "words": 1.3,
+    "meaning": 17.2,
+    "fused": 19.8,
+    "rerank": 115.2
    },
    "reranked": "applied"
   },
@@ -4266,13 +4266,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 7
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.4,
-    "fused": 20.8,
-    "rerank": 75.6
+    "words": 1.7,
+    "meaning": 18.5,
+    "fused": 20.4,
+    "rerank": 130
    },
    "reranked": "applied"
   },
@@ -4288,10 +4288,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.1,
-    "fused": 19.9,
-    "rerank": 153.1
+    "words": 1.8,
+    "meaning": 17.6,
+    "fused": 18.8,
+    "rerank": 262.9
    },
    "reranked": "applied"
   },
@@ -4307,10 +4307,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 17.4,
-    "fused": 17.6,
-    "rerank": 152
+    "words": 1.6,
+    "meaning": 17.9,
+    "fused": 18.6,
+    "rerank": 258.4
    },
    "reranked": "applied"
   },
@@ -4323,13 +4323,13 @@
     "words": 0,
     "meaning": 6,
     "fused": 6,
-    "rerank": 1
+    "rerank": 3
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18.5,
-    "fused": 21.3,
-    "rerank": 138.3
+    "words": 1.6,
+    "meaning": 19.4,
+    "fused": 21.5,
+    "rerank": 239.6
    },
    "reranked": "applied"
   },
@@ -4345,10 +4345,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.5,
+    "words": 1.2,
+    "meaning": 16.9,
     "fused": 19.7,
-    "rerank": 74.1
+    "rerank": 123.4
    },
    "reranked": "applied"
   },
@@ -4361,13 +4361,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 3,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 2.1,
-    "meaning": 18.1,
-    "fused": 19.9,
-    "rerank": 49.6
+    "words": 1.7,
+    "meaning": 17.6,
+    "fused": 19.6,
+    "rerank": 76.3
    },
    "reranked": "applied"
   },
@@ -4383,10 +4383,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.7,
-    "fused": 19.9,
-    "rerank": 165.7
+    "words": 1.2,
+    "meaning": 18,
+    "fused": 19.1,
+    "rerank": 212.2
    },
    "reranked": "applied"
   },
@@ -4402,10 +4402,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.8,
-    "fused": 18.5,
-    "rerank": 34.3
+    "words": 1.3,
+    "meaning": 17.4,
+    "fused": 19.6,
+    "rerank": 39.4
    },
    "reranked": "applied"
   },
@@ -4418,13 +4418,13 @@
     "words": 0,
     "meaning": 17,
     "fused": 17,
-    "rerank": 3
+    "rerank": 5
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 19.8,
-    "fused": 19.1,
-    "rerank": 118.6
+    "words": 1.4,
+    "meaning": 17.7,
+    "fused": 18,
+    "rerank": 225.8
    },
    "reranked": "applied"
   },
@@ -4440,10 +4440,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17,
-    "fused": 20,
-    "rerank": 134.1
+    "words": 1.3,
+    "meaning": 18.3,
+    "fused": 20.9,
+    "rerank": 247.9
    },
    "reranked": "applied"
   },
@@ -4459,10 +4459,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.2,
-    "fused": 19.5,
-    "rerank": 91.9
+    "words": 1.3,
+    "meaning": 19,
+    "fused": 19.2,
+    "rerank": 144
    },
    "reranked": "applied"
   },
@@ -4478,10 +4478,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.2,
-    "fused": 20.3,
-    "rerank": 37.2
+    "words": 1.8,
+    "meaning": 18.9,
+    "fused": 19.3,
+    "rerank": 57.6
    },
    "reranked": "applied"
   },
@@ -4494,13 +4494,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1,
-    "meaning": 16.7,
-    "fused": 18.2,
-    "rerank": 84.1
+    "words": 1.2,
+    "meaning": 17.8,
+    "fused": 19,
+    "rerank": 154.5
    },
    "reranked": "applied"
   },
@@ -4516,10 +4516,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 16.7,
-    "fused": 18.4,
-    "rerank": 50.8
+    "words": 1.7,
+    "meaning": 17.6,
+    "fused": 18.6,
+    "rerank": 77.8
    },
    "reranked": "applied"
   },
@@ -4535,10 +4535,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.1,
-    "fused": 18.7,
-    "rerank": 71.2
+    "words": 1.4,
+    "meaning": 17.3,
+    "fused": 19.8,
+    "rerank": 92.5
    },
    "reranked": "applied"
   },
@@ -4554,10 +4554,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.9,
-    "fused": 22.4,
-    "rerank": 18.2
+    "words": 1.4,
+    "meaning": 17.2,
+    "fused": 18.8,
+    "rerank": 18.7
    },
    "reranked": "none"
   },
@@ -4574,9 +4574,9 @@
    },
    "ms": {
     "words": 1.3,
-    "meaning": 18.4,
-    "fused": 18.8,
-    "rerank": 54.4
+    "meaning": 19.4,
+    "fused": 19.7,
+    "rerank": 71.7
    },
    "reranked": "applied"
   },
@@ -4592,10 +4592,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 16.9,
-    "fused": 18.6,
-    "rerank": 44.4
+    "words": 1.4,
+    "meaning": 18.5,
+    "fused": 21.1,
+    "rerank": 69
    },
    "reranked": "applied"
   },
@@ -4608,13 +4608,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 1
+    "rerank": 4
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.3,
-    "fused": 18.9,
-    "rerank": 80.2
+    "words": 1.4,
+    "meaning": 17.6,
+    "fused": 18.2,
+    "rerank": 110.3
    },
    "reranked": "applied"
   },
@@ -4627,13 +4627,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 16.5,
-    "fused": 18.1,
-    "rerank": 64.3
+    "words": 2.1,
+    "meaning": 17.1,
+    "fused": 20,
+    "rerank": 92.3
    },
    "reranked": "applied"
   },
@@ -4649,10 +4649,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.1,
-    "fused": 18.4,
-    "rerank": 143.6
+    "words": 1.7,
+    "meaning": 17.2,
+    "fused": 19.2,
+    "rerank": 221.6
    },
    "reranked": "applied"
   },
@@ -4665,13 +4665,13 @@
     "words": 3,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 17.3,
-    "fused": 19.3,
-    "rerank": 97
+    "words": 1.8,
+    "meaning": 17.5,
+    "fused": 20.3,
+    "rerank": 165
    },
    "reranked": "applied"
   },
@@ -4687,10 +4687,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 16.7,
+    "words": 1.4,
+    "meaning": 18.9,
     "fused": 18.6,
-    "rerank": 152.6
+    "rerank": 242.8
    },
    "reranked": "applied"
   },
@@ -4703,13 +4703,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.1,
-    "fused": 20.1,
-    "rerank": 159.1
+    "words": 1.3,
+    "meaning": 17.6,
+    "fused": 20.3,
+    "rerank": 282.4
    },
    "reranked": "applied"
   },
@@ -4725,10 +4725,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18,
-    "fused": 21.6,
-    "rerank": 35.2
+    "words": 1.6,
+    "meaning": 18.3,
+    "fused": 18.8,
+    "rerank": 46.8
    },
    "reranked": "applied"
   },
@@ -4744,10 +4744,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.3,
-    "fused": 18.8,
-    "rerank": 38.8
+    "words": 1.4,
+    "meaning": 18.7,
+    "fused": 19.4,
+    "rerank": 51.3
    },
    "reranked": "applied"
   },
@@ -4760,13 +4760,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 17.5,
+    "words": 1.8,
+    "meaning": 18.6,
     "fused": 19.6,
-    "rerank": 70.5
+    "rerank": 115.1
    },
    "reranked": "applied"
   },
@@ -4782,10 +4782,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18,
-    "fused": 19.8,
-    "rerank": 34.8
+    "words": 2,
+    "meaning": 19,
+    "fused": 19,
+    "rerank": 58.3
    },
    "reranked": "applied"
   },
@@ -4801,10 +4801,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.2,
-    "fused": 19.5,
-    "rerank": 39.2
+    "words": 1.7,
+    "meaning": 17.1,
+    "fused": 19.3,
+    "rerank": 61.4
    },
    "reranked": "applied"
   },
@@ -4817,13 +4817,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.9,
-    "fused": 21,
-    "rerank": 47.3
+    "words": 1.7,
+    "meaning": 19.7,
+    "fused": 21.9,
+    "rerank": 76.5
    },
    "reranked": "applied"
   },
@@ -4836,13 +4836,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
     "words": 1.3,
-    "meaning": 18.3,
-    "fused": 20.2,
-    "rerank": 49.9
+    "meaning": 17.6,
+    "fused": 19.6,
+    "rerank": 59.6
    },
    "reranked": "applied"
   },
@@ -4858,10 +4858,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.9,
-    "fused": 18.3,
-    "rerank": 17.8
+    "words": 1.4,
+    "meaning": 18.7,
+    "fused": 18.4,
+    "rerank": 17.6
    },
    "reranked": "none"
   },
@@ -4874,13 +4874,13 @@
     "words": 0,
     "meaning": 9,
     "fused": 9,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1,
-    "meaning": 17.6,
-    "fused": 19.3,
-    "rerank": 156.1
+    "words": 1.1,
+    "meaning": 17.2,
+    "fused": 17.5,
+    "rerank": 245.3
    },
    "reranked": "applied"
   },
@@ -4896,10 +4896,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.1,
-    "fused": 22,
-    "rerank": 32.2
+    "words": 2.1,
+    "meaning": 20.9,
+    "fused": 20.7,
+    "rerank": 39.8
    },
    "reranked": "applied"
   },
@@ -4915,10 +4915,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 17.2,
-    "fused": 18.7,
-    "rerank": 31.7
+    "words": 2.1,
+    "meaning": 19,
+    "fused": 20.8,
+    "rerank": 39.6
    },
    "reranked": "applied"
   },
@@ -4931,13 +4931,13 @@
     "words": 1,
     "meaning": 0,
     "fused": 3,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.1,
-    "fused": 18.5,
-    "rerank": 86.6
+    "words": 2,
+    "meaning": 18.6,
+    "fused": 19.6,
+    "rerank": 154
    },
    "reranked": "applied"
   },
@@ -4950,13 +4950,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 3,
-    "rerank": 3
+    "rerank": 4
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17,
-    "fused": 17.5,
-    "rerank": 102
+    "words": 1.4,
+    "meaning": 17.3,
+    "fused": 17.6,
+    "rerank": 159.9
    },
    "reranked": "applied"
   },
@@ -4972,10 +4972,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 17.3,
-    "fused": 18.9,
-    "rerank": 48.4
+    "words": 1.2,
+    "meaning": 18,
+    "fused": 19.1,
+    "rerank": 74.6
    },
    "reranked": "applied"
   },
@@ -4991,10 +4991,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.1,
-    "meaning": 18.1,
-    "fused": 20.4,
-    "rerank": 33.1
+    "words": 1.3,
+    "meaning": 17.5,
+    "fused": 19.9,
+    "rerank": 34.8
    },
    "reranked": "applied"
   },
@@ -5007,13 +5007,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.5,
-    "fused": 20,
-    "rerank": 55.5
+    "words": 1.3,
+    "meaning": 17,
+    "fused": 18.7,
+    "rerank": 70.8
    },
    "reranked": "applied"
   },
@@ -5029,10 +5029,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
+    "words": 1.4,
     "meaning": 18.6,
-    "fused": 19.7,
-    "rerank": 84.1
+    "fused": 20.2,
+    "rerank": 126.3
    },
    "reranked": "applied"
   },
@@ -5048,10 +5048,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 16.9,
-    "fused": 19,
-    "rerank": 35.9
+    "words": 1.6,
+    "meaning": 18.3,
+    "fused": 20.8,
+    "rerank": 49
    },
    "reranked": "applied"
   },
@@ -5064,13 +5064,13 @@
     "words": 1,
     "meaning": 1,
     "fused": 1,
-    "rerank": 5
+    "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18,
-    "fused": 19.5,
-    "rerank": 45.5
+    "words": 1.7,
+    "meaning": 18.4,
+    "fused": 19.9,
+    "rerank": 62.4
    },
    "reranked": "applied"
   },
@@ -5083,13 +5083,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.5,
-    "fused": 20,
-    "rerank": 32.6
+    "words": 1.8,
+    "meaning": 19.3,
+    "fused": 19.7,
+    "rerank": 44.5
    },
    "reranked": "applied"
   },
@@ -5105,10 +5105,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.6,
-    "fused": 17.9,
-    "rerank": 35.3
+    "words": 1.5,
+    "meaning": 18.3,
+    "fused": 19.4,
+    "rerank": 35.8
    },
    "reranked": "applied"
   },
@@ -5124,10 +5124,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18.1,
-    "fused": 18.8,
-    "rerank": 78.8
+    "words": 1.6,
+    "meaning": 17,
+    "fused": 20.3,
+    "rerank": 95.7
    },
    "reranked": "applied"
   },
@@ -5140,13 +5140,13 @@
     "words": 0,
     "meaning": 15,
     "fused": 15,
-    "rerank": 16
+    "rerank": 19
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.2,
-    "fused": 19.4,
-    "rerank": 111.4
+    "words": 1.7,
+    "meaning": 18,
+    "fused": 19.7,
+    "rerank": 125.3
    },
    "reranked": "applied"
   },
@@ -5162,10 +5162,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.7,
-    "fused": 19.6,
-    "rerank": 37.2
+    "words": 1.4,
+    "meaning": 16.9,
+    "fused": 18.6,
+    "rerank": 40.6
    },
    "reranked": "applied"
   },
@@ -5181,10 +5181,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.3,
-    "fused": 20.2,
-    "rerank": 36.5
+    "words": 1.9,
+    "meaning": 20.4,
+    "fused": 21.3,
+    "rerank": 39.1
    },
    "reranked": "applied"
   },
@@ -5200,10 +5200,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.5,
-    "fused": 19.8,
-    "rerank": 39.4
+    "words": 1.5,
+    "meaning": 17.8,
+    "fused": 19.3,
+    "rerank": 51.1
    },
    "reranked": "applied"
   },
@@ -5219,10 +5219,10 @@
     "rerank": 8
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.4,
+    "words": 1.4,
+    "meaning": 17,
     "fused": 19,
-    "rerank": 143.5
+    "rerank": 151.2
    },
    "reranked": "applied"
   },
@@ -5235,13 +5235,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 2,
-    "meaning": 18.7,
-    "fused": 20.7,
-    "rerank": 38.5
+    "words": 1.9,
+    "meaning": 17.5,
+    "fused": 19.4,
+    "rerank": 41.6
    },
    "reranked": "applied"
   },
@@ -5254,13 +5254,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 13
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.9,
-    "fused": 20.9,
-    "rerank": 127.9
+    "words": 1.4,
+    "meaning": 17.2,
+    "fused": 19,
+    "rerank": 139.2
    },
    "reranked": "applied"
   },
@@ -5277,9 +5277,9 @@
    },
    "ms": {
     "words": 1.4,
-    "meaning": 19,
-    "fused": 19.5,
-    "rerank": 43.7
+    "meaning": 17.9,
+    "fused": 19.4,
+    "rerank": 55.6
    },
    "reranked": "applied"
   },
@@ -5292,13 +5292,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 6
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18,
-    "fused": 19.7,
-    "rerank": 148.3
+    "words": 1.4,
+    "meaning": 17.8,
+    "fused": 19.6,
+    "rerank": 202.7
    },
    "reranked": "applied"
   },
@@ -5311,13 +5311,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 17.4,
-    "fused": 18.5,
-    "rerank": 96.3
+    "words": 1.4,
+    "meaning": 17,
+    "fused": 19.1,
+    "rerank": 118.2
    },
    "reranked": "applied"
   },
@@ -5330,13 +5330,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.6,
-    "fused": 18.8,
-    "rerank": 129.7
+    "words": 1.5,
+    "meaning": 18.8,
+    "fused": 21.2,
+    "rerank": 166.8
    },
    "reranked": "applied"
   },
@@ -5352,10 +5352,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
+    "words": 1.5,
     "meaning": 17.7,
-    "fused": 19.5,
-    "rerank": 48.3
+    "fused": 20,
+    "rerank": 66.4
    },
    "reranked": "applied"
   },
@@ -5371,10 +5371,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.5,
-    "fused": 19.9,
-    "rerank": 30.8
+    "words": 1.5,
+    "meaning": 19.2,
+    "fused": 22.6,
+    "rerank": 37.6
    },
    "reranked": "applied"
   },
@@ -5390,10 +5390,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.6,
-    "fused": 20.7,
-    "rerank": 65.9
+    "words": 2.4,
+    "meaning": 22.6,
+    "fused": 20.3,
+    "rerank": 99
    },
    "reranked": "applied"
   },
@@ -5406,13 +5406,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 1
    },
    "ms": {
     "words": 1.4,
-    "meaning": 17.5,
-    "fused": 20.5,
-    "rerank": 46
+    "meaning": 16.8,
+    "fused": 18.7,
+    "rerank": 49.6
    },
    "reranked": "applied"
   },
@@ -5425,13 +5425,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 13
+    "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.5,
-    "fused": 19.1,
-    "rerank": 79.5
+    "words": 1.4,
+    "meaning": 17.7,
+    "fused": 20.1,
+    "rerank": 103.5
    },
    "reranked": "applied"
   },
@@ -5444,13 +5444,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 1
+    "rerank": 4
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 20,
-    "fused": 21.8,
-    "rerank": 73.2
+    "words": 1.4,
+    "meaning": 17.8,
+    "fused": 19.5,
+    "rerank": 90.4
    },
    "reranked": "applied"
   },
@@ -5466,10 +5466,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 17.6,
-    "fused": 18,
-    "rerank": 16.8
+    "words": 1.5,
+    "meaning": 18.3,
+    "fused": 20.4,
+    "rerank": 18.7
    },
    "reranked": "none"
   },
@@ -5485,10 +5485,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1,
-    "meaning": 16.5,
-    "fused": 21.2,
-    "rerank": 20.4
+    "words": 1.2,
+    "meaning": 16.8,
+    "fused": 18.6,
+    "rerank": 18.9
    },
    "reranked": "none"
   },
@@ -5504,10 +5504,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.5,
-    "fused": 21.5,
-    "rerank": 20.1
+    "words": 1.6,
+    "meaning": 18.3,
+    "fused": 20.3,
+    "rerank": 19.5
    },
    "reranked": "none"
   },
@@ -5520,13 +5520,13 @@
     "words": 1,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18.8,
-    "fused": 20.3,
-    "rerank": 49.2
+    "words": 1.9,
+    "meaning": 17.5,
+    "fused": 18.4,
+    "rerank": 54.2
    },
    "reranked": "applied"
   },
@@ -5539,13 +5539,13 @@
     "words": 0,
     "meaning": 13,
     "fused": 13,
-    "rerank": 13
+    "rerank": 12
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 17.7,
+    "words": 1.8,
+    "meaning": 18.2,
     "fused": 19.8,
-    "rerank": 100.7
+    "rerank": 116.1
    },
    "reranked": "applied"
   },
@@ -5558,13 +5558,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 6
+    "rerank": 4
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.1,
-    "fused": 19.5,
-    "rerank": 52.1
+    "words": 1.4,
+    "meaning": 18.5,
+    "fused": 19.6,
+    "rerank": 68.6
    },
    "reranked": "applied"
   },
@@ -5577,13 +5577,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17,
-    "fused": 20.3,
-    "rerank": 81.9
+    "words": 1.6,
+    "meaning": 17.1,
+    "fused": 18.6,
+    "rerank": 102.5
    },
    "reranked": "applied"
   },
@@ -5599,10 +5599,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18,
-    "fused": 19.4,
-    "rerank": 56.8
+    "words": 1.4,
+    "meaning": 17,
+    "fused": 18.9,
+    "rerank": 58.9
    },
    "reranked": "applied"
   },
@@ -5615,13 +5615,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 10
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.5,
-    "fused": 22.1,
-    "rerank": 68.4
+    "words": 1.3,
+    "meaning": 17.4,
+    "fused": 18.8,
+    "rerank": 86.6
    },
    "reranked": "applied"
   },
@@ -5637,10 +5637,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 18.4,
-    "fused": 20,
-    "rerank": 28
+    "words": 1.6,
+    "meaning": 16.6,
+    "fused": 18.3,
+    "rerank": 31.3
    },
    "reranked": "applied"
   },
@@ -5653,13 +5653,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.3,
-    "fused": 19.6,
-    "rerank": 55
+    "words": 1.4,
+    "meaning": 16.8,
+    "fused": 20.9,
+    "rerank": 89.8
    },
    "reranked": "applied"
   },
@@ -5675,10 +5675,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 17.2,
+    "words": 1.4,
+    "meaning": 18.4,
     "fused": 19.9,
-    "rerank": 31.3
+    "rerank": 39.6
    },
    "reranked": "applied"
   },
@@ -5691,13 +5691,13 @@
     "words": 0,
     "meaning": 7,
     "fused": 7,
-    "rerank": 9
+    "rerank": 8
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 17.9,
-    "fused": 18.5,
-    "rerank": 80.2
+    "words": 3.4,
+    "meaning": 19.3,
+    "fused": 20.2,
+    "rerank": 94.2
    },
    "reranked": "applied"
   },
@@ -5713,10 +5713,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.9,
-    "fused": 21.3,
-    "rerank": 31.7
+    "words": 2.1,
+    "meaning": 17.5,
+    "fused": 20.4,
+    "rerank": 34.9
    },
    "reranked": "applied"
   },
@@ -5729,13 +5729,13 @@
     "words": 0,
     "meaning": 9,
     "fused": 9,
-    "rerank": 4
+    "rerank": 9
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19.1,
-    "fused": 21.2,
-    "rerank": 87
+    "words": 1.5,
+    "meaning": 18.9,
+    "fused": 21.3,
+    "rerank": 109
    },
    "reranked": "applied"
   },
@@ -5748,13 +5748,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 2,
-    "rerank": 2
+    "rerank": 3
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 16.5,
-    "fused": 17.8,
-    "rerank": 79
+    "words": 1.9,
+    "meaning": 17,
+    "fused": 18.4,
+    "rerank": 114.8
    },
    "reranked": "applied"
   },
@@ -5767,13 +5767,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 5
+    "rerank": 1
    },
    "ms": {
     "words": 1.3,
-    "meaning": 17.2,
-    "fused": 18.9,
-    "rerank": 45.3
+    "meaning": 17.4,
+    "fused": 19,
+    "rerank": 51.5
    },
    "reranked": "applied"
   },
@@ -5789,10 +5789,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18,
-    "fused": 19.7,
-    "rerank": 49.8
+    "words": 1.3,
+    "meaning": 16.7,
+    "fused": 19,
+    "rerank": 55.2
    },
    "reranked": "applied"
   },
@@ -5808,10 +5808,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 19.1,
-    "fused": 20.1,
-    "rerank": 37.2
+    "words": 1.3,
+    "meaning": 16.6,
+    "fused": 18.2,
+    "rerank": 49.5
    },
    "reranked": "applied"
   },
@@ -5827,10 +5827,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 19.5,
-    "fused": 21.4,
-    "rerank": 38.8
+    "words": 1.5,
+    "meaning": 17.8,
+    "fused": 19.7,
+    "rerank": 46
    },
    "reranked": "applied"
   },
@@ -5846,10 +5846,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.7,
-    "fused": 18.8,
-    "rerank": 31
+    "words": 1.9,
+    "meaning": 17.5,
+    "fused": 19,
+    "rerank": 35.6
    },
    "reranked": "applied"
   },
@@ -5865,10 +5865,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 16.6,
-    "fused": 18.4,
-    "rerank": 43.8
+    "words": 1.4,
+    "meaning": 18.4,
+    "fused": 20.4,
+    "rerank": 55.3
    },
    "reranked": "applied"
   },
@@ -5884,10 +5884,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 17.3,
-    "fused": 19.2,
-    "rerank": 44.6
+    "words": 1.4,
+    "meaning": 17.6,
+    "fused": 20.3,
+    "rerank": 52.5
    },
    "reranked": "applied"
   },
@@ -5900,13 +5900,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 4
+    "rerank": 3
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.1,
-    "fused": 20,
-    "rerank": 65.7
+    "words": 1.8,
+    "meaning": 18.6,
+    "fused": 20.2,
+    "rerank": 88.4
    },
    "reranked": "applied"
   },
@@ -5922,10 +5922,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.6,
-    "fused": 21.5,
-    "rerank": 54.9
+    "words": 2.3,
+    "meaning": 19.2,
+    "fused": 20.7,
+    "rerank": 67.2
    },
    "reranked": "applied"
   },
@@ -5938,13 +5938,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 8
+    "rerank": 11
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 17.8,
-    "fused": 19.2,
-    "rerank": 119.9
+    "words": 1.9,
+    "meaning": 18.1,
+    "fused": 21.7,
+    "rerank": 162
    },
    "reranked": "applied"
   },
@@ -5960,10 +5960,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
+    "words": 1.4,
     "meaning": 16.8,
-    "fused": 19,
-    "rerank": 48
+    "fused": 18.4,
+    "rerank": 55.9
    },
    "reranked": "applied"
   },
@@ -5976,13 +5976,13 @@
     "words": 0,
     "meaning": 4,
     "fused": 4,
-    "rerank": 3
+    "rerank": 2
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 16.9,
-    "fused": 19,
-    "rerank": 37.3
+    "words": 1.8,
+    "meaning": 18.8,
+    "fused": 19.1,
+    "rerank": 57.3
    },
    "reranked": "applied"
   },
@@ -5998,10 +5998,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.7,
-    "fused": 19.4,
-    "rerank": 31.5
+    "words": 1.4,
+    "meaning": 16.4,
+    "fused": 18.1,
+    "rerank": 33.6
    },
    "reranked": "applied"
   },
@@ -6014,13 +6014,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.1,
-    "fused": 20.2,
-    "rerank": 56
+    "words": 1.4,
+    "meaning": 17.3,
+    "fused": 19.2,
+    "rerank": 62.3
    },
    "reranked": "applied"
   },
@@ -6033,13 +6033,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.1,
-    "fused": 19.3,
-    "rerank": 54.1
+    "words": 1.8,
+    "meaning": 17.2,
+    "fused": 18.8,
+    "rerank": 71.3
    },
    "reranked": "applied"
   },
@@ -6052,13 +6052,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 16.9,
-    "fused": 18.8,
-    "rerank": 51.3
+    "words": 1.4,
+    "meaning": 16.6,
+    "fused": 18.6,
+    "rerank": 78.3
    },
    "reranked": "applied"
   },
@@ -6074,10 +6074,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.2,
-    "fused": 19.1,
-    "rerank": 34.7
+    "words": 1.9,
+    "meaning": 17.7,
+    "fused": 20.3,
+    "rerank": 44.4
    },
    "reranked": "applied"
   },
@@ -6093,10 +6093,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.6,
+    "words": 2.2,
+    "meaning": 18.5,
     "fused": 19.7,
-    "rerank": 46.8
+    "rerank": 63.7
    },
    "reranked": "applied"
   },
@@ -6112,10 +6112,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 16.3,
-    "fused": 19.4,
-    "rerank": 77.1
+    "words": 2,
+    "meaning": 17.1,
+    "fused": 21.4,
+    "rerank": 112.7
    },
    "reranked": "applied"
   },
@@ -6131,10 +6131,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 18.8,
-    "fused": 19,
-    "rerank": 29.1
+    "words": 1.4,
+    "meaning": 17.9,
+    "fused": 21.2,
+    "rerank": 33.7
    },
    "reranked": "applied"
   },
@@ -6147,13 +6147,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 9
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.1,
+    "words": 1.4,
+    "meaning": 17.3,
     "fused": 18,
-    "rerank": 67
+    "rerank": 95.1
    },
    "reranked": "applied"
   },
@@ -6169,10 +6169,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
+    "words": 1.4,
     "meaning": 17.1,
     "fused": 18.8,
-    "rerank": 151.6
+    "rerank": 272.7
    },
    "reranked": "applied"
   },
@@ -6188,10 +6188,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.2,
-    "fused": 18.8,
-    "rerank": 157.2
+    "words": 1.3,
+    "meaning": 18.9,
+    "fused": 19.3,
+    "rerank": 235.3
    },
    "reranked": "applied"
   },
@@ -6207,10 +6207,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 17.8,
-    "fused": 20.9,
-    "rerank": 50.1
+    "words": 1.5,
+    "meaning": 17.7,
+    "fused": 19.3,
+    "rerank": 55.1
    },
    "reranked": "applied"
   },
@@ -6223,13 +6223,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 5
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 17.9,
-    "fused": 20.1,
-    "rerank": 56.7
+    "words": 2.4,
+    "meaning": 19,
+    "fused": 19.2,
+    "rerank": 92.4
    },
    "reranked": "applied"
   },
@@ -6242,13 +6242,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
     "words": 1.4,
-    "meaning": 18.6,
-    "fused": 19.9,
-    "rerank": 150.6
+    "meaning": 17,
+    "fused": 18.5,
+    "rerank": 261.1
    },
    "reranked": "applied"
   },
@@ -6261,13 +6261,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 13
+    "rerank": 1
    },
    "ms": {
-    "words": 1.2,
-    "meaning": 18.3,
-    "fused": 20.6,
-    "rerank": 154.7
+    "words": 1.4,
+    "meaning": 17.4,
+    "fused": 19.3,
+    "rerank": 284.6
    },
    "reranked": "applied"
   },
@@ -6283,10 +6283,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 17.8,
-    "fused": 19.6,
-    "rerank": 18.7
+    "words": 1.5,
+    "meaning": 18.5,
+    "fused": 22.6,
+    "rerank": 19
    },
    "reranked": "none"
   },
@@ -6299,13 +6299,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 10
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.4,
-    "fused": 21.4,
-    "rerank": 67.4
+    "words": 1.2,
+    "meaning": 16.3,
+    "fused": 18.8,
+    "rerank": 93
    },
    "reranked": "applied"
   },
@@ -6321,10 +6321,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 20.1,
-    "fused": 22.9,
-    "rerank": 54.7
+    "words": 2.6,
+    "meaning": 20.3,
+    "fused": 21.7,
+    "rerank": 77.6
    },
    "reranked": "applied"
   },
@@ -6340,10 +6340,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 19,
-    "fused": 20.4,
-    "rerank": 144.2
+    "words": 1.6,
+    "meaning": 19.7,
+    "fused": 21.1,
+    "rerank": 179
    },
    "reranked": "applied"
   },
@@ -6356,13 +6356,13 @@
     "words": 0,
     "meaning": 11,
     "fused": 11,
-    "rerank": 3
+    "rerank": 4
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 20.7,
-    "fused": 23,
-    "rerank": 171.5
+    "words": 1.7,
+    "meaning": 19.8,
+    "fused": 22.6,
+    "rerank": 296.8
    },
    "reranked": "applied"
   },
@@ -6378,10 +6378,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 20.5,
-    "fused": 22.3,
-    "rerank": 41.5
+    "words": 2.2,
+    "meaning": 19.9,
+    "fused": 23.1,
+    "rerank": 60.9
    },
    "reranked": "applied"
   },
@@ -6394,13 +6394,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 6
+    "rerank": 1
    },
    "ms": {
-    "words": 2.1,
-    "meaning": 18.8,
-    "fused": 22.1,
-    "rerank": 49
+    "words": 2.6,
+    "meaning": 22.2,
+    "fused": 21.5,
+    "rerank": 77.7
    },
    "reranked": "applied"
   },
@@ -6416,10 +6416,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 19.3,
-    "fused": 21.1,
-    "rerank": 36.9
+    "words": 1.6,
+    "meaning": 19.6,
+    "fused": 21.2,
+    "rerank": 54.5
    },
    "reranked": "applied"
   },
@@ -6435,10 +6435,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 2.2,
-    "meaning": 18.2,
-    "fused": 21.1,
-    "rerank": 55.2
+    "words": 2.8,
+    "meaning": 20.4,
+    "fused": 21.6,
+    "rerank": 101.1
    },
    "reranked": "applied"
   },
@@ -6454,10 +6454,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.2,
-    "meaning": 20,
-    "fused": 20.1,
-    "rerank": 89.4
+    "words": 2.3,
+    "meaning": 20.3,
+    "fused": 22.2,
+    "rerank": 151.5
    },
    "reranked": "applied"
   },
@@ -6473,10 +6473,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.8,
-    "fused": 21.4,
-    "rerank": 19.7
+    "words": 2,
+    "meaning": 21,
+    "fused": 25,
+    "rerank": 24
    },
    "reranked": "none"
   },
@@ -6492,10 +6492,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 22,
+    "words": 2.2,
+    "meaning": 21.1,
     "fused": 22.1,
-    "rerank": 34.1
+    "rerank": 41.9
    },
    "reranked": "applied"
   },
@@ -6511,10 +6511,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.8,
-    "fused": 21.9,
-    "rerank": 37.4
+    "words": 1.7,
+    "meaning": 20.6,
+    "fused": 21,
+    "rerank": 47
    },
    "reranked": "applied"
   },
@@ -6527,13 +6527,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 3
+    "rerank": 5
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19.4,
-    "fused": 20.6,
-    "rerank": 133.6
+    "words": 2.5,
+    "meaning": 23,
+    "fused": 21.5,
+    "rerank": 249.2
    },
    "reranked": "applied"
   },
@@ -6549,10 +6549,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 19.7,
-    "fused": 21.3,
-    "rerank": 54.9
+    "words": 1.5,
+    "meaning": 20.7,
+    "fused": 20.3,
+    "rerank": 106.2
    },
    "reranked": "applied"
   },
@@ -6568,10 +6568,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 19,
-    "fused": 20.4,
-    "rerank": 37.9
+    "words": 2.3,
+    "meaning": 21.8,
+    "fused": 21.5,
+    "rerank": 53.3
    },
    "reranked": "applied"
   },
@@ -6587,10 +6587,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 2,
-    "meaning": 20.6,
-    "fused": 22.6,
-    "rerank": 68.8
+    "words": 1.6,
+    "meaning": 19.4,
+    "fused": 21.1,
+    "rerank": 110.9
    },
    "reranked": "applied"
   },
@@ -6606,10 +6606,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.7,
-    "meaning": 19.6,
-    "fused": 19.8,
-    "rerank": 73.1
+    "words": 2.4,
+    "meaning": 20.7,
+    "fused": 20.6,
+    "rerank": 150.1
    },
    "reranked": "applied"
   },
@@ -6625,10 +6625,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.6,
-    "fused": 20.5,
-    "rerank": 57.4
+    "words": 1.6,
+    "meaning": 20.6,
+    "fused": 22,
+    "rerank": 102.3
    },
    "reranked": "applied"
   },
@@ -6644,10 +6644,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.5,
-    "fused": 21.4,
-    "rerank": 45.5
+    "words": 2.9,
+    "meaning": 19.8,
+    "fused": 20,
+    "rerank": 62.9
    },
    "reranked": "applied"
   },
@@ -6660,13 +6660,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.6,
-    "fused": 20.2,
-    "rerank": 54.5
+    "words": 1.6,
+    "meaning": 20.7,
+    "fused": 23.7,
+    "rerank": 85.8
    },
    "reranked": "applied"
   },
@@ -6679,13 +6679,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 4
+    "rerank": 3
    },
    "ms": {
-    "words": 2,
-    "meaning": 21.6,
-    "fused": 21.1,
-    "rerank": 53.2
+    "words": 1.6,
+    "meaning": 19.4,
+    "fused": 20.4,
+    "rerank": 77.4
    },
    "reranked": "applied"
   },
@@ -6701,10 +6701,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 19,
-    "fused": 21.9,
-    "rerank": 161.6
+    "words": 1.7,
+    "meaning": 19.2,
+    "fused": 20.2,
+    "rerank": 297.9
    },
    "reranked": "applied"
   },
@@ -6717,13 +6717,13 @@
     "words": 0,
     "meaning": 22,
     "fused": 22,
-    "rerank": 20
+    "rerank": 3
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 20,
-    "fused": 24.6,
-    "rerank": 168.8
+    "words": 2.2,
+    "meaning": 21.2,
+    "fused": 21.8,
+    "rerank": 277.9
    },
    "reranked": "applied"
   },
@@ -6736,13 +6736,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 27
+    "rerank": 4
    },
    "ms": {
     "words": 2.3,
-    "meaning": 21.8,
-    "fused": 23.6,
-    "rerank": 169.3
+    "meaning": 19.1,
+    "fused": 20.6,
+    "rerank": 439.5
    },
    "reranked": "applied"
   },
@@ -6758,10 +6758,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19,
-    "fused": 20.9,
-    "rerank": 33.4
+    "words": 1.8,
+    "meaning": 19.9,
+    "fused": 23,
+    "rerank": 42
    },
    "reranked": "applied"
   },
@@ -6777,10 +6777,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18.3,
-    "fused": 19.9,
-    "rerank": 31.2
+    "words": 1.5,
+    "meaning": 18.7,
+    "fused": 21.7,
+    "rerank": 43.9
    },
    "reranked": "applied"
   },
@@ -6796,10 +6796,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.1,
-    "fused": 19.7,
-    "rerank": 36.6
+    "words": 1.6,
+    "meaning": 18.9,
+    "fused": 20.1,
+    "rerank": 45.7
    },
    "reranked": "applied"
   },
@@ -6812,13 +6812,13 @@
     "words": 0,
     "meaning": 8,
     "fused": 8,
-    "rerank": 8
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 21.1,
-    "fused": 24.8,
-    "rerank": 74.1
+    "words": 2,
+    "meaning": 22,
+    "fused": 23.2,
+    "rerank": 82.1
    },
    "reranked": "applied"
   },
@@ -6831,13 +6831,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
     "words": 1.5,
-    "meaning": 20.4,
-    "fused": 22.6,
-    "rerank": 51
+    "meaning": 18.7,
+    "fused": 20.3,
+    "rerank": 96.3
    },
    "reranked": "applied"
   },
@@ -6853,10 +6853,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 17.9,
-    "fused": 20,
-    "rerank": 47.8
+    "words": 1.5,
+    "meaning": 18,
+    "fused": 20.9,
+    "rerank": 86.1
    },
    "reranked": "applied"
   },
@@ -6869,13 +6869,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 18.7,
-    "fused": 22.4,
-    "rerank": 50.5
+    "words": 1.8,
+    "meaning": 20.4,
+    "fused": 20.6,
+    "rerank": 98
    },
    "reranked": "applied"
   },
@@ -6891,10 +6891,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.6,
-    "fused": 21.4,
-    "rerank": 39
+    "words": 1.6,
+    "meaning": 19,
+    "fused": 20.7,
+    "rerank": 46.7
    },
    "reranked": "applied"
   },
@@ -6910,10 +6910,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19.4,
-    "fused": 21.4,
-    "rerank": 160.1
+    "words": 2,
+    "meaning": 20.3,
+    "fused": 20.4,
+    "rerank": 208.3
    },
    "reranked": "applied"
   },
@@ -6929,10 +6929,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 19.7,
-    "fused": 22.5,
-    "rerank": 53.4
+    "words": 2.1,
+    "meaning": 22.3,
+    "fused": 20.9,
+    "rerank": 73.1
    },
    "reranked": "applied"
   },
@@ -6948,10 +6948,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.7,
+    "words": 1.9,
     "meaning": 18.1,
-    "fused": 19.9,
-    "rerank": 56.5
+    "fused": 20.6,
+    "rerank": 76.4
    },
    "reranked": "applied"
   },
@@ -6964,13 +6964,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 2.2,
-    "meaning": 21.1,
-    "fused": 20.9,
-    "rerank": 55.8
+    "words": 2.1,
+    "meaning": 19.7,
+    "fused": 24,
+    "rerank": 87.1
    },
    "reranked": "applied"
   },
@@ -6983,13 +6983,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 5
+    "rerank": 4
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 19.2,
-    "fused": 20.9,
-    "rerank": 54.1
+    "words": 2.1,
+    "meaning": 20.5,
+    "fused": 20.3,
+    "rerank": 68.3
    },
    "reranked": "applied"
   },
@@ -7002,13 +7002,13 @@
     "words": 0,
     "meaning": 8,
     "fused": 8,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.3,
-    "fused": 21.7,
-    "rerank": 146.1
+    "words": 1.5,
+    "meaning": 22.2,
+    "fused": 21.3,
+    "rerank": 195
    },
    "reranked": "applied"
   },
@@ -7021,13 +7021,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 17.9,
-    "fused": 19.8,
-    "rerank": 29.7
+    "words": 2.1,
+    "meaning": 21.1,
+    "fused": 20.9,
+    "rerank": 45.8
    },
    "reranked": "applied"
   },
@@ -7040,13 +7040,13 @@
     "words": 1,
     "meaning": 2,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18,
-    "fused": 19.8,
-    "rerank": 151.5
+    "words": 2.3,
+    "meaning": 19.2,
+    "fused": 19.9,
+    "rerank": 263
    },
    "reranked": "applied"
   },
@@ -7062,10 +7062,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 20.5,
-    "fused": 21.9,
-    "rerank": 69.6
+    "words": 2.1,
+    "meaning": 20,
+    "fused": 23.3,
+    "rerank": 108.4
    },
    "reranked": "applied"
   },
@@ -7078,13 +7078,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 11
+    "rerank": 2
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 19,
-    "fused": 23.7,
-    "rerank": 125
+    "words": 2.2,
+    "meaning": 19.6,
+    "fused": 21.9,
+    "rerank": 193.2
    },
    "reranked": "applied"
   },
@@ -7097,13 +7097,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19,
-    "fused": 20.3,
-    "rerank": 63.2
+    "words": 1.5,
+    "meaning": 20,
+    "fused": 22.2,
+    "rerank": 102.2
    },
    "reranked": "applied"
   },
@@ -7116,13 +7116,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 3
+    "rerank": 4
    },
    "ms": {
-    "words": 1.4,
-    "meaning": 18.8,
-    "fused": 20.7,
-    "rerank": 56.6
+    "words": 1.7,
+    "meaning": 19,
+    "fused": 22.6,
+    "rerank": 92.2
    },
    "reranked": "applied"
   },
@@ -7135,13 +7135,13 @@
     "words": 4,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 3
    },
    "ms": {
-    "words": 2.3,
-    "meaning": 18.3,
-    "fused": 22.4,
-    "rerank": 157.7
+    "words": 3.3,
+    "meaning": 19.4,
+    "fused": 22.9,
+    "rerank": 292.7
    },
    "reranked": "applied"
   },
@@ -7157,10 +7157,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2,
-    "meaning": 20.6,
-    "fused": 23.2,
-    "rerank": 21.7
+    "words": 2.1,
+    "meaning": 18.9,
+    "fused": 21,
+    "rerank": 20.2
    },
    "reranked": "none"
   },
@@ -7173,13 +7173,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 19.1,
-    "fused": 21.7,
-    "rerank": 91
+    "words": 1.5,
+    "meaning": 18.6,
+    "fused": 20.1,
+    "rerank": 108.3
    },
    "reranked": "applied"
   },
@@ -7192,13 +7192,13 @@
     "words": 1,
     "meaning": 1,
     "fused": 1,
-    "rerank": 2
+    "rerank": 1
    },
    "ms": {
-    "words": 2,
-    "meaning": 21.1,
-    "fused": 21.9,
-    "rerank": 35.9
+    "words": 1.9,
+    "meaning": 18.6,
+    "fused": 20.3,
+    "rerank": 40.7
    },
    "reranked": "applied"
   },
@@ -7211,13 +7211,13 @@
     "words": 0,
     "meaning": 3,
     "fused": 3,
-    "rerank": 18
+    "rerank": 5
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 19.1,
-    "fused": 20.9,
-    "rerank": 112.1
+    "words": 1.6,
+    "meaning": 18.8,
+    "fused": 21.3,
+    "rerank": 230.2
    },
    "reranked": "applied"
   },
@@ -7233,10 +7233,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 1.8,
-    "meaning": 18.2,
-    "fused": 21,
-    "rerank": 39.1
+    "words": 3,
+    "meaning": 18.5,
+    "fused": 19.9,
+    "rerank": 51.4
    },
    "reranked": "applied"
   },
@@ -7252,10 +7252,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.6,
+    "words": 1.5,
     "meaning": 18.5,
-    "fused": 20.1,
-    "rerank": 18.9
+    "fused": 19.7,
+    "rerank": 18.7
    },
    "reranked": "none"
   },
@@ -7271,10 +7271,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 18.7,
-    "fused": 20.6,
-    "rerank": 19.7
+    "words": 1.5,
+    "meaning": 20.5,
+    "fused": 23.4,
+    "rerank": 21.6
    },
    "reranked": "none"
   },
@@ -7290,10 +7290,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.3,
-    "meaning": 18.5,
-    "fused": 20.2,
-    "rerank": 63.7
+    "words": 1.4,
+    "meaning": 18.8,
+    "fused": 20.7,
+    "rerank": 85.4
    },
    "reranked": "applied"
   },
@@ -7309,10 +7309,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 18.8,
-    "fused": 19.6,
-    "rerank": 76.4
+    "words": 1.7,
+    "meaning": 19.4,
+    "fused": 19.7,
+    "rerank": 122.8
    },
    "reranked": "applied"
   },
@@ -7328,10 +7328,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.5,
-    "meaning": 19.8,
-    "fused": 19.7,
-    "rerank": 21.5
+    "words": 1.9,
+    "meaning": 18.6,
+    "fused": 19.2,
+    "rerank": 19.2
    },
    "reranked": "none"
   },
@@ -7344,13 +7344,13 @@
     "words": 0,
     "meaning": 5,
     "fused": 5,
-    "rerank": 5
+    "rerank": 1
    },
    "ms": {
     "words": 1.4,
     "meaning": 18.7,
-    "fused": 20.5,
-    "rerank": 121.2
+    "fused": 21.8,
+    "rerank": 194.2
    },
    "reranked": "applied"
   },
@@ -7366,10 +7366,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2,
-    "meaning": 19,
-    "fused": 20.3,
-    "rerank": 58.4
+    "words": 2.6,
+    "meaning": 20.3,
+    "fused": 22.4,
+    "rerank": 112.7
    },
    "reranked": "applied"
   },
@@ -7382,13 +7382,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 2,
-    "meaning": 20.7,
+    "words": 1.8,
+    "meaning": 19.1,
     "fused": 20.8,
-    "rerank": 70.9
+    "rerank": 164
    },
    "reranked": "applied"
   },
@@ -7401,13 +7401,13 @@
     "words": 0,
     "meaning": 2,
     "fused": 2,
-    "rerank": 4
+    "rerank": 2
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 22.3,
-    "fused": 22.7,
-    "rerank": 118.7
+    "words": 2.3,
+    "meaning": 20.2,
+    "fused": 21.2,
+    "rerank": 219.9
    },
    "reranked": "applied"
   },
@@ -7423,10 +7423,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.1,
-    "meaning": 19.7,
-    "fused": 19.9,
-    "rerank": 75.9
+    "words": 1.8,
+    "meaning": 18.3,
+    "fused": 20,
+    "rerank": 155.8
    },
    "reranked": "applied"
   },
@@ -7439,13 +7439,13 @@
     "words": 0,
     "meaning": 12,
     "fused": 12,
-    "rerank": 6
+    "rerank": 5
    },
    "ms": {
-    "words": 1.9,
-    "meaning": 19.6,
-    "fused": 23,
-    "rerank": 156.9
+    "words": 1.6,
+    "meaning": 19.1,
+    "fused": 20.7,
+    "rerank": 285.3
    },
    "reranked": "applied"
   },
@@ -7458,13 +7458,13 @@
     "words": 1,
     "meaning": 1,
     "fused": 1,
-    "rerank": 10
+    "rerank": 1
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 20.4,
-    "fused": 20.7,
-    "rerank": 117.4
+    "words": 2.8,
+    "meaning": 23.2,
+    "fused": 23.5,
+    "rerank": 234.1
    },
    "reranked": "applied"
   },
@@ -7480,10 +7480,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 1.5,
-    "meaning": 21.2,
-    "fused": 22.9,
-    "rerank": 164.2
+    "words": 2.8,
+    "meaning": 19.8,
+    "fused": 23.1,
+    "rerank": 240.8
    },
    "reranked": "applied"
   },
@@ -7499,10 +7499,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 1.6,
-    "meaning": 19.8,
-    "fused": 20.4,
-    "rerank": 39.1
+    "words": 1.7,
+    "meaning": 18.4,
+    "fused": 21,
+    "rerank": 43.6
    },
    "reranked": "applied"
   },
@@ -7518,10 +7518,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2,
-    "meaning": 21.7,
-    "fused": 22.3,
-    "rerank": 59
+    "words": 1.6,
+    "meaning": 18.4,
+    "fused": 20.1,
+    "rerank": 86.4
    },
    "reranked": "applied"
   }
