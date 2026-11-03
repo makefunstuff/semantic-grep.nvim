@@ -98,6 +98,7 @@ export class LocalModel extends HttpEmbedder {
 
   /** What is missing: `{runtime: "llama-server" | null, model: bool, bytes, path}`. */
   async needs() {
+    await this.sweep(); // asked at the first search of each Neovim: what a stopped download left goes then
     return {runtime: this.runtime() ? null : this.llamaServer, model: !this.hasModel(), own: this.own, bytes: this.spec.bytes, path: this.path, name: this.spec.name};
   }
 
@@ -122,13 +123,13 @@ export class LocalModel extends HttpEmbedder {
 
   /** What a download stopped before its end left (Neovim quit meanwhile): gone, unless its process still fetches it. */
   async sweep() {
+    if (this.own) return; // a folder of one's own: nothing of its is ours
     const dir = join(this.path, '..');
-    const prefix = `${basename(this.path)}.`;
     let names = [];
     try { names = await readdir(dir); } catch { return; }
     for (const name of names) {
-      const pid = Number(name.slice(prefix.length, -'.part'.length));
-      if (name.startsWith(prefix) && name.endsWith('.part') && !alive(pid)) await rm(join(dir, name), {force: true});
+      const pid = name.startsWith(`${basename(this.path)}.`) && /\.(\d+)\.part$/.exec(name.slice(basename(this.path).length))?.[1];
+      if (pid && !alive(Number(pid))) await rm(join(dir, name), {force: true}).catch(() => {});
     }
   }
 

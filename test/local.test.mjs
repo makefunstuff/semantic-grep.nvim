@@ -51,6 +51,11 @@ test('the download: once, its progress told, checked by size and hash, nothing l
     assert.equal(existsSync(join(dataDir, 'models', 'tiny.gguf.999999999.part')), false, 'what a stopped one left is gone');
     assert.equal(model.state(), 'on');
     assert.deepEqual(await model.turnOn(), {runtime: false, model: false}, 'not again');
+    writeFileSync(join(dataDir, 'models', 'tiny.gguf.999999998.part'), 'left by another Neovim');
+    writeFileSync(join(dataDir, 'models', 'tiny.gguf.notes.part'), 'not one of ours');
+    await model.needs();
+    assert.equal(existsSync(join(dataDir, 'models', 'tiny.gguf.999999998.part')), false, 'swept with the model there too');
+    assert.equal(existsSync(join(dataDir, 'models', 'tiny.gguf.notes.part')), true, 'only a download\'s own name');
   } finally {
     model.close();
   }
