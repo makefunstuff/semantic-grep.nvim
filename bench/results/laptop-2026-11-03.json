@@ -20,7 +20,7 @@
  "semanticGrep": "b69c6ce",
  "questions": {
   "file": "bench/questions.jsonl",
-  "sha1": "0cd1eb1e8bf1",
+  "sha1": "165477f54fea",
   "count": 372,
   "split": "all"
  },
