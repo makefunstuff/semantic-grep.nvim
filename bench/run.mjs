@@ -55,6 +55,8 @@ const writers = flags.notes ? JSON.parse(readFileSync(resolve(flags.writers ?? j
 const writerSpec = flags.notes ? writers[flags.notes] : null;
 if (flags.notes && !writerSpec) throw new Error(`no writer "${flags.notes}" in ${flags.writers ?? 'bench/writers.json'} (${Object.keys(writers).join(', ')})`);
 const notesEntry = writerSpec ? notesConfig(writerSpec.notes) : null;
+// What makes a note (the model, how much of the piece it reads, the prompt): its cache and data folder are named by it.
+const notesMade = notesEntry ? createHash('sha1').update(JSON.stringify([notesEntry.model, notesEntry.chars, NOTES_SYSTEM])).digest('hex').slice(0, 8) : null;
 const rerank = rerankConfig(profile.rerank ?? null);
 const unknown = flags.modes ? String(flags.modes).split(',').filter(mode => !MODES.includes(mode)) : [];
 if (unknown.length) throw new Error(`no mode ${unknown.join(', ')}: the modes are ${MODES.join(', ')}`);
@@ -95,7 +97,7 @@ try {
   // Pieces cut by indentation are another index than tree-sitter's.
   let dataDir = join(cache, 'data', `${embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words'}${flags.parsers === 'none' ? '-indent' : ''}`);
   // With notes, a data folder of their own, begun as a copy of the one without (its pieces' vectors are the same).
-  const notedDir = flags.notes ? `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}` : null;
+  const notedDir = flags.notes ? `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}-${notesMade}` : null;
   if (flags.fresh) for (const dir of [dataDir, notedDir].filter(Boolean)) rmSync(dir, {recursive: true, force: true});
   if (notedDir && !existsSync(notedDir) && existsSync(dataDir)) cpSync(dataDir, notedDir, {recursive: true});
   if (notedDir) dataDir = notedDir;
@@ -189,9 +191,7 @@ try {
  * written now (its server started at the first) and cached; then their vectors embedded. What the writing took.
  */
 async function noted(repo) {
-  // Cached by what makes a note: the model, how much of the piece it reads, and the prompt.
-  const made = createHash('sha1').update(JSON.stringify([notesEntry.model, notesEntry.chars, NOTES_SYSTEM])).digest('hex').slice(0, 8);
-  const file = join(cache, 'notes', `${flags.notes.replace(/[^\w.-]+/g, '_')}-${made}`, `${basename(repo.name).replace(/[^\w.-]+/g, '_')}.jsonl`);
+  const file = join(cache, 'notes', `${flags.notes.replace(/[^\w.-]+/g, '_')}-${notesMade}`, `${basename(repo.name).replace(/[^\w.-]+/g, '_')}.jsonl`);
   const tookFile = file.replace(/\.jsonl$/, '.took.json'); // what writing them took, the first time
   mkdirSync(dirname(file), {recursive: true});
   const cached = new Map((existsSync(file) ? readFileSync(file, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []).map(row => [row.hash, row]));

@@ -55,8 +55,9 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   files +0.010), at 1.7 s a piece on 4 CPU threads: a 5,000-piece project is noted in about 2.3 hours of idle time.
   Beefy's Qwen3-4B helps the files view more (+0.029) and writes 1,000 pieces in 3.4 minutes on a GPU; on a CPU it takes 72 minutes, which is why it is not the laptop's. The cloud's Claude Haiku 5.5 is the best
   for its price, 10 cents a thousand pieces; Claude Sonnet 5.5 is better still at 19 times that:
-  `notes = {model = 'claude-sonnet-5-5', request = {thinking = {type = 'between_tools'}}}` with the cloud profile
-  (Sonnet 5.5 takes no other way to turn its thinking off), for a project worth $2 a thousand pieces.
+  `notes = {model = 'claude-sonnet-5-5', chars = 3000, concurrency = 4, request = {thinking = {type = 'between_tools'}}}`
+  with the cloud profile (Sonnet 5.5 takes no other way to turn its thinking off; measured through OpenRouter at low
+  reasoning effort, not this way), for a project worth $2 a thousand pieces.
 - **Dropped:** Qwen3-30B-A3B (no better than no notes, a little worse), and Qwen3.5-9B, whose run was stopped before
   it was measured: on this machine it would not fit whole in the GPU memory free beside other work, and wrote about
   45 pieces a minute half on the CPU.
@@ -69,13 +70,16 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
 - **Searches cost a little more.** Each note is a vector beside its piece's: the meaning search compares twice as
   many, a few milliseconds more on a large project.
 
-Tokens a thousand pieces: about 260,000 read and 45,000 to 60,000 written by the Qwen models, 376,000 read and
+Tokens a thousand pieces: about 260,000 read and 44,000 to 60,000 written by the Qwen models, 376,000 read and
 116,000 to 122,000 written by Claude (its tokenizer counts more, and it writes longer notes). Times are a run's
 wall clock, four pieces at a time on a GPU or eight through OpenRouter, one at a time on the CPU; the runs and their
 notes' cost are in [`bench/results/notes-2026-11-03/`](../bench/results/notes-2026-11-03/) (`npm run bench --
 --profile laptop --split test --repos cobra,fd,flask --notes laptop-qwen3.5-2b`, the writers in
 [`bench/writers.json`](../bench/writers.json); a writer's notes are cached by piece, so a run again costs nothing).
-The CPU times were measured apart, on cobra's first 40 pieces with `notes write --concurrency 1 --chars 1500` on a
+The Claude numbers were measured through OpenRouter (`or-haiku-5.5`, `or-sonnet-5.5`), the same models as
+Anthropic's API serves: the cloud profile's own request to Anthropic (thinking off, low effort) is checked against a
+fake only, for want of a key here, and is to be measured when one comes (`npm run bench -- ... --notes cloud-haiku`).
+The CPU times ([`cpu-times.json`](../bench/results/notes-2026-11-03/cpu-times.json)) were measured apart, on cobra's first 40 pieces with `notes write --concurrency 1 --chars 1500` on a
 llama-server with 4 threads: 1.66 s a piece for the 2B (4.4 GB of RAM at most), 4.3 s for the 4B (6.9 GB).
 
 ## Running a writer

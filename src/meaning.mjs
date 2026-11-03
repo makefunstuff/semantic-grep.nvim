@@ -27,7 +27,8 @@ export const MAX_PIECES = 20_000; // per project, about 45 min of a first build 
 export const RESCAN_MS = 10 * 60_000;
 const NOTES_TICK_MS = 15_000; // how often the notes writer looks whether it may write
 const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests
-const NOTES_BATCH = 4; // pieces a writer's lane takes at a time: a search waits for one piece at most
+const NOTES_BATCH = 4;
+const NOTES_TRIES = 3; // pieces a writer's lane takes at a time: a search waits for one piece at most
 const PARSE_GROUP = 200; // files per headless Neovim of tree-sitter
 const PROGRESS_MS = 2000; // how often a build in progress tells the editors how far it is
 const HEAD_CHARS = 100;
@@ -645,6 +646,7 @@ export class Meaning {
     this.noting = null; // {abort} while the writer writes
     this.notesRestUntil = 0;
     this.notesFailed = new Set(); // pieces the writer gave no note for, this session: not asked again until the next
+    this.notesTries = new Map(); // a piece's failed tries this session: after NOTES_TRIES it joins notesFailed
     if (this.writer) {
       this.notesTimer = setInterval(() => this.writeNotes().catch(error => log(`meaning: notes: ${error.message}`)), NOTES_TICK_MS);
       this.notesTimer.unref?.();
@@ -1150,6 +1152,13 @@ export class Meaning {
           const noted = new Set(notes.map(note => note.hash));
           // A model that answered with no note is asked of other pieces; one that did not answer rests.
           const unanswered = errors.some(error => !error.endsWith(NO_NOTE));
+          // A piece that fails NOTES_TRIES times (too long for the model, say) is not asked again this session.
+          for (const piece of pieces) {
+            if (notes.some(note => note.hash === piece.hash)) continue;
+            const tries = (this.notesTries.get(piece.hash) ?? 0) + 1;
+            this.notesTries.set(piece.hash, tries);
+            if (tries >= NOTES_TRIES) this.notesFailed.add(piece.hash);
+          }
           if (!notes.length && unanswered) {
             this.notesRestUntil = this.now() + NOTES_REST_MS;
             this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(NOTES_REST_MS)}`);

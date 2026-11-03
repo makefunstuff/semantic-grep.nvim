@@ -259,3 +259,21 @@ test('closed while the writer writes: its notes are dropped, and no index is ope
     await server.close();
   }
 });
+
+test('a piece the writer keeps failing on alone is given up for the session after three tries', async () => {
+  const root = project();
+  const server = await fakeWriterServer({mode: 'down'});
+  let now = 1_000_000;
+  const meaning = new Meaning({dataDir: scratch('notes-data-'), embedder: fakeEmbedder(), notes: notesConfig({baseUrl: server.baseUrl, model: 'fake-writer', concurrency: 1, idleMs: 0}), now: () => now});
+  try {
+    await settled(meaning, root);
+    for (let i = 0; i < 5; i++) {
+      now += 6 * 60_000; // past each rest
+      await meaning.writeNotes();
+    }
+    assert.equal(server.requests.length, 6, 'each of the two pieces asked three times, then no more');
+  } finally {
+    await meaning.close();
+    await server.close();
+  }
+});

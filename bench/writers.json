@@ -1,6 +1,6 @@
 {
   "laptop-qwen3.5-2b": {
-    "about": "The laptop's writer: Qwen3.5-2B (Q4_K_M, 1.3 GB), reading 1500 characters of each piece. Its notes are the same on a CPU and a GPU; written here on the GPU, timed on 4 CPU threads apart (docs/notes.md).",
+    "about": "The laptop's writer: Qwen3.5-2B (Q4_K_M, 1.3 GB), reading 1500 characters of each piece. Its notes are the same on a CPU and a GPU; written here on the GPU, timed on 4 CPU threads apart (docs/notes.md). Its saved run had --ctx-size 16384; 8192 holds the same four pieces.",
     "notes": {
       "api": "openai",
       "baseUrl": "http://127.0.0.1:28122/v1",
@@ -26,7 +26,7 @@
     }
   },
   "laptop-qwen3-4b": {
-    "about": "The beefy writer: Qwen3-4B-Instruct-2507 (Q4_K_M, 2.5 GB) on a GPU, reading 1500 characters of each piece; written on the GPU, timed on 4 CPU threads apart.",
+    "about": "Qwen3-4B-Instruct-2507 (Q4_K_M, 2.5 GB), beefy's writer, on a GPU, reading 1500 characters of each piece; written on the GPU, timed on 4 CPU threads apart.",
     "notes": {
       "api": "openai",
       "baseUrl": "http://127.0.0.1:28122/v1",
@@ -52,7 +52,7 @@
     }
   },
   "cloud-haiku": {
-    "about": "The cloud writer: Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY, reading 3000 characters of each piece. Price: dollars a million tokens.",
+    "about": "The cloud writer: Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY, reading 3000 characters of each piece. Price: dollars a million tokens. Not measured yet (no key here): the Claude numbers are or-haiku-5.5's.",
     "notes": {
       "api": "anthropic",
       "baseUrl": "https://api.anthropic.com/v1",

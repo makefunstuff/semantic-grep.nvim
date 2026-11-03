@@ -131,12 +131,13 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
   to the agent's model.
 - **Notes written in the background.** With `notes = true` in `setup()`, a language model writes those notes itself,
-  while nothing is searched (after a minute or two), a few pieces at a time, and stops at the next search: the
+  while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
   profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
   cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
   that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud profile's does). How to
-  run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku's notes
-  take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760, for 10 cents a thousand pieces.
+  run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku 5.5's notes
+  (measured through OpenRouter) take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760,
+  for 10 cents a thousand pieces.
 
 ## Commands
 
