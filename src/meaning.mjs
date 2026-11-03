@@ -27,8 +27,8 @@ export const MAX_PIECES = 20_000; // per project, about 45 min of a first build 
 export const RESCAN_MS = 10 * 60_000;
 const NOTES_TICK_MS = 15_000; // how often the notes writer looks whether it may write
 const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests
-const NOTES_BATCH = 4;
-const NOTES_TRIES = 3; // pieces a writer's lane takes at a time: a search waits for one piece at most
+const NOTES_BATCH = 4; // pieces a writer's lane takes at a time: a search waits for one piece at most
+const NOTES_TRIES = 3; // a piece alone in its batch that fails this often is left for the session
 const PARSE_GROUP = 200; // files per headless Neovim of tree-sitter
 const PROGRESS_MS = 2000; // how often a build in progress tells the editors how far it is
 const HEAD_CHARS = 100;
@@ -1125,7 +1125,8 @@ export class Meaning {
    * The notes writer's turn (every NOTES_TICK_MS): when nothing was searched for its `idleMs` and no project is being
    * embedded, it writes a note for each piece of the open projects that has none (the project searched last first), a
    * few pieces at a time, and stops as soon as someone searches. A batch it got no note for at all rests it a few
-   * minutes; a piece it got none for is left until the next session. Resolves how many notes it wrote.
+   * minutes (its pieces are asked again after); a piece it got none for while others got theirs, or that fails alone
+   * NOTES_TRIES times, is left until the next session. Resolves how many notes it wrote.
    */
   async writeNotes({idle = () => this.now() - this.activeAt >= this.writer.entry.idleMs} = {}) {
     // A first build (or a checkout's) goes first: its pieces' vectors are the search's. The notes' own vectors are not.
@@ -1152,12 +1153,12 @@ export class Meaning {
           const noted = new Set(notes.map(note => note.hash));
           // A model that answered with no note is asked of other pieces; one that did not answer rests.
           const unanswered = errors.some(error => !error.endsWith(NO_NOTE));
-          // A piece that fails NOTES_TRIES times (too long for the model, say) is not asked again this session.
-          for (const piece of pieces) {
-            if (notes.some(note => note.hash === piece.hash)) continue;
-            const tries = (this.notesTries.get(piece.hash) ?? 0) + 1;
-            this.notesTries.set(piece.hash, tries);
-            if (tries >= NOTES_TRIES) this.notesFailed.add(piece.hash);
+          // The last piece left, failing alone, may be the piece (too long for the model, say) or the writer (down):
+          // after NOTES_TRIES rests it is left for the session. Several failing together are an outage: kept.
+          if (pieces.length === 1 && !notes.length) {
+            const tries = (this.notesTries.get(pieces[0].hash) ?? 0) + 1;
+            this.notesTries.set(pieces[0].hash, tries);
+            if (tries >= NOTES_TRIES) this.notesFailed.add(pieces[0].hash);
           }
           if (!notes.length && unanswered) {
             this.notesRestUntil = this.now() + NOTES_REST_MS;

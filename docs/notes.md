@@ -21,7 +21,8 @@ require('semantic-grep').setup({
   later). Each note is kept as it comes, so a Neovim closed half way keeps what was written.
 - **What.** Every piece without a note: one written by an agent is never written over. A piece whose code changed has
   a new hash, so it has no note until one is written again. A model that does not answer rests the writer five
-  minutes; a piece it answers nothing usable for is left until the next session.
+  minutes, and its pieces are asked again after; a piece that gets nothing usable while others get their notes, or
+  that is the last one left and fails three times, is left until the next session.
 - **Where the code goes.** To the writer's model, a piece at a time (its first `chars` characters). A writer on this
   machine (127.0.0.1, localhost, ::1) gets it; any other only with `sendCode = true` in its entry, else the config is
   refused. The cloud profile's writer says so (that profile sends the code to hosted models already); a writer of your
@@ -80,7 +81,7 @@ The Claude numbers were measured through OpenRouter (`or-haiku-5.5`, `or-sonnet-
 Anthropic's API serves: the cloud profile's own request to Anthropic (thinking off, low effort) is checked against a
 fake only, for want of a key here, and is to be measured when one comes (`npm run bench -- ... --notes cloud-haiku`).
 The CPU times ([`cpu-times.json`](../bench/results/notes-2026-11-03/cpu-times.json)) were measured apart, on cobra's first 40 pieces with `notes write --concurrency 1 --chars 1500` on a
-llama-server with 4 threads: 1.66 s a piece for the 2B (4.4 GB of RAM at most), 4.3 s for the 4B (6.9 GB).
+llama-server with 4 threads: 1.66 s a piece for the 2B (4.3 GB of RAM at most, the model included), 4.3 s for the 4B (6.7 GB).
 
 ## Running a writer
 

@@ -266,7 +266,7 @@ test('closed while the writer writes: its notes are dropped, and no index is ope
   }
 });
 
-test('a piece the writer keeps failing on alone is given up for the session after three tries', async () => {
+test('an outage keeps the pieces for later; a piece failing alone is given up for the session after three tries', async () => {
   const root = project();
   const server = await fakeWriterServer({mode: 'down'});
   let now = 1_000_000;
@@ -277,7 +277,20 @@ test('a piece the writer keeps failing on alone is given up for the session afte
       now += 6 * 60_000; // past each rest
       await meaning.writeNotes();
     }
-    assert.equal(server.requests.length, 6, 'each of the two pieces asked three times, then no more');
+    assert.equal(server.requests.length, 10, 'down: both pieces asked again after each rest');
+    server.set({mode: 'ok'});
+    now += 6 * 60_000;
+    assert.equal(await meaning.writeNotes(), 2, 'and noted once it answers');
+    writeFileSync(join(root, 'src', 'team.js'), 'export function dropMember(team) {\n  team.members = [];\n}\n');
+    await meaning.saved(root, join(root, 'src', 'team.js'));
+    await settled(meaning, root);
+    server.set({mode: 'down'});
+    const before = server.requests.length;
+    for (let i = 0; i < 5; i++) {
+      now += 6 * 60_000;
+      await meaning.writeNotes();
+    }
+    assert.equal(server.requests.length - before, 3, 'the last piece, failing alone: three tries, then left');
   } finally {
     await meaning.close();
     await server.close();
