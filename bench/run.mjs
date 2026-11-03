@@ -5,14 +5,19 @@
 //
 //   npm run bench -- --profile laptop [--questions FILE] [--repos hono,flask] [--split dev|test] [--modes words,fused]
 //                    [--out FILE] [--compare FILE] [--fresh] [--profiles FILE] [--cache DIR] [--models DIR]
-//                    [--llama-server PATH] [--parsers none]
+//                    [--llama-server PATH] [--parsers none] [--notes WRITER] [--writers FILE]
+//
+// With --notes, every piece first gets a note from that writer of writers.json (src/notes.mjs; its llama-server started
+// like a profile's), as the plugin's notes = {...} writes them, and the questions are asked with them. The notes are
+// cached by piece (<cache>/notes/<writer>/<repo>.jsonl): a run again asks the writer only for pieces it has none for,
+// and the run saves what the writing took (time and tokens a thousand pieces, and with a price, the cost).
 //
 // A question is a JSON line, {id, repo, query, file, from, to, style?, split?, also?: [{file, from, to}]}: `repo` a
 // name in corpus.json (fetched by `npm run bench:fetch`) or a folder's absolute path (a private questions file, see
 // export-picks.mjs). A result answers it when it is in that file and its lines overlap the range (or one in `also`).
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
-import {existsSync, mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {appendFileSync, cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {basename, dirname, isAbsolute, join, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {cacheDir, neovimParsers, options, settled} from './common.mjs';
@@ -40,11 +45,18 @@ process.emitWarning = function (warning, ...rest) {
 const {Meaning} = await import('../src/meaning.mjs');
 const {Reranker} = await import('../src/rerank.mjs');
 const {embeddingConfig, rerankConfig} = await import('../src/config.mjs');
+const {notesConfig, NotesWriter, SYSTEM: NOTES_SYSTEM} = await import('../src/notes.mjs');
 
 const profiles = JSON.parse(readFileSync(resolve(flags.profiles ?? join(HERE, 'profiles.json')), 'utf8'));
 const profile = profiles[flags.profile];
 if (!profile) throw new Error(`no profile "${flags.profile}" in ${flags.profiles ?? 'bench/profiles.json'} (${Object.keys(profiles).join(', ')})`);
 const embedding = embeddingConfig(profile.embedding ?? null);
+const writers = flags.notes ? JSON.parse(readFileSync(resolve(flags.writers ?? join(HERE, 'writers.json')), 'utf8')) : null;
+const writerSpec = flags.notes ? writers[flags.notes] : null;
+if (flags.notes && !writerSpec) throw new Error(`no writer "${flags.notes}" in ${flags.writers ?? 'bench/writers.json'} (${Object.keys(writers).join(', ')})`);
+const notesEntry = writerSpec ? notesConfig(writerSpec.notes) : null;
+// What makes a note (the model, how much of the piece it reads, the prompt): its cache and data folder are named by it.
+const notesMade = notesEntry ? createHash('sha1').update(JSON.stringify([notesEntry.model, notesEntry.chars, NOTES_SYSTEM])).digest('hex').slice(0, 8) : null;
 const rerank = rerankConfig(profile.rerank ?? null);
 const unknown = flags.modes ? String(flags.modes).split(',').filter(mode => !MODES.includes(mode)) : [];
 if (unknown.length) throw new Error(`no mode ${unknown.join(', ')}: the modes are ${MODES.join(', ')}`);
@@ -79,11 +91,16 @@ const repos = [...new Set(questions.map(question => question.repo))].map(name =>
 const code = {commit: gitHead(ROOT), changed: changedFiles(ROOT)};
 const served = await serveProfile(profile, {models: flags.models ?? process.env.SEMANTIC_GREP_BENCH_MODELS, llamaServer: flags['llama-server'] ?? process.env.LLAMA_SERVER ?? 'llama-server', log});
 let meaning;
+let writerServed = null;
 try {
   // One data folder per embedding model: its vectors stay for the next run, and another model's never mix in.
   // Pieces cut by indentation are another index than tree-sitter's.
-  const dataDir = join(cache, 'data', `${embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words'}${flags.parsers === 'none' ? '-indent' : ''}`);
-  if (flags.fresh) rmSync(dataDir, {recursive: true, force: true});
+  let dataDir = join(cache, 'data', `${embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words'}${flags.parsers === 'none' ? '-indent' : ''}`);
+  // With notes, a data folder of their own, begun as a copy of the one without (its pieces' vectors are the same).
+  const notedDir = flags.notes ? `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}-${notesMade}` : null;
+  if (flags.fresh) for (const dir of [dataDir, notedDir].filter(Boolean)) rmSync(dir, {recursive: true, force: true});
+  if (notedDir && !existsSync(notedDir) && existsSync(dataDir)) cpSync(dataDir, notedDir, {recursive: true});
+  if (notedDir) dataDir = notedDir;
   const parsers = flags.parsers === 'none' ? [] : neovimParsers();
   meaning = new Meaning({dataDir, embedding, reranker: rerank ? new Reranker({entries: rerank, log}) : null, log});
   meaning.useParsers(parsers);
@@ -91,6 +108,7 @@ try {
 
   const perQuestion = [];
   const repoResults = {};
+  const notesResults = {};
   for (const repo of repos) {
     const started = Date.now();
     const opened = meaning.open(repo.root);
@@ -99,6 +117,7 @@ try {
     const index = await settled(meaning, repo.root, ({chunks, embedded}) => log(`${repo.name}: ${embedded} of ${chunks} pieces embedded`));
     const {files, chunks, embedded} = index.progress();
     const indexMs = Date.now() - started;
+    if (notesEntry) notesResults[repo.name] = await noted(repo);
     log(`${repo.name}: ${files} files, ${chunks} pieces, ready in ${(indexMs / 1000).toFixed(1)} s`);
     const asked = questions.filter(question => question.repo === repo.name);
     // One search of each kind first, none of the questions, not timed: the models load, the matrix is made.
@@ -148,12 +167,13 @@ try {
     styles: Object.fromEntries(styles.map(style => [style, summary(perQuestion.filter(row => row.style === style))])),
     reranked: modes.includes('rerank') ? count(perQuestion.map(row => row.reranked)) : null,
     build: buildOf(repoResults),
+    notes: notesEntry ? notesOf(notesResults) : null,
     perQuestion,
   };
   print(result);
   const isPrivate = result.questions.file === 'private';
   // Named by what it ran, and never over an earlier run: profile, day, split, repositories and modes when not all.
-  const name = [flags.profile, result.when.slice(0, 10), flags.split, flags.repos && repos.map(repo => basename(repo.name)).join('+'), flags.modes && modes.join('+')].filter(Boolean).join('-');
+  const name = [flags.profile, result.when.slice(0, 10), flags.split, flags.repos && repos.map(repo => basename(repo.name)).join('+'), flags.modes && modes.join('+'), flags.notes && `notes-${flags.notes}`].filter(Boolean).join('-');
   let out = flags.out && resolve(flags.out);
   for (let n = 1; !out || (!flags.out && existsSync(out)); n++) out = join(isPrivate ? join(cache, 'results') : join(HERE, 'results'), `${name}${n > 1 ? `-${n}` : ''}.json`);
   mkdirSync(dirname(out), {recursive: true});
@@ -162,7 +182,65 @@ try {
   if (before) compare(result, before);
 } finally {
   await meaning?.close();
+  await writerServed?.stop();
   await served.stop();
+}
+
+/**
+ * Every piece of `repo` with a note of the writer's: those cached from an earlier run put as they are, the others
+ * written now (its server started at the first) and cached; then their vectors embedded. What the writing took.
+ */
+async function noted(repo) {
+  const file = join(cache, 'notes', `${flags.notes.replace(/[^\w.-]+/g, '_')}-${notesMade}`, `${basename(repo.name).replace(/[^\w.-]+/g, '_')}.jsonl`);
+  const tookFile = file.replace(/\.jsonl$/, '.took.json'); // what writing them took, the first time
+  mkdirSync(dirname(file), {recursive: true});
+  const cached = new Map((existsSync(file) ? readFileSync(file, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []).map(row => [row.hash, row]));
+  const {pieces, noted: had} = await meaning.pendingNotes(repo.root, {limit: Infinity});
+  const put = pieces.filter(piece => cached.has(piece.hash)).map(piece => cached.get(piece.hash));
+  if (put.length) await meaning.addNotes(repo.root, put, {source: `writer:${notesEntry.model}`});
+  const todo = pieces.filter(piece => !cached.has(piece.hash));
+  const took = {pieces: pieces.length + had, cached: put.length + had, written: 0, failed: 0, ms: 0, input: 0, output: 0, cost: 0};
+  if (todo.length) {
+    writerServed ??= await serveProfile({notes: notesEntry, serve: writerSpec.serve}, {models: flags.models ?? process.env.SEMANTIC_GREP_BENCH_MODELS, llamaServer: flags['llama-server'] ?? process.env.LLAMA_SERVER ?? 'llama-server', log});
+    const writer = new NotesWriter({entry: notesEntry, log});
+    const started = Date.now();
+    for (let i = 0; i < todo.length; i += notesEntry.concurrency * 8) {
+      const batch = todo.slice(i, i + notesEntry.concurrency * 8);
+      const {notes, errors} = await writer.write(batch);
+      if (!notes.length && errors.some(error => !error.endsWith('no note in the answer'))) throw new Error(`notes: ${errors[0]}`);
+      for (const note of notes) appendFileSync(file, `${JSON.stringify(note)}\n`);
+      await meaning.addNotes(repo.root, notes, {source: writer.name});
+      Object.assign(took, {written: took.written + notes.length, failed: took.failed + batch.length - notes.length});
+      log(`${repo.name}: ${took.written + took.cached} of ${pieces.length} pieces noted`);
+    }
+    Object.assign(took, {ms: Date.now() - started, ...writer.tokens, cost: writer.cost});
+  }
+  // What writing every cached note took, over the runs that wrote them: what the cost a thousand pieces is of.
+  const before = existsSync(tookFile) ? JSON.parse(readFileSync(tookFile, 'utf8')) : {};
+  took.total = Object.fromEntries(['written', 'ms', 'input', 'output', 'cost'].map(key => [key, (before.total?.[key] ?? before[key] ?? 0) + took[key]]));
+  if (took.written) writeFileSync(tookFile, `${JSON.stringify(took)}\n`);
+  await settled(meaning, repo.root, ({chunks}) => log(`${repo.name}: the notes of ${chunks} pieces embedded`));
+  return took;
+}
+
+/** The notes' cost: time and tokens a thousand pieces written here (not cached), and with the writer's price, dollars. */
+function notesOf(byRepo) {
+  const rows = Object.values(byRepo);
+  const count = key => rows.reduce((total, row) => total + row[key], 0);
+  // Over every run that wrote the notes (took.total), not only this one.
+  const sum = key => rows.reduce((total, row) => total + row.total[key], 0);
+  const written = sum('written');
+  const per1k = value => (written ? Math.round(value / written * 1000) : null);
+  const price = writerSpec.price; // dollars a million tokens, {input, output}
+  return {
+    writer: flags.notes, model: notesEntry.model, about: writerSpec.about ?? null, served: writerServed?.measured() ?? null,
+    pieces: count('pieces'), written: count('written'), cached: count('cached'), failed: count('failed'), measuredOn: written,
+    msPer1k: per1k(sum('ms')), inputPer1k: per1k(sum('input')), outputPer1k: per1k(sum('output')),
+    // What the API said the requests cost, else the tokens at the writer's price.
+    dollarsPer1k: !written ? null : sum('cost') ? Math.round(sum('cost') / written * 1000 * 1000) / 1000
+      : price ? Math.round((sum('input') * price.input + sum('output') * price.output) / written * 1000 / 1e6 * 1000) / 1000 : null,
+    repos: byRepo,
+  };
 }
 
 /** One search of `mode`, as the plugin asks it. */
@@ -247,6 +325,7 @@ function print(result) {
   rowsOf(`all (${result.files[modes[0]].n})`, result.files);
   if (result.build) lines.push(`\nbuilt ${result.build.pieces} pieces in ${(result.build.ms / 1000).toFixed(1)} s: ${(result.build.msPer1k / 1000).toFixed(1)} s a thousand`);
   for (const [role, server] of Object.entries(result.servers ?? {})) if (server.rssMB !== undefined) lines.push(`${role}: ${server.gguf}, ${server.rssMB} MB of RAM${server.vramMB ? `, ${server.vramMB} MB of GPU memory` : ''} at most`);
+  if (result.notes) lines.push(`\nnotes by ${result.notes.writer} (${result.notes.model}): ${result.notes.written} written, ${result.notes.cached} cached, ${result.notes.failed} without${result.notes.msPer1k ? `; ${(result.notes.msPer1k / 1000).toFixed(0)} s, ${result.notes.inputPer1k} tokens read and ${result.notes.outputPer1k} written a thousand pieces` : ''}${result.notes.dollarsPer1k !== null ? `, $${result.notes.dollarsPer1k}` : ''}`);
   if (result.reranked) lines.push(`\nreranks: ${Object.entries(result.reranked).map(([why, n]) => `${n} ${why}`).join(', ')}`);
   process.stdout.write(`${lines.join('\n')}\n`);
 }

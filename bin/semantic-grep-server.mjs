@@ -4,6 +4,10 @@
 //   semantic-grep-server notes pending [--root DIR] [--limit N]   pieces without a note, one JSON line each:
 //                                                                {hash, file, from, to, name, text}
 //   semantic-grep-server notes put [--root DIR] [--source NAME]   notes from stdin, one JSON line each: {hash, note}
+//   semantic-grep-server notes write [--root DIR] [--profile laptop|beefy|cloud] [--model NAME] [--base-url URL]
+//                       [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N] [--limit N]
+//                                                                a note for each piece without one, by a language model
+//                                                                (src/notes.mjs; the profile's writer, laptop's by default)
 //
 // both with [--data-dir DIR] (default Neovim's: ~/.local/share/nvim/semantic-grep), [--index data|project] and
 // [--project-dir NAME], as the plugin's setup has them. A Neovim searching the project picks the notes up as they come.
@@ -38,10 +42,30 @@ process.exit(0);
 
 async function notes(action, args) {
   const options = {};
-  for (let i = 0; i < args.length; i += 2) options[args[i].replace(/^--/, '')] = args[i + 1];
-  if (!['pending', 'put'].includes(action)) {
-    process.stderr.write('usage: semantic-grep-server notes pending|put [--root DIR] [--data-dir DIR] [--index data|project] [--project-dir NAME] [--limit N] [--source NAME]\n');
+  for (let i = 0; i < args.length; i++) {
+    const name = args[i].replace(/^--/, '');
+    options[name] = args[i + 1] === undefined || args[i + 1].startsWith('--') ? true : args[++i];
+  }
+  if (!['pending', 'put', 'write'].includes(action)) {
+    process.stderr.write('usage: semantic-grep-server notes pending|put|write [--root DIR] [--data-dir DIR] [--index data|project] [--project-dir NAME] [--limit N] [--source NAME]\n'
+      + '  write: [--profile laptop|beefy|cloud] [--model NAME] [--base-url URL] [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N]\n');
     return 2;
+  }
+  let writer = null;
+  if (action === 'write') {
+    const {profileConfig} = await import('../src/profiles.mjs');
+    const {NotesWriter} = await import('../src/notes.mjs');
+    const own = Object.fromEntries(Object.entries({
+      api: options.api, baseUrl: options['base-url'], model: options.model, apiKeyEnv: options['api-key-env'],
+      sendCode: options['send-code'] === true ? true : undefined,
+      concurrency: options.concurrency && Number(options.concurrency), chars: options.chars && Number(options.chars),
+    }).filter(([, value]) => value !== undefined));
+    try {
+      writer = new NotesWriter({entry: profileConfig({profile: options.profile, notes: own}).notes, log: line => process.stderr.write(`${line}\n`)});
+    } catch (error) {
+      process.stderr.write(`semantic-grep: ${error.message}\n`);
+      return 2;
+    }
   }
   const {Meaning} = await import('../src/meaning.mjs');
   const {execFileSync} = await import('node:child_process');
@@ -61,6 +85,28 @@ async function notes(action, args) {
       if (answer.problem) throw new Error(answer.problem);
       for (const piece of answer.pieces) process.stdout.write(`${JSON.stringify(piece)}\n`);
       process.stderr.write(`${answer.pieces.length} shown of ${answer.pending} pieces without a note (${answer.noted} noted)\n`);
+    } else if (action === 'write') {
+      // As many notes as --limit (all by default), a batch at a time; a note is kept as soon as its batch is written.
+      const most = options.limit === undefined ? Infinity : Number(options.limit);
+      const failed = new Set();
+      const started = Date.now();
+      let written = 0;
+      for (;;) {
+        const answer = await meaning.pendingNotes(root, {limit: Math.min(writer.entry.concurrency * 8, most - written), skip: failed});
+        if (answer.problem) throw new Error(answer.problem);
+        if (!answer.pieces.length || written >= most) break;
+        const {notes, errors} = await writer.write(answer.pieces);
+        for (const error of errors) process.stderr.write(`  ${error}\n`);
+        if (!notes.length && errors.some(error => !error.endsWith('no note in the answer'))) throw new Error(`${writer.about} wrote no note: ${errors[0]}`);
+        const noted = new Set(notes.map(note => note.hash));
+        for (const piece of answer.pieces) if (!noted.has(piece.hash)) failed.add(piece.hash);
+        await meaning.addNotes(root, notes, {source: writer.name});
+        written += notes.length;
+        const s = (Date.now() - started) / 1000;
+        process.stderr.write(`${written} notes written, ${answer.pending - notes.length} pieces without one; ${written ? `${(s / written * 1000).toFixed(0)} s a thousand` : 'none yet'}\n`);
+      }
+      const {input, output} = writer.tokens;
+      process.stderr.write(`${written} notes by ${writer.about} in ${Math.round((Date.now() - started) / 1000)} s; ${input} tokens read, ${output} written\n`);
     } else {
       const notes = [];
       await new Promise(done => readLines(process.stdin, message => notes.push(message)).on('close', done));

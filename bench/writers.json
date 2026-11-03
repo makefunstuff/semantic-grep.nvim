@@ -1,0 +1,143 @@
+{
+  "laptop-qwen3.5-2b": {
+    "about": "The laptop's writer: Qwen3.5-2B (Q4_K_M, 1.3 GB), reading 1500 characters of each piece. Its notes are the same on a CPU and a GPU; written here on the GPU, timed on 4 CPU threads apart (docs/notes.md). Its saved run had --ctx-size 16384; 8192 holds the same four pieces.",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "http://127.0.0.1:28122/v1",
+      "model": "qwen3.5-2b",
+      "concurrency": 4,
+      "chars": 1500
+    },
+    "serve": {
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "notes": {
+        "gguf": "Qwen3.5-2B-Q4_K_M.gguf",
+        "args": [
+          "--ctx-size",
+          "8192",
+          "--parallel",
+          "4",
+          "--gpu-layers",
+          "99"
+        ]
+      }
+    }
+  },
+  "laptop-qwen3-4b": {
+    "about": "Qwen3-4B-Instruct-2507 (Q4_K_M, 2.5 GB), beefy's writer, on a GPU, reading 1500 characters of each piece; written on the GPU, timed on 4 CPU threads apart.",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "http://127.0.0.1:28122/v1",
+      "model": "qwen3-4b-instruct-2507",
+      "concurrency": 4,
+      "chars": 1500
+    },
+    "serve": {
+      "env": {
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "notes": {
+        "gguf": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf",
+        "args": [
+          "--ctx-size",
+          "8192",
+          "--parallel",
+          "4",
+          "--gpu-layers",
+          "99"
+        ]
+      }
+    }
+  },
+  "cloud-haiku": {
+    "about": "The cloud writer: Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY, reading 3000 characters of each piece. Price: dollars a million tokens. Not measured yet (no key here): the Claude numbers are or-haiku-5.5's.",
+    "notes": {
+      "api": "anthropic",
+      "baseUrl": "https://api.anthropic.com/v1",
+      "model": "claude-haiku-5-5",
+      "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "sendCode": true,
+      "concurrency": 4,
+      "chars": 3000
+    },
+    "price": {
+      "input": 0.1,
+      "output": 0.5
+    }
+  },
+  "or-qwen3-30b": {
+    "about": "Qwen3-30B-A3B-Instruct-2507 through OpenRouter (the key in $OPENROUTER_API_KEY): small and fast, no reasoning. Price: dollars a million tokens; the run records what OpenRouter says each request cost. Measured and dropped: its notes made the lists no better (docs/notes.md).",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "model": "qwen/qwen3-30b-a3b-instruct-2507",
+      "apiKeyEnv": "OPENROUTER_API_KEY",
+      "sendCode": true,
+      "concurrency": 8,
+      "chars": 3000,
+      "timeoutMs": 60000,
+      "request": {
+        "usage": {
+          "include": true
+        }
+      }
+    },
+    "price": {
+      "input": 0.1,
+      "output": 0.3
+    }
+  },
+  "or-haiku-5.5": {
+    "about": "Claude Haiku 5.5 through OpenRouter, reasoning off: the cloud profile's writer (which asks Anthropic's API itself).",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "model": "anthropic/claude-haiku-5.5",
+      "apiKeyEnv": "OPENROUTER_API_KEY",
+      "sendCode": true,
+      "concurrency": 8,
+      "chars": 3000,
+      "timeoutMs": 60000,
+      "request": {
+        "reasoning": {
+          "enabled": false
+        },
+        "usage": {
+          "include": true
+        }
+      }
+    },
+    "price": {
+      "input": 0.1,
+      "output": 0.5
+    }
+  },
+  "or-sonnet-5.5": {
+    "about": "Claude Sonnet 5.5 through OpenRouter, at low reasoning effort (it cannot be turned off): a strong writer, to see what a better note is worth.",
+    "notes": {
+      "api": "openai",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "model": "anthropic/claude-sonnet-5.5",
+      "apiKeyEnv": "OPENROUTER_API_KEY",
+      "sendCode": true,
+      "concurrency": 8,
+      "chars": 3000,
+      "timeoutMs": 60000,
+      "request": {
+        "reasoning": {
+          "effort": "low"
+        },
+        "max_tokens": 1500,
+        "usage": {
+          "include": true
+        }
+      }
+    },
+    "price": {
+      "input": 2.0,
+      "output": 10.0
+    }
+  }
+}

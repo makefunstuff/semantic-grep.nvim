@@ -98,7 +98,7 @@ test('without an embedding model the words still work, and meaning says so', asy
     assert.equal(words.state, 'off');
     const meaning = await server.call('meaning', {root, query: 'waiter'});
     assert.deepEqual([meaning.state, meaning.results], ['off', []]);
-    assert.deepEqual(await server.call('check', {}), {profile: null, embedding: null, rerank: null, local: null});
+    assert.deepEqual(await server.call('check', {}), {profile: null, embedding: null, rerank: null, notes: null, local: null});
   } finally {
     await server.close();
   }

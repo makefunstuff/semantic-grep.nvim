@@ -13,7 +13,7 @@ import {fakeEmbeddingServer} from './fake-embedder.mjs';
 import {scratch, until} from './helpers.mjs';
 
 test('a profile fills the models; the config\'s own fields go over it, another model drops the profile\'s settings for its own, false turns one off', () => {
-  assert.deepEqual(profileConfig({}), {embedding: null, rerank: null});
+  assert.deepEqual(profileConfig({}), {embedding: null, rerank: null, notes: null});
   const beefy = profileConfig({profile: 'beefy'});
   assert.equal(beefy.embedding.model, PROFILES.beefy.embedding.model);
   assert.equal(beefy.rerank[0].model, PROFILES.beefy.rerank.model);

@@ -87,6 +87,12 @@ require('semantic-grep').setup({
   -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows; chars: how much
   -- of each piece it reads (default 160, 1200 for 'rerank').
   rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
+  -- Notes on the pieces of code, written by a language model while nothing is searched (docs/notes.md): true for the
+  -- profile's writer (the laptop's without a profile), or an entry over it, e.g. {model = 'qwen3.5-9b'}. api: 'openai'
+  -- (/chat/completions: llama-server, Ollama, ...) or 'anthropic'; concurrency: pieces asked at once; chars: how much
+  -- of each piece it reads; idleMs: how long without a search before it writes. Off (nil) by default. The code goes
+  -- to a writer elsewhere than this machine only with sendCode = true.
+  notes = nil,
   picker = 'auto',          -- 'telescope', 'snacks', 'fzf-lua' or 'select'
   debounce_ms = 150,        -- the pause before meaning is asked
   rerank_delay_ms = 0,      -- how long meaning's list must stay before it is reranked
@@ -124,6 +130,14 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   none is pending." A note holds while its piece's code does not change; `pending` then lists it again. Both
   commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
   to the agent's model.
+- **Notes written in the background.** With `notes = true` in `setup()`, a language model writes those notes itself,
+  while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
+  profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
+  cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
+  that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud profile's does). How to
+  run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku 5.5's notes
+  (measured through OpenRouter, with the laptop's embedding model) take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760,
+  for 10 cents a thousand pieces.
 
 ## Commands
 

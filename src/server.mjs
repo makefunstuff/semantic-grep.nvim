@@ -2,9 +2,11 @@
 // one message a line: Neovim asks, the server answers each `id`, and tells Neovim of its own accord with notifications.
 //
 // Requests (params):
-//   initialize {dataDir, profile?, embedding?, rerank?, index?, projectDir?, parsers?, local?}  -> {state, model, version}
+//   initialize {dataDir, profile?, embedding?, rerank?, notes?, index?, projectDir?, parsers?, local?}  -> {state, model, version}
 //                                                 without embedding (or false) and profile: the small local model
-//                                                 (local.mjs; local = {gguf?, llamaServer?, threads?}, or false)
+//                                                 (local.mjs; local = {gguf?, llamaServer?, threads?}, or false);
+//                                                 notes (true, or an entry over the profile's writer): notes written
+//                                                 while nothing is searched (notes.mjs)
 //   needs {}                                      -> {state, runtime, model, bytes, name, path} what the local model lacks
 //   download {}                                   -> {state}           the local model fetched (progress as it comes)
 //   open {root}                                   -> {state}           the project is indexed in the background
@@ -19,7 +21,7 @@
 //   notes {root, limit?}                          -> {pieces, pending, noted} pieces without a note, for an agent
 //   addNotes {root, notes: [{hash, note}]}        -> {added, unknown}
 //   status {}                                     -> the Meaning's snapshot
-//   check {}                                      -> {profile, embedding, rerank} the models asked once each, for :checkhealth
+//   check {}                                      -> {profile, embedding, rerank, notes} the models asked once each, for :checkhealth
 // Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); progress {root, phase, done,
 // total, text}, log {text} and booked {root, kind, text} (to Neovim). `found` is `{phase, query, state, results:
 // [{file, path, line, from, to, head, kind, name, meaning, words, rerank?}], chunks, embedded, problem?, ms?, ...}`;
@@ -84,7 +86,7 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
     async initialize(params = {}) {
       if (meaning) await meaning.close();
       if (typeof params.dataDir !== 'string' || !isAbsolute(params.dataDir)) throw new Error('dataDir must be an absolute path');
-      const {embedding, rerank} = profileConfig(params);
+      const {embedding, rerank, notes} = profileConfig(params);
       profile = params.profile ?? null;
       const index = indexConfig(params.index);
       // No embedding model named, nor a profile, nor turned off: the small one of local.mjs, served here.
@@ -93,7 +95,7 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
       meaning = new Meaning({
         dataDir: params.dataDir, config: {index, ...(params.projectDir ? {projectDir: params.projectDir} : {})}, embedding,
         ...(own ? {embedder: own, provider: own} : {}),
-        reranker: rerank ? new Reranker({entries: rerank, log}) : null,
+        reranker: rerank ? new Reranker({entries: rerank, log}) : null, notes,
         log, progress: (root, how) => notify('progress', {root, ...how}), book: (root, kind, text) => notify('booked', {root, kind, text}),
         ...meaningWith,
       });
@@ -177,7 +179,17 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
         Object.assign(rerank, {timeoutMs: m.reranker.timeoutMs, models: m.reranker.name, unreachable: !rerank.ok && UNREACHABLE.test(rerank.error ?? '')});
         for (const skip of rerank.skipped ?? []) skip.unreachable = UNREACHABLE.test(skip.error ?? '');
       }
-      return {profile, embedding, rerank, local: m.provider?.snapshot?.().local ?? null};
+      // The notes writer, asked for one note on a small piece of its own (not the project's code).
+      const notes = m.writer ? await (async () => {
+        const started = Date.now();
+        const counts = {written: m.writer.written, tokens: {...m.writer.tokens}, cost: m.writer.cost, ms: m.writer.ms};
+        const {notes: [written], errors} = await m.writer.write([{hash: 'check', file: 'math.js', from: 1, name: 'add', text: '/** The sum of a and b. */\nexport function add(a, b) { return a + b }'}]);
+        Object.assign(m.writer, counts); // the check's note is not the project's
+        const about = {model: m.writer.about, sendCode: m.writer.entry.sendCode, idleMs: m.writer.entry.idleMs, written: m.writer.written};
+        return written ? {ok: true, ms: Date.now() - started, note: written.note, ...about}
+          : {ok: false, ms: Date.now() - started, error: errors[0] ?? 'no answer', unreachable: UNREACHABLE.test(errors[0] ?? ''), ...about};
+      })() : null;
+      return {profile, embedding, rerank, notes, local: m.provider?.snapshot?.().local ?? null};
     },
   };
 
