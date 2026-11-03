@@ -18,6 +18,12 @@ The laptop profile has no reranker: a `rerank` there is a whole entry of your ow
 alone has 0.610; over all 372 questions the 8B's fused list has 0.628 against EmbeddingGemma 2's 0.600 and the old
 beefy (Qwen3-Embedding-4B) 0.615.
 
+With no profile and no `embedding`, the plugin runs the laptop's model itself: it downloads
+`embeddinggemma-2-Q8_0.gguf` once (asked first; pinned by commit and SHA-256) into Neovim's data folder and starts the
+`llama-server` on PATH with the laptop's arguments below, on a free port of 127.0.0.1, stopping it after 15 minutes
+unused and when Neovim goes (`local_model` in `setup()` points at a GGUF or a llama-server of your own). The laptop
+profile is the same model on a server you run.
+
 The local profiles expect llama.cpp's `llama-server` on this machine: the embedding model at
 `http://127.0.0.1:18120/v1`, the reranker at `http://127.0.0.1:18121/v1`. `:checkhealth semantic-grep` names the
 profile and each model nothing answers for ("unreachable"), with where it looked.

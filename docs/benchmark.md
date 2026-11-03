@@ -37,6 +37,75 @@ Flags: `--repos hono,flask`, `--split dev|test`, `--modes words,fused`, `--quest
 (index again; otherwise a run reuses the index and vectors in the cache), `--parsers none` (cut pieces by indentation, not
 Neovim's tree-sitter), `--profiles FILE` (your own profiles), `--cache DIR`.
 
+## Files
+
+`:SemanticGrep files` lists files, not pieces, so it is scored by files too: a question is answered by its labelled file
+(or a file in its `also`), anywhere in it. Each mode is asked as the files view asks it (`Meaning.files`), and the
+saved run has the same numbers for the files (`files`, and `fileModes` per repository; `fileRank` per question):
+
+| mode | the pieces a file is ranked by |
+| --- | --- |
+| `words` | the 60 with *any* of the question's words, by BM25 (a sentence's words are seldom all in one piece) |
+| `meaning` | the 60 closest in meaning, not cut by the model's band |
+| `fused` | both lists fused by reciprocal rank: meaning's, and the pieces with every word, as the pieces view fuses them |
+| `rerank` | the fused 60, their first reordered by the profile's reranker: what the files view does when there is one |
+
+A file scores by its pieces among those 60: the one at rank *r* is worth 1/(5 + *r*); its best piece counts in full,
+its next one half, the one after a quarter, and so on: the best piece first, and a small bonus for several
+(`filesOf` in `src/meaning.mjs`). The 5, the half and the 60 were chosen on the `dev` questions (121) with the laptop's
+model, from a grid of 1/(*k* + *r*) for *k* 0 to 60, the next piece's share 0 to 0.5, 30 to 100 pieces, and meaning's
+band from the model's to none:
+
+| on `dev`, fused | R@1 | R@5 | R@10 | MRR |
+| --- | --- | --- | --- | --- |
+| the files of the pieces list, each where it first comes | 0.645 | 0.901 | 0.950 | 0.758 |
+| the best piece alone (the share 0) | 0.653 | 0.917 | 0.975 | 0.769 |
+| *k* 60, a tenth of the next | 0.653 | 0.942 | 0.975 | 0.762 |
+| **k 5, half the next (chosen)** | **0.694** | **0.942** | **0.975** | **0.787** |
+| the same with meaning cut at the model's band (0.06) | 0.686 | 0.917 | 0.950 | 0.778 |
+
+For the words alone, any word rather than every word took file recall@5 from 0.18 to 0.86 on `dev`; fusing meaning
+with the any-word list instead of the every-word one was a little worse (0.934 against 0.942), so the fused list keeps
+the picker's.
+
+Results on the `test` split (not tuned on), 2026-11-03: [`words`](../bench/results/words-2026-11-03-test.json) and
+[`laptop`](../bench/results/laptop-2026-11-03-test.json) over all six repositories (251 questions), `beefy` over hono,
+cobra and fd ([113 questions](../bench/results/beefy-2026-11-03-test-hono+cobra+fd.json); the three the rerankers were
+chosen on, as its 8B model had to run on the CPU here). `cloud` has no numbers yet, for want of a key (see Profiles),
+nor the laptop with a reranker: none fits its wait (profiles.md).
+
+| profile, mode | file R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
+| --- | --- | --- | --- | --- | --- | --- |
+| words | 0.558 | 0.892 | 0.960 | 0.702 | 0.9 | 2.7 |
+| laptop meaning | 0.622 | 0.916 | 0.972 | 0.745 | 17 | 23 |
+| **laptop fused (the default)** | 0.637 | 0.912 | 0.968 | 0.757 | 18 | 23 |
+| beefy words | 0.558 | 0.920 | 0.991 | 0.719 | 1.4 | 3.6 |
+| beefy meaning | 0.673 | 0.947 | 0.991 | 0.799 | 223 | 282 |
+| beefy fused | 0.681 | 0.973 | 0.991 | 0.812 | 221 | 292 |
+| beefy rerank | 0.717 | 0.973 | 0.991 | 0.833 | 370 | 450 |
+
+File recall@5 per repository (`test`):
+
+| | hono | telescope | flask | cobra | fd | vue-docs |
+| --- | --- | --- | --- | --- | --- | --- |
+| words | 0.964 | 0.762 | 0.885 | 0.932 | 0.878 | 0.955 |
+| laptop fused | 0.893 | 0.810 | 0.846 | 0.977 | 0.976 | 0.977 |
+| beefy fused | 1.000 |  |  | 0.955 | 0.976 |  |
+
+- **The target is met**: the default (no setup: the laptop's EmbeddingGemma 2 on 4 CPU threads, no reranker) has the
+  right file among the first five for 91% of the `test` questions (recall@5 0.912), in 23 ms at p95, against the 0.85 and 300 ms
+  asked. A first index costs more than a search: about 108 s a thousand pieces on 4 threads (profiles.md).
+- **Words find files better than pieces**: a file has many pieces, and any of a sentence's words in them points at it:
+  0.892 at recall@5 without any model, against 0.131 for the words' pieces. Meaning still adds most at the top
+  (recall@1 0.558 to 0.637). On hono and flask the words alone do better at recall@5 than fused; fusing meaning with
+  the any-word list instead was worse on `dev`, so that is left for more questions to decide.
+- **The rerank adds a little for files, at the top**: beefy's reranker lifts the first file (recall@1 0.681 to 0.717,
+  MRR 0.812 to 0.833) and leaves recall@5 where it was (0.973): a file's several pieces already say much of what a
+  reranked piece would. It stays off on the laptop, where it would cost 2 s a search.
+- beefy's latency here is not its own: the GPUs were taken by other work during this run, so its Qwen3-Embedding-8B
+  ran on 8 CPU threads (the reranker on a GPU); its quality is the same as on a GPU, and on one its search took 114 /
+  215 ms (profiles.md).
+
 ## The corpus
 
 [`bench/corpus.json`](../bench/corpus.json), fetched by `bench/fetch.mjs` (one shallow fetch of each commit, not

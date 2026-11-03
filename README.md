@@ -1,26 +1,49 @@
 # semantic-grep.nvim
 
-Find code by what it does, not only by what it calls it. A live picker that works like `live_grep`: on every key
+Write a plain sentence, get the files it is about. `:SemanticGrep files where search results are reranked` lists the
+files of the project that answer it, best first, each at its best matching line; Enter opens it there. A small model
+runs on your own machine, on the CPU (EmbeddingGemma 2, 310 MB, under 1 GB of RAM): no service, no key, nothing to
+set up.
+
+## Install (lazy.nvim)
+
+```lua
+{'makefunstuff/semantic-grep.nvim', dependencies = {'nvim-telescope/telescope.nvim'}, cmd = 'SemanticGrep', opts = {}}
+```
+
+Then `:SemanticGrep files` and a sentence. The first time, it asks to download the model (310 MB, once, into Neovim's
+data folder) and searches by words meanwhile. It runs the model with llama.cpp's `llama-server`, which must be on
+PATH (`brew install llama.cpp`, `winget install llama.cpp`, `nix profile install nixpkgs#llama-cpp`, or a release from
+[llama.cpp](https://github.com/ggml-org/llama.cpp/releases)); it starts it on a free local port and stops it after 15 minutes unused or when
+Neovim goes. Without it, the search works by words alone and `:checkhealth semantic-grep` says what is missing.
+On the [benchmark](docs/benchmark.md)'s questions, the right file is among the first five 91% of the time, in about
+20 ms a search on 4 CPU threads.
+
+## Pieces of code
+
+The files view is one of two. The other finds the pieces of code themselves: a live picker that works like `live_grep`: on every key
 it shows the pieces of code that have your words (identifiers split, so `removeUserFromTeam` is also remove, user,
 from and team; comments and strings too). Pause for 150 ms and the pieces closest to what you *mean* join the list
 below them, so nothing you already see moves. With a decision model set, the first pieces are then reranked in
 place, and the piece you are on stays selected.
 
-The words work with no model at all (SQLite FTS5, BM25, stemming). Meaning needs an embedding model behind an
-OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Ollama, LM Studio, vLLM, a cloud API).
-Three profiles name the models measured best for a machine: `laptop` (CPU only), `beefy` (a GPU) and `cloud` (hosted
-APIs); [docs/profiles.md](docs/profiles.md) has their numbers and how to run each model's server.
+The words work with no model at all (SQLite FTS5, BM25, stemming). Meaning needs an embedding model: the small local
+one by default, or any behind an OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Ollama,
+LM Studio, vLLM, a cloud API). Three profiles name the models measured best for a machine: `laptop` (CPU only, the
+default's model on a server of your own), `beefy` (a GPU) and `cloud` (hosted APIs);
+[docs/profiles.md](docs/profiles.md) has their numbers and how to run each model's server.
 
 ## Requirements
 
 - Neovim 0.10 or later (0.12 shows indexing progress in the statusline/fidget)
 - Node 22.16 or later (`node:sqlite` with FTS5; no npm install, no native dependencies)
 - git (or ripgrep) to list the project's files
+- For search by meaning with no setup: llama.cpp's `llama-server` on PATH (above)
 - Optional: [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (preferred),
   [snacks.nvim](https://github.com/folke/snacks.nvim)'s picker or [fzf-lua](https://github.com/ibhagwan/fzf-lua);
   without them, `vim.ui.select`
 
-## Install (lazy.nvim)
+## Keys and profiles
 
 ```lua
 {
@@ -28,15 +51,16 @@ APIs); [docs/profiles.md](docs/profiles.md) has their numbers and how to run eac
   dependencies = {'nvim-telescope/telescope.nvim'},
   cmd = 'SemanticGrep',
   keys = {
+    {'<leader>sm', '<cmd>SemanticGrep files<cr>', desc = 'Files by meaning'},
     {'<M-s>', '<cmd>SemanticGrep<cr>', desc = 'Search by meaning'},
     {'<M-s>', function() require('semantic-grep').find(require('semantic-grep').selected()) end, mode = 'x', desc = 'Search the selection by meaning'},
   },
-  opts = {profile = 'laptop'}, -- or 'beefy', 'cloud': see docs/profiles.md to start its models
+  opts = {}, -- or {profile = 'beefy'} ('laptop', 'cloud'): models of your own, see docs/profiles.md to start them
 }
 ```
 
-The plugin sets no keymaps; `Alt-s` above is a suggestion. As a Telescope extension:
-`require('telescope').load_extension('semantic_grep')`, then `:Telescope semantic_grep`.
+The plugin sets no keymaps; these are suggestions. As a Telescope extension:
+`require('telescope').load_extension('semantic_grep')`, then `:Telescope semantic_grep files` or `:Telescope semantic_grep`.
 
 ## Configuration
 
@@ -46,6 +70,10 @@ require('semantic-grep').setup({
   -- `embedding` and `rerank` set goes over the profile's (embedding = {baseUrl = ...} moves it; another model drops
   -- the profile's settings for its own); rerank = false turns its reranker off.
   profile = nil,
+  -- With no `embedding` and no profile: the small local model, EmbeddingGemma 2 Q8_0, downloaded once when you say so
+  -- (or `gguf`, a file of your own) and served by `llama_server` (default the one on PATH) on `threads` CPU threads
+  -- (4, fewer on a smaller CPU); it stops after 15 minutes unused and starts again at the next search. false: words only.
+  local_model = {gguf = nil, llama_server = 'llama-server', threads = nil},
   -- An OpenAI-compatible /v1/embeddings. Known prompts are added for EmbeddingGemma, nomic-embed-text/-code and
   -- Qwen3-Embedding; set queryPrefix/documentPrefix for another ({title} in documentPrefix places each piece's
   -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv. band: how far
@@ -69,7 +97,11 @@ require('semantic-grep').setup({
 })
 ```
 
-In the picker, `Enter` opens a piece at its line and `<C-q>` sends the list to quickfix in the order shown. A
+In the files view, `Enter` opens the file at its best line (in Telescope, `<C-q>` sends the files to quickfix). A file ranks by its
+pieces among the first 60 of the search's (words and meaning fused): its best one, plus half the next, a quarter of
+the one after, so a file with several close pieces goes above one with a single near one (docs/benchmark.md, "Files").
+
+In the picker of pieces, `Enter` opens a piece at its line and `<C-q>` sends the list to quickfix in the order shown. A
 quickfix list sent before the rerank came is reordered in place when it comes (unless you changed it meanwhile).
 
 ## It learns
@@ -97,10 +129,14 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
 
 | | |
 | --- | --- |
-| `:SemanticGrep [words]` | Open the live picker, with the words typed in (with a range, the lines' words) |
+| `:SemanticGrep files [sentence]` | The files the sentence is about, best first, each at its best line |
+| `:SemanticGrep [words]` | Open the live picker of pieces, with the words typed in (with a range, the lines' words) |
 | `:SemanticGrep rebuild` | Make the project's index again from its files, every vector too |
-| `:Telescope semantic_grep` | The same picker, as a Telescope extension |
-| `:checkhealth semantic-grep` | Node, the profile, the embedding and rerank models (each asked once; one that nothing answers for is named unreachable), and this project's index |
+| `:SemanticGrep download` | Download the local model now (or again, after "No, words only") |
+| `:Telescope semantic_grep files` | The files view, as a Telescope extension (`:Telescope semantic_grep` the pieces) |
+| `:checkhealth semantic-grep` | Node, llama-server and the local model, the profile, the embedding and rerank models (each asked once; one that nothing answers for is named unreachable), and this project's index |
+
+From Lua: `require('semantic-grep').files(sentence)` and `.find(words)`.
 
 ## How it works
 
@@ -120,7 +156,7 @@ Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm
 
 `npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`): six public
 repositories pinned by commit, 372 questions written the way people search, each asked by words, by meaning, fused
-and reranked, scored by recall@1/5/10, MRR and latency. Your own searches and the pieces you opened run through the
+and reranked, scored by recall@1/5/10, MRR and latency, of the pieces and of the files view. Your own searches and the pieces you opened run through the
 same bench, privately (`npm run bench:export`). See [docs/benchmark.md](docs/benchmark.md) for how, and the results.
 
 ## License

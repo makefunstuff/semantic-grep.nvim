@@ -92,13 +92,13 @@ test('without an embedding model the words still work, and meaning says so', asy
   const root = project();
   const server = startServer();
   try {
-    assert.equal((await server.call('initialize', {dataDir: scratch('server-data-')})).state, 'off');
+    assert.equal((await server.call('initialize', {dataDir: scratch('server-data-'), embedding: false})).state, 'off');
     const words = await server.call('words', {root, query: 'waiter'});
     await until(async () => (await server.call('words', {root, query: 'waiter'})).results.length === 1, 'the words');
     assert.equal(words.state, 'off');
     const meaning = await server.call('meaning', {root, query: 'waiter'});
     assert.deepEqual([meaning.state, meaning.results], ['off', []]);
-    assert.deepEqual(await server.call('check', {}), {profile: null, embedding: null, rerank: null});
+    assert.deepEqual(await server.call('check', {}), {profile: null, embedding: null, rerank: null, local: null});
   } finally {
     await server.close();
   }

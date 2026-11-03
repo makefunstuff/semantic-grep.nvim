@@ -61,6 +61,12 @@ test('the bench: words, meaning, fused and reranked, each scored by recall, MRR 
     assert.equal(run.overall.meaning.n, 3);
     assert.ok(run.overall.fused.p50 > 0 && run.overall.fused.p95 >= run.overall.fused.p50);
     assert.deepEqual(Object.keys(run.styles), ['vague', 'plain']);
+    assert.deepEqual(Object.keys(run.files), ['words', 'meaning', 'fused', 'rerank'], 'the files view, each way');
+    // The fake decision model puts what has "waiter" first: in the files view (meaning's list not cut by the band) too.
+    assert.deepEqual(run.perQuestion.find(row => row.id === 'q1').fileRank, {words: 0, meaning: 1, fused: 1, rerank: 2});
+    assert.equal(run.perQuestion.find(row => row.id === 'q3').fileRank.rerank, 1);
+    assert.equal(run.files.fused.recall1, 1);
+    assert.match(stdout, /files \(the labelled file\):/);
     assert.match(stdout, /all \(3\)\s+words\s+0\.333/);
     assert.equal(JSON.stringify(run).includes(embeddings.baseUrl.replace('/v1', '')), true, 'the models are recorded');
 

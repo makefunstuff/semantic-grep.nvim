@@ -57,9 +57,9 @@ export function exclude(common, projectDir = PROJECT_DIR) {
 
 const vectorOf = blob => new Float32Array(blob.buffer.slice(blob.byteOffset, blob.byteOffset + blob.byteLength));
 
-/** The FTS5 query for `terms` (words already split and lower case): every one, each as the start of a word. */
-export function matchOf(terms) {
-  return terms.map(term => (term.length > 2 ? `"${term}"*` : `"${term}"`)).join(' AND ');
+/** The FTS5 query for `terms` (words already split and lower case): every one (with `any`, any one), each as the start of a word. */
+export function matchOf(terms, any = false) {
+  return terms.map(term => (term.length > 2 ? `"${term}"*` : `"${term}"`)).join(any ? ' OR ' : ' AND ');
 }
 
 const opened = new Map(); // path -> {store, users}
@@ -277,9 +277,9 @@ export class IndexStore {
   }
 
   /** The ids of worktree `tree`'s pieces that have every one of `terms`, best first by BM25. */
-  wordSearch(tree, terms, limit) {
+  wordSearch(tree, terms, limit, any = false) {
     if (!terms.length) return [];
-    return this.statements.search.all(matchOf(terms), tree, limit).map(row => row.id);
+    return this.statements.search.all(matchOf(terms, any), tree, limit).map(row => row.id);
   }
 
   /**

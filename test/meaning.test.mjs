@@ -11,7 +11,7 @@ import {test} from 'node:test';
 import {embeddingConfig, indexConfig} from '../src/config.mjs';
 import {HttpEmbedder, promptsOf} from '../src/embedder.mjs';
 import {indexPlace} from '../src/index-store.mjs';
-import {fuse, indexable, Meaning, ProjectIndex, projectFiles, searchTerms, words} from '../src/meaning.mjs';
+import {filesOf, fuse, indexable, Meaning, ProjectIndex, projectFiles, searchTerms, words} from '../src/meaning.mjs';
 import {blocks, cut, importLines, nameOf, PIECE, piecesOf, TreeSitter, withoutImports} from '../src/pieces.mjs';
 import {fakeEmbedder, fakeEmbeddingServer, fakeProvider, fakeVector} from './fake-embedder.mjs';
 import {hasNvim, scratch, until} from './helpers.mjs';
@@ -136,6 +136,38 @@ test('the words of code: lower case, with identifiers split as well; a search\'s
 test('rankings fuse by reciprocal rank: what both rank high goes first', () => {
   assert.deepEqual(fuse([['a', 'b', 'c'], ['b', 'c']]), ['b', 'c', 'a']);
   assert.deepEqual(fuse([[], ['x']]), ['x']);
+});
+
+test('files rank by their pieces: the best one, and a little for each next, so several close ones beat a single near one', () => {
+  const ranked = ['a', 'b', 'b', 'c', 'b', 'a'].map((file, i) => ({file, from: i}));
+  const files = filesOf(ranked);
+  assert.deepEqual(files.map(file => [file.file, file.hits, file.best.from]), [['b', 3, 1], ['a', 2, 0], ['c', 1, 3]]);
+  assert.ok(Math.abs(files[0].score - (1 / 7 + 0.5 / 8 + 0.25 / 10)) < 1e-9);
+  assert.deepEqual(filesOf(ranked, {decay: 0}).map(file => file.file), ['a', 'b', 'c'], 'without the bonus: by the best piece alone');
+});
+
+test('the files view: a sentence\'s files by meaning, a file once at its best line; by any of its words without a model', async () => {
+  const root = realpathSync(scratch('files-'));
+  mkdirSync(join(root, 'src'));
+  writeFileSync(join(root, 'src', 'deliver.js'), 'export function deliver(job) {\n  return send(job)\n}\n\n\n// Try again after a failure.\nexport function redo(job) {\n  sleep(backoff(job.tries))\n  return deliver(job)\n}\n');
+  writeFileSync(join(root, 'src', 'cart.js'), '// The basket\'s sum.\nexport function total(cart) {\n  return cart.items.reduce((sum, item) => sum + item.cents, 0)\n}\n');
+  execFileSync('git', ['init', '-q'], {cwd: root});
+  const meaning = new Meaning({dataDir: scratch('files-data-'), embedder: fakeEmbedder()});
+  const words = new Meaning({dataDir: scratch('files-data-')});
+  try {
+    await until(async () => (await meaning.words(root, 'cents')).results.length && !meaning.working && (await meaning.files(root, 'x')).reading === undefined, 'the build');
+    const found = await meaning.files(root, 'retry when it fails');
+    assert.equal(found.state, 'on');
+    assert.deepEqual(found.results.map(result => result.file), ['src/deliver.js', 'src/cart.js'], 'a file once');
+    assert.equal(found.results[0].line, 7, 'at its best piece, after its doc comment');
+    assert.ok(found.results[0].hits >= 1 && found.results[0].score > found.results[1].score);
+    await until(async () => (await words.words(root, 'cents')).results.length, 'the words');
+    const byWords = await words.files(root, 'the cents of a basket that is not there');
+    assert.deepEqual([byWords.state, byWords.results.map(result => result.file)], ['off', ['src/cart.js']], 'any of its words, not every one');
+  } finally {
+    await meaning.close();
+    await words.close();
+  }
 });
 
 test('the files indexed are git\'s, without what .gitignore leaves out, pictures or lockfiles', async () => {

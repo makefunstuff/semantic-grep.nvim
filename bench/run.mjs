@@ -102,10 +102,10 @@ try {
     log(`${repo.name}: ${files} files, ${chunks} pieces, ready in ${(indexMs / 1000).toFixed(1)} s`);
     const asked = questions.filter(question => question.repo === repo.name);
     // One search of each kind first, none of the questions, not timed: the models load, the matrix is made.
-    for (const mode of modes) await ask(mode, repo.root, 'where does it start');
+    for (const mode of modes) { await ask(mode, repo.root, 'where does it start'); await meaning.files(repo.root, 'where does it start', {mode, limit: LIMIT}); }
     const rows = [];
     for (const question of asked) {
-      const row = {id: question.id, repo: repo.name, style: question.style ?? null, split: question.split ?? null, rank: {}, ms: {}};
+      const row = {id: question.id, repo: repo.name, style: question.style ?? null, split: question.split ?? null, rank: {}, ms: {}, fileRank: {}, fileMs: {}};
       for (const mode of modes) {
         const t = performance.now();
         const answer = await ask(mode, repo.root, question.query);
@@ -115,13 +115,19 @@ try {
         // How close in meaning the best piece and the first right one are: what calibrate.mjs sets a model's band by.
         if (mode === 'meaning' && answer.results.length) row.similarity = {best: answer.results[0].meaning, answer: answer.results[row.rank[mode] - 1]?.meaning ?? null};
         if (mode === 'rerank') row.reranked = answer.rerank ? (answer.rerank.applied ? 'applied' : answer.rerank.why) : 'none';
+        // The files view of the same search: answered by the labelled file, anywhere in it.
+        const f = performance.now();
+        const files = await meaning.files(repo.root, question.query, {mode, limit: LIMIT});
+        row.fileMs[mode] = Math.round((performance.now() - f) * 10) / 10;
+        if (files.problem) throw new Error(`files ${mode} "${question.query}": ${files.problem}`);
+        row.fileRank[mode] = fileRankOf(files.results, question);
       }
       rows.push(row);
     }
     perQuestion.push(...rows);
     // A build's time a thousand pieces, when this run embedded most of them (not when it reused an earlier run's vectors).
     const msPer1k = embedded - cached > chunks / 2 ? Math.round(indexMs / (embedded - cached) * 1000) : null;
-    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, embedded: embedded - cached, indexMs, msPer1k, questions: rows.length, modes: summary(rows)};
+    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, embedded: embedded - cached, indexMs, msPer1k, questions: rows.length, modes: summary(rows), fileModes: summary(rows, true)};
   }
 
   const styles = [...new Set(perQuestion.map(row => row.style).filter(Boolean))];
@@ -137,6 +143,7 @@ try {
     parsers: parsers.length,
     limit: LIMIT,
     overall: summary(perQuestion),
+    files: summary(perQuestion, true), // the files view: a question answered by its labelled file
     repos: repoResults,
     styles: Object.fromEntries(styles.map(style => [style, summary(perQuestion.filter(row => row.style === style))])),
     reranked: modes.includes('rerank') ? count(perQuestion.map(row => row.reranked)) : null,
@@ -165,6 +172,12 @@ function ask(mode, root, query) {
   return meaning.search(root, query, {limit: LIMIT, book: false, rerank: mode === 'rerank'});
 }
 
+/** The 1-based rank of the first file that answers `question` (its file, or one in `also`), or 0. */
+function fileRankOf(results, question) {
+  const files = new Set([question.file, ...(question.also ?? []).map(answer => answer.file)]);
+  return results.findIndex(result => files.has(result.file)) + 1;
+}
+
 /** The 1-based rank of the first result that answers `question`, or 0. */
 function rankOf(results, question) {
   const answers = [question, ...(question.also ?? [])];
@@ -175,12 +188,12 @@ function rankOf(results, question) {
 function percentile(sorted, p) { return sorted.length ? sorted[Math.min(sorted.length - 1, Math.ceil(p * sorted.length) - 1)] : null; }
 function round(value) { return Math.round(value * 1000) / 1000; }
 
-/** Recall@1/5/10, MRR and the p50/p95 milliseconds of each mode over `rows`. */
-function summary(rows) {
+/** Recall@1/5/10, MRR and the p50/p95 milliseconds of each mode over `rows`: of the pieces, or of the files view (`files`). */
+function summary(rows, files = false) {
   const out = {};
   for (const mode of modes) {
-    const ranks = rows.map(row => row.rank[mode]);
-    const ms = rows.map(row => row.ms[mode]).sort((a, b) => a - b);
+    const ranks = rows.map(row => (files ? row.fileRank : row.rank)[mode]);
+    const ms = rows.map(row => (files ? row.fileMs : row.ms)[mode]).sort((a, b) => a - b);
     const recall = k => round(ranks.filter(rank => rank && rank <= k).length / ranks.length);
     out[mode] = {n: ranks.length, recall1: recall(1), recall5: recall(5), recall10: recall(10), mrr: round(ranks.reduce((sum, rank) => sum + (rank ? 1 / rank : 0), 0) / ranks.length), p50: percentile(ms, 0.5), p95: percentile(ms, 0.95)};
   }
@@ -229,6 +242,9 @@ function print(result) {
   lines.push('');
   rowsOf(`all (${result.overall[modes[0]].n})`, result.overall);
   for (const [style, byMode] of Object.entries(result.styles)) rowsOf(style.slice(0, 11), byMode);
+  lines.push('\nfiles (the labelled file):');
+  for (const [name, repo] of Object.entries(result.repos)) rowsOf(basename(name).slice(0, 11), repo.fileModes);
+  rowsOf(`all (${result.files[modes[0]].n})`, result.files);
   if (result.build) lines.push(`\nbuilt ${result.build.pieces} pieces in ${(result.build.ms / 1000).toFixed(1)} s: ${(result.build.msPer1k / 1000).toFixed(1)} s a thousand`);
   for (const [role, server] of Object.entries(result.servers ?? {})) if (server.rssMB !== undefined) lines.push(`${role}: ${server.gguf}, ${server.rssMB} MB of RAM${server.vramMB ? `, ${server.vramMB} MB of GPU memory` : ''} at most`);
   if (result.reranked) lines.push(`\nreranks: ${Object.entries(result.reranked).map(([why, n]) => `${n} ${why}`).join(', ')}`);
@@ -248,5 +264,6 @@ function compare(now, before) {
   };
   for (const [name, repo] of Object.entries(now.repos)) diff(basename(name).slice(0, 11), repo.modes, before.repos[name]?.modes);
   diff('all', now.overall, before.overall);
+  if (before.files) diff('all files', now.files, before.files);
   process.stdout.write(`${lines.join('\n')}\n`);
 }
