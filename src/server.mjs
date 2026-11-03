@@ -182,8 +182,10 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
       // The notes writer, asked for one note on a small piece of its own (not the project's code).
       const notes = m.writer ? await (async () => {
         const started = Date.now();
+        const counts = {written: m.writer.written, tokens: {...m.writer.tokens}, cost: m.writer.cost, ms: m.writer.ms};
         const {notes: [written], errors} = await m.writer.write([{hash: 'check', file: 'math.js', from: 1, name: 'add', text: '/** The sum of a and b. */\nexport function add(a, b) { return a + b }'}]);
-        const about = {model: m.writer.about, sendCode: m.writer.entry.sendCode, idleMs: m.writer.entry.idleMs, written: m.writer.written - (written ? 1 : 0)};
+        Object.assign(m.writer, counts); // the check's note is not the project's
+        const about = {model: m.writer.about, sendCode: m.writer.entry.sendCode, idleMs: m.writer.entry.idleMs, written: m.writer.written};
         return written ? {ok: true, ms: Date.now() - started, note: written.note, ...about}
           : {ok: false, ms: Date.now() - started, error: errors[0] ?? 'no answer', unreachable: UNREACHABLE.test(errors[0] ?? ''), ...about};
       })() : null;

@@ -194,11 +194,11 @@ test('notes written in the background while nothing is searched: found by their 
     assert.equal(server.requests.length, asked);
     server.set({mode: 'empty'});
     now += 5 * 60_000;
-    assert.equal(await meaning.writeNotes(), 0);
+    for (let i = 0; i < 3; i++) { now += 61_000; assert.equal(await meaning.writeNotes(), 0); }
     now += 61_000;
     const after = server.requests.length;
     assert.equal(await meaning.writeNotes(), 0);
-    assert.equal(server.requests.length, after, 'a piece with no note in the answer is left for this session');
+    assert.equal(server.requests.length, after, 'a piece with no note in the answer three times is left for this session');
   } finally {
     await meaning.close();
     await server.close();
@@ -266,7 +266,7 @@ test('closed while the writer writes: its notes are dropped, and no index is ope
   }
 });
 
-test('an outage keeps the pieces for later; a piece failing alone is given up for the session after three tries', async () => {
+test('an outage keeps the pieces for later; a piece the writer fails on is given up for the session after three tries', async () => {
   const root = project();
   const server = await fakeWriterServer({mode: 'down'});
   let now = 1_000_000;
@@ -290,7 +290,11 @@ test('an outage keeps the pieces for later; a piece failing alone is given up fo
       now += 6 * 60_000;
       await meaning.writeNotes();
     }
-    assert.equal(server.requests.length - before, 3, 'the last piece, failing alone: three tries, then left');
+    assert.ok(server.requests.length - before >= 5, 'the last piece, the server down: asked again after each rest');
+    server.set({mode: 'empty'});
+    const tried = server.requests.length;
+    for (let i = 0; i < 5; i++) { now += 6 * 60_000; await meaning.writeNotes(); }
+    assert.equal(server.requests.length - tried, 3, 'answered with no note: three tries, then left');
   } finally {
     await meaning.close();
     await server.close();

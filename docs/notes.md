@@ -20,9 +20,9 @@ require('semantic-grep').setup({
   searched last first, a few at a time, and stops at the next search (the piece it was writing is dropped and written
   later). Each note is kept as it comes, so a Neovim closed half way keeps what was written.
 - **What.** Every piece without a note: one written by an agent is never written over. A piece whose code changed has
-  a new hash, so it has no note until one is written again. A model that does not answer rests the writer five
-  minutes, and its pieces are asked again after; a piece that gets nothing usable while others get their notes, or
-  that is the last one left and fails three times, is left until the next session.
+  a new hash, so it has no note until one is written again. A writer that does not answer at all rests five
+  minutes, and its pieces are asked again after; a piece it fails on three times (no usable note, too long a wait)
+  is left until the next session.
 - **Where the code goes.** To the writer's model, a piece at a time (its first `chars` characters). A writer on this
   machine (127.0.0.1, localhost, ::1) gets it; any other only with `sendCode = true` in its entry, else the config is
   refused. The cloud profile's writer says so (that profile sends the code to hosted models already); a writer of your
@@ -53,7 +53,7 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   would. The notes' own words matter as much as their meaning: the words alone go from MRR 0.100 to 0.22 with
   Claude's notes, as a search's plain words now meet the note's.
 - **Kept: one writer a profile.** The laptop's Qwen3.5-2B is the smallest that helps (pieces +0.025 over all 189,
-  files +0.010), at 1.7 s a piece on 4 CPU threads: a 5,000-piece project is noted in about 2.3 hours of idle time.
+  files +0.010, within the noise: its gain is the pieces' list), at 1.7 s a piece on 4 CPU threads: a 5,000-piece project is noted in about 2.3 hours of idle time.
   Beefy's Qwen3-4B helps the files view more (+0.029) and writes 1,000 pieces in 3.4 minutes on a GPU; on a CPU it takes 72 minutes, which is why it is not the laptop's. The cloud's Claude Haiku 5.5 is the best
   for its price, 10 cents a thousand pieces; Claude Sonnet 5.5 is better still at 19 times that:
   `notes = {model = 'claude-sonnet-5-5', chars = 3000, concurrency = 4, request = {thinking = {type = 'between_tools'}}}`
@@ -75,7 +75,9 @@ Tokens a thousand pieces: about 260,000 read and 44,000 to 60,000 written by the
 116,000 to 122,000 written by Claude (its tokenizer counts more, and it writes longer notes). Times are a run's
 wall clock, four pieces at a time on a GPU or eight through OpenRouter, one at a time on the CPU; the runs and their
 notes' cost are in [`bench/results/notes-2026-11-03/`](../bench/results/notes-2026-11-03/) (`npm run bench --
---profile laptop --split test --repos cobra,fd,flask --notes laptop-qwen3.5-2b`, the writers in
+--profiles bench/candidates.json --profile gpu-gemma2 --split test --repos cobra,fd,flask --modes words,meaning,fused
+--notes laptop-qwen3.5-2b`: the laptop's model on a GPU, the same vectors; on this change's code, uncommitted then, as
+their `changed` field says; the writers in
 [`bench/writers.json`](../bench/writers.json); a writer's notes are cached by piece, so a run again costs nothing).
 The Claude numbers were measured through OpenRouter (`or-haiku-5.5`, `or-sonnet-5.5`), the same models as
 Anthropic's API serves: the cloud profile's own request to Anthropic (thinking off, low effort) is checked against a
