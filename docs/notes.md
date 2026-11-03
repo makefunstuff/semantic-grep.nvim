@@ -54,7 +54,14 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   Claude's notes, as a search's plain words now meet the note's.
 - **Kept: one writer a profile.** The laptop's Qwen3.5-2B is the smallest that helps (pieces +0.025 over all 189,
   files +0.010, within the noise: its gain is the pieces' list), at 1.7 s a piece on 4 CPU threads: a 5,000-piece project is noted in about 2.3 hours of idle time.
-  Beefy's Qwen3-4B helps the files view more (+0.029) and writes 1,000 pieces in 3.4 minutes on a GPU; on a CPU it takes 72 minutes, which is why it is not the laptop's. The cloud's Claude Haiku 5.5 is the best
+  Beefy's Qwen3-4B helps the files view more (+0.029) and writes 1,000 pieces in 3.4 minutes on a GPU; on a CPU it takes 72 minutes, which is why it is not the laptop's.
+  **Its gain is measured only with the laptop's embedding model**: every run above is EmbeddingGemma 2 with no
+  reranker. With the beefy profile's own models (Qwen3-Embedding-8B and the Qwen3-Reranker-0.6B, which reads a note
+  before its code) it is not measured: the run was stopped before its questions were asked. A stronger embedder and
+  a reranker may leave notes less to add. Notes stay off by default there, as everywhere: `notes = true` with
+  `profile = 'beefy'` is a choice to make on your own searches (`npm run bench:export`) until then. Its baseline
+  with no notes, on the same 137 questions: pieces MRR 0.603 fused, 0.643 reranked; files 0.780 fused, 0.808
+  reranked. The cloud's Claude Haiku 5.5 is the best
   for its price, 10 cents a thousand pieces; Claude Sonnet 5.5 is better still at 19 times that:
   `notes = {model = 'claude-sonnet-5-5', chars = 3000, concurrency = 4, request = {thinking = {type = 'between_tools'}}}`
   with the cloud profile (Sonnet 5.5 takes no other way to turn its thinking off; measured through OpenRouter at low

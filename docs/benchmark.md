@@ -206,10 +206,13 @@ files, 2026-11-03 ([runs](../bench/results/notes-2026-11-03/); docs/notes.md has
 | --- | --- | --- | --- |
 | none | 0.544 | 0.725 | |
 | Qwen3.5-2B (the laptop's) | 0.582 | 0.729 | 28 min on 4 CPU threads |
-| Qwen3-4B-Instruct-2507 (beefy's) | 0.571 | 0.753 | 3.4 min on a GPU |
+| Qwen3-4B-Instruct-2507 (beefy's¹) | 0.571 | 0.753 | 3.4 min on a GPU |
 | Qwen3-30B-A3B (dropped) | 0.538 | 0.721 | $0.04 |
 | Claude Haiku 5.5 (the cloud's) | 0.605 | 0.760 | $0.10 |
 | Claude Sonnet 5.5 | 0.633 | 0.773 | $1.92 |
+
+¹ Measured with the laptop's embedding model only, as every row here; with the beefy profile's own models
+(Qwen3-Embedding-8B, Qwen3-Reranker-0.6B) the notes' gain is not measured (notes.md).
 
 ## Results
 
