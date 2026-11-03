@@ -1,0 +1,32 @@
+{
+  "name": "semantic-grep",
+  "version": "0.1.0",
+  "description": "Search code by its words and by what they mean: SQLite FTS5 plus embeddings from an OpenAI-compatible endpoint, with an optional decision-model rerank; a Neovim plugin and a library",
+  "type": "module",
+  "license": "MIT",
+  "author": "Iurii Plugatarov",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./server": "./src/server.mjs",
+    "./pieces.lua": "./src/pieces.lua"
+  },
+  "bin": {
+    "semantic-grep-server": "./bin/semantic-grep-server.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "lua/",
+    "plugin/",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.mjs",
+    "test:nvim": "node --test --test-concurrency=1 test/nvim/*.test.mjs"
+  }
+}

@@ -1,0 +1,7 @@
+# Shop
+
+A tiny shop for the tests of semantic-grep.
+
+## Prices
+
+Prices are kept in cents, never as floating point.
