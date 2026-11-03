@@ -431,6 +431,7 @@ test('an "embedding" model at a /v1/embeddings: on at once, its prompts, its key
     assert.equal(server.requests.at(-1).dimensions, 128, 'dimensions are asked for');
     assert.equal(server.requests.at(-1).input[0], 'task: search result | query: x');
     assert.equal(sized.id, 'embeddinggemma-2/128', 'vectors are kept per model and size');
+    assert.equal(sized.document('min.js', 'x'.repeat(50_000)), `title: none | text: ${'x'.repeat(PIECE.chars)}`, 'a piece of one long line is cut to what the model reads');
   } finally {
     await meaning.close();
     await server.stop();

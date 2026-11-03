@@ -45,6 +45,17 @@ test('the plugin loads: :SemanticGrep, no keymaps, the Telescope extension liste
   assert.deepEqual(lines[0], {command: 2, keymaps: 0, extension: 1, running: false, health: 1, complete: ['rebuild']});
 });
 
+test('on_progress takes a source\'s JSON nulls (vim.NIL) without an error', {skip: !hasNvim && 'nvim not installed'}, async () => {
+  const dir = scratch('nvim-');
+  const {lines} = await runNvim(`
+    require('semantic-grep').setup({})
+    local ok, err = pcall(require('semantic-grep').on_progress, {root = vim.NIL, phase = 'embedding', done = vim.NIL, total = vim.NIL, text = vim.NIL})
+    local ok2 = pcall(require('semantic-grep').on_progress, {phase = 'done', total = 12})
+    emit({ok = ok, ok2 = ok2, err = err and tostring(err) or ''})
+  `, {cwd: dir, dir});
+  assert.deepEqual(lines[0], {ok: true, ok2: true, err: ''});
+});
+
 test(':checkhealth semantic-grep: Node, the embedding model, the rerank model and this project\'s index', {skip: !hasNvim && 'nvim not installed'}, async () => {
   const embeddings = await fakeEmbeddingServer();
   const decisions = await fakeRerankServer({favourite: 'The sum of a and b'});

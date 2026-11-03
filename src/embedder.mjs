@@ -2,6 +2,7 @@
 // LM Studio, vLLM, a cloud API). Each text becomes a vector of unit length, so similarity is a dot product. One request
 // at a time; a search goes before the index's batches waiting, so it waits for one batch at most.
 import {apiKeyOf} from './config.mjs';
+import {PIECE} from './pieces.mjs';
 
 // The prompts EmbeddingGemma was trained with: a piece of the project (titled by its file, or none), and a search.
 export const documentText = (title, text) => `title: ${title || 'none'} | text: ${text}`;
@@ -52,7 +53,9 @@ export class HttpEmbedder {
 
   get msPerText() { return this.embedded ? this.embedMs / this.embedded : null; }
 
-  document(file, text) { return `${this.prompts.document}${text}`; }
+  // A piece is at most PIECE.chars, but a single longer line (minified code, a lockfile) is a piece of its own: its
+  // head is what the model reads, so a server's batch or the model's context is never overrun.
+  document(file, text) { return `${this.prompts.document}${text.slice(0, PIECE.chars)}`; }
 
   query(text) { return `${this.prompts.query}${text}`; }
 

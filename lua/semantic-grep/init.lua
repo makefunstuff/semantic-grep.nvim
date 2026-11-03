@@ -115,6 +115,10 @@ end
 -- How far a project's index is: Neovim's own progress message (0.12), which a statusline or fidget may show.
 local progress_id = nil
 function M.on_progress(message)
+  -- A source's JSON nulls arrive as vim.NIL.
+  local function num(value) return type(value) == 'number' and value or nil end
+  local function str(value) return type(value) == 'string' and value or nil end
+  message = {root = str(message.root), phase = str(message.phase), done = num(message.done), total = num(message.total), text = str(message.text)}
   local percent = message.total and message.total > 0 and math.floor(100 * (message.done or 0) / message.total) or nil
   local text = message.phase == 'reading' and 'reading the project for the word search'
     or message.phase == 'embedding' and ('embedding pieces of code: %d of %d'):format(message.done or 0, message.total or 0)
