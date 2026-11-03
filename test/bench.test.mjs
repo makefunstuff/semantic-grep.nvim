@@ -110,3 +110,18 @@ test('the questions file: each question in a pinned repository, labelled with li
   }
   assert.deepEqual(new Set(questions.map(question => question.repo)), new Set(corpus), 'every repository is asked about');
 });
+
+test('the profiles: each a valid config; a cloud one names its key by environment variable, a local one how to serve it', async () => {
+  const {embeddingConfig, rerankConfig} = await import('../src/config.mjs');
+  const profiles = JSON.parse(readFileSync(join(BENCH, 'profiles.json'), 'utf8'));
+  assert.ok(['words', 'laptop', 'beefy', 'cloud'].every(name => profiles[name]));
+  for (const [name, profile] of Object.entries(profiles)) {
+    embeddingConfig(profile.embedding ?? null, `${name}.embedding`);
+    rerankConfig(profile.rerank ?? null, `${name}.rerank`);
+    for (const entry of [profile.embedding, profile.rerank].filter(Boolean)) {
+      assert.equal(entry.apiKey, undefined, `${name}: no key in the file`);
+      if (/^https:/.test(entry.baseUrl)) assert.match(entry.apiKeyEnv, /^[A-Z_]+_API_KEY$/, name);
+      else assert.ok(profile.serve?.[entry === profile.embedding ? 'embedding' : 'rerank']?.gguf, `${name}: a local model says how to serve it`);
+    }
+  }
+});

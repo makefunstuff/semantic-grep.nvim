@@ -109,6 +109,13 @@ program can be the picker's source instead of the server: see `lua/semantic-grep
 
 Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm run test:e2e` (live models).
 
+## Benchmark
+
+`npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`): six public
+repositories pinned by commit, 372 questions written the way people search, each asked by words, by meaning, fused
+and reranked, scored by recall@1/5/10, MRR and latency. Your own searches and the pieces you opened run through the
+same bench, privately (`npm run bench:export`). See [docs/benchmark.md](docs/benchmark.md) for how, and the results.
+
 ## License
 
 MIT
