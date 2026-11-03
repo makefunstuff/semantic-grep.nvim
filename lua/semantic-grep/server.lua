@@ -71,7 +71,7 @@ function M.new(config)
       end,
     })
     if not ok or id <= 0 then
-      fail_all(('cannot run %s: is Node 22 or later installed?'):format(config.node or 'node'))
+      fail_all(('cannot run %s: is Node 22.16 or later installed?'):format(config.node or 'node'))
       return
     end
     job = id

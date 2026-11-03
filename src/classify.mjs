@@ -7,6 +7,8 @@
 //   the chat (/apply-template), and /completion with n_predict 1 gives the next token's log-probabilities, of which
 //   the labels' are softmaxed. /tokenize finds each label's token.
 // - "openai": OpenAI's Decisions API, POST <baseUrl>/decisions {model, input, questions: [{type: "choice", ...}]}.
+// - "rerank": a cross-encoder's POST <baseUrl>/rerank {model, query, documents} (llama.cpp's `llama-server --rerank`,
+//   Cohere, Jina, Voyage). Answers a relevance score for each document, as `scores` beside their softmax.
 //
 // `classify(entry, {state, question}, {signal, apiKey})` resolves `{probabilities: {<key>: p}}`, keyed as the
 // question's criteria, or rejects; an error with `malformed: true` is an answer of the wrong shape (the model did
@@ -133,7 +135,24 @@ async function llamaCpp(entry, {state, question}, options) {
   return {probabilities: Object.fromEntries(keys.map((key, i) => [key, probabilities[i]]))};
 }
 
-const APIS = {'system-one': systemOne, 'llama-cpp': llamaCpp, openai};
+// A cross-encoder reads the search and each piece together and scores them: {results | data: [{index, relevance_score}]}.
+async function rerankScores(entry, {state, question}, options) {
+  const keys = Object.keys(question.criteria);
+  const query = question.query ?? String(state).replace(/^Search: /u, '');
+  const body = await post(`${trimmed(entry.baseUrl)}/rerank`, {model: entry.model, query, documents: keys.map(key => question.criteria[key])}, options);
+  const results = body?.results ?? body?.data;
+  if (!Array.isArray(results)) throw malformed('no results in its answer');
+  const scores = new Array(keys.length);
+  for (const result of results) {
+    const score = result?.relevance_score ?? result?.score;
+    if (isRecord(result) && Number.isInteger(result.index) && result.index >= 0 && result.index < keys.length && typeof score === 'number' && Number.isFinite(score)) scores[result.index] = score;
+  }
+  if (scores.includes(undefined) || scores.length !== keys.length) throw malformed('no score for every piece');
+  const probabilities = softmax(scores);
+  return {probabilities: Object.fromEntries(keys.map((key, i) => [key, probabilities[i]])), scores: Object.fromEntries(keys.map((key, i) => [key, scores[i]]))};
+}
+
+const APIS = {'system-one': systemOne, 'llama-cpp': llamaCpp, openai, rerank: rerankScores};
 
 export function classify(entry, context, options = {}) {
   const api = APIS[entry.api];

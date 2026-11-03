@@ -13,7 +13,7 @@ import {test} from 'node:test';
 import {classify, llamaPrompt, softmax} from '../src/classify.mjs';
 import {rerankConfig} from '../src/config.mjs';
 import {Meaning} from '../src/meaning.mjs';
-import {FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder} from '../src/rerank.mjs';
+import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder, shorten, SNIPPET_CHARS} from '../src/rerank.mjs';
 import {fakeEmbedder} from './fake-embedder.mjs';
 import {fakeRerankChain, fakeReranker, fakeRerankServer} from './fake-reranker.mjs';
 import {scratch} from './helpers.mjs';
@@ -413,7 +413,9 @@ test('a list of models: one question at a time across them, a new config keeps e
 test('config: "rerank" is a decision model entry, or a list best first, with top and timeoutMs; off without it', () => {
   assert.equal(rerankConfig(undefined), null);
   assert.equal(rerankConfig(false), null);
-  assert.deepEqual(rerankConfig({api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B'}), [{api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B', top: RERANK_TOP, timeoutMs: RERANK_TIMEOUT_MS}], 'one model is a list of one');
+  assert.deepEqual(rerankConfig({api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B'}), [{api: 'system-one', baseUrl: 'http://127.0.0.1:8080/v1', model: 'd1-2B', top: RERANK_TOP, chars: SNIPPET_CHARS, timeoutMs: RERANK_TIMEOUT_MS}], 'one model is a list of one');
+  assert.equal(rerankConfig({api: 'rerank', baseUrl: 'http://h/v1', model: 'bge', chars: 1200})[0].chars, 1200, 'how much of each piece it reads');
+  assert.throws(() => rerankConfig({api: 'rerank', baseUrl: 'http://h/v1', model: 'bge', chars: 10}), /rerank\.chars must be a whole number from 40 to 4000/);
   assert.equal(rerankConfig({api: 'llama-cpp', baseUrl: 'http://h/v1', model: 'm', top: 6, timeoutMs: 1500})[0].top, 6);
   assert.throws(() => rerankConfig({api: 'system-one', baseUrl: 'http://h/v1', model: 'm', top: 1}), /rerank\.top must be a whole number from 2 to 30/);
   assert.throws(() => rerankConfig({api: 'system-one', baseUrl: 'http://h/v1', model: 'm', timeoutMs: -1}), /rerank\.timeoutMs/);
@@ -521,4 +523,50 @@ test('a host\'s own decision client (pi-ai\'s shape) reranks as the built-in one
   answers.push(() => ({stopReason: 'error', errorMessage: 'connection refused'}));
   assert.equal((await reranker.rerank('q', results)).why, 'error');
   assert.equal(reranker.available, false, 'it rests a minute');
+});
+
+test('rerank: a cross-encoder\'s /rerank scores each piece, Cohere\'s, Jina\'s and llama.cpp\'s shape or Voyage\'s, and every piece it read takes its place by them', async () => {
+  const scoresOf = documents => documents.map(text => (text.includes('waiter') ? 0.9 : text.includes('basket') ? 0.4 : 0.1));
+  const server = await fakeHttp({
+    '/v1/rerank': ({query, documents}) => (query === 'voyage' ? {data: scoresOf(documents).map((relevance_score, index) => ({index, relevance_score}))}
+      : {results: scoresOf(documents).map((relevance_score, index) => ({index, relevance_score})).sort((a, b) => b.relevance_score - a.relevance_score)}),
+  });
+  try {
+    const question = rerankQuestion(['a.js:1  one', 'b.js:2  the waiter']);
+    const answer = await classify({api: 'rerank', baseUrl: server.baseUrl, model: 'bge'}, {state: 'Search: tip', question}, {apiKey: 'jina-test'});
+    assert.deepEqual(answer.scores, {1: 0.1, 2: 0.9});
+    const [, body, authorization] = server.requests[0];
+    assert.deepEqual([body.model, body.query, body.documents, authorization], ['bge', 'tip', ['a.js:1  one', 'b.js:2  the waiter'], 'Bearer jina-test']);
+
+    const reranker = new Reranker({entries: rerankConfig({api: 'rerank', baseUrl: server.baseUrl, model: 'bge', top: 3})});
+    const results = ['first', 'the basket', 'the waiter', 'last'].map((head, i) => ({file: `${i}.js`, from: 1, line: 1, head}));
+    const done = await reranker.rerank('voyage', results);
+    assert.equal(done.ok, true);
+    assert.deepEqual(done.results.map(result => result.head), ['the waiter', 'the basket', 'first', 'last'], 'the three it read in its order, the fourth after them');
+    assert.deepEqual([done.results[0].rerank, done.moved], [0.9, 2], 'the basket stayed second');
+    assert.deepEqual(byScore([{file: 'a'}, {file: 'b'}, {file: 'c'}], [0.5, 0.5]).map(result => result.file), ['a', 'b', 'c'], 'equal scores keep their order');
+  } finally {
+    await server.close();
+  }
+});
+
+test('chars: each model of a list reads as much of each piece as its entry says, a decision model after a cross-encoder its 160', async () => {
+  assert.equal(shorten('a.js:1 (f)  0123456789', 4), 'a.js:1 (f)  0123…');
+  assert.equal(shorten('a.js:1  0123…', 40), 'a.js:1  0123…', 'already short');
+  const decisions = await fakeRerankServer({favourite: 'waiter'});
+  try {
+    const reranker = new Reranker({entries: rerankConfig([
+      {api: 'rerank', baseUrl: 'http://127.0.0.1:9/v1', model: 'gone'}, // nothing listens there: it fails, the next is asked
+      {api: 'system-one', baseUrl: decisions.baseUrl, model: 'fake-d1'},
+    ])});
+    assert.equal(reranker.chars, 1200, 'the texts are read at the most any model reads');
+    const results = ['first', 'the waiter', 'last'].map((head, i) => ({file: `${i}.js`, from: 1, line: 1, head}));
+    const texts = results.map(result => pieceText(result, `${result.head} ${'x'.repeat(1000)}`, reranker.chars));
+    const done = await reranker.rerank('tip', results, {texts});
+    assert.deepEqual([done.ok, done.model, done.results[0].head], [true, 'fake-d1', 'the waiter']);
+    const criteria = Object.values(decisions.requests[0].questions.best.criteria);
+    assert.ok(criteria.every(text => text.length <= 12 + SNIPPET_CHARS), 'the decision model read its 160 characters');
+  } finally {
+    await decisions.close();
+  }
 });

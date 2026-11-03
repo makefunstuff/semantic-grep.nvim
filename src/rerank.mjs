@@ -6,6 +6,9 @@
 // One rerank at a time: a model on a CPU may serve other work too, and a second question would only wait behind the
 // first. A rerank asked while one runs keeps its search's order ("busy").
 //
+// A cross-encoder (api "rerank": a /rerank endpoint, such as llama.cpp's with a reranker model, Cohere's, Jina's or
+// Voyage's) answers a relevance score for each piece instead: every piece it read takes its place by its score.
+//
 // It is optional and never in the way: off without a `rerank` entry, asked only where a list is settled (meaning came
 // in a picker, or vim.ui.select's one list), within `timeoutMs`. A model that is down, slow, or answers oddly (the
 // wrong shape, or no preference at all) keeps the order the search gave.
@@ -13,14 +16,14 @@
 // The entry may list several models, best first (a fast one on a GPU that is not always up, then one on a CPU that
 // is): a rerank asks the first that has not failed lately, and the next when it fails or is slower than its own
 // `timeoutMs`. Each one that fails rests for a minute, so a search pays its wait once, not every time.
-import {apiKeyOf, RERANK_TIMEOUT_MS, RERANK_TOP} from './config.mjs';
+import {apiKeyOf, DECISION_CHARS, RERANK_TIMEOUT_MS, RERANK_TOP} from './config.mjs';
 import {classify} from './classify.mjs';
 
 export {FALLBACK_TIMEOUT_MS, RERANK_TIMEOUT_MS, RERANK_TOP} from './config.mjs';
 
 // Of each piece's text, its first this many characters (its doc comment, or its head and first lines): the model reads
 // them all, so they are its time. 160 ranked as well as 600, in half the time.
-export const SNIPPET_CHARS = 160;
+export const SNIPPET_CHARS = DECISION_CHARS;
 // A rerank is applied only when the model's best piece stands out: at least STANDS_OUT times an even share (1/n; of a
 // short list, half), and MARGIN above its second. Then that piece goes first and the rest keep the search's order.
 // Measured with d1-2B on 41 labelled questions over two projects (recall@5 / MRR): the fused list alone 0.91 / 0.74;
@@ -51,10 +54,21 @@ const INSTRUCTIONS = 'A developer searched their project with the words in the s
  * What the model reads of one piece: where it is and what names it (its definition, or what encloses it), then its
  * text from its doc comment on, cut short, on one line.
  */
-export function pieceText(result, text = result.head ?? '') {
+export function pieceText(result, text = result.head ?? '', chars = SNIPPET_CHARS) {
   const flat = String(text).replace(/\s+/g, ' ').trim();
   const name = result.name ? ` (${String(result.name).replace(/\s+/g, ' ')})` : '';
-  return `${result.file}:${result.line ?? result.from}${name}  ${flat.length > SNIPPET_CHARS ? `${flat.slice(0, SNIPPET_CHARS)}…` : flat}`;
+  return `${result.file}:${result.line ?? result.from}${name}  ${flat.length > chars ? `${flat.slice(0, chars)}…` : flat}`;
+}
+
+/**
+ * A piece's text (pieceText's) cut to `chars` of its own: the texts are read at the most any model of the list reads,
+ * and each model gets as much as its entry says.
+ */
+export function shorten(text, chars) {
+  const at = text.indexOf('  ');
+  if (at < 0) return text;
+  const body = text.slice(at + 2).replace(/…$/u, '');
+  return body.length > chars ? `${text.slice(0, at + 2)}${body.slice(0, chars)}…` : text;
 }
 
 /** The choice question about `texts` (each piece's pieceText): its answers are "1" to "N", in the list's order. */
@@ -89,6 +103,15 @@ export function reorder(results, values) {
   const scored = results.map((result, i) => (i < values.length ? {...result, rerank: Math.round(values[i] * 1000) / 1000} : result));
   const best = values.indexOf(Math.max(...values));
   return [scored[best], ...scored.filter((_, i) => i !== best)];
+}
+
+/**
+ * `results` with their first `scores.length` in a cross-encoder's order, highest score first (equal ones keep theirs);
+ * the others after them as they were. Each of those first ones has its score as `rerank`.
+ */
+export function byScore(results, scores) {
+  const scored = results.slice(0, scores.length).map((result, i) => ({...result, rerank: Math.round(scores[i] * 1000) / 1000}));
+  return [...scored.map((result, i) => [result, scores[i], i]).sort((a, b) => b[1] - a[1] || a[2] - b[2]).map(([result]) => result), ...results.slice(scores.length)];
 }
 
 /** A host client's answer (pi-ai's shape: `{stopReason, errorMessage, answers}`) as classify's, or its error. */
@@ -126,6 +149,7 @@ export class Reranker {
       down: null, downAt: 0, answered: 0, msAnswered: 0, // why it failed last, while it is not asked; and the reranks it answered
     }));
     this.top = Math.max(...this.endpoints.map(endpoint => endpoint.top)); // the most pieces any of them reads
+    this.chars = Math.max(...this.endpoints.map(endpoint => endpoint.entry.chars ?? SNIPPET_CHARS)); // of each piece, the most any reads
     this.timeoutMs = this.endpoints.reduce((sum, endpoint) => sum + endpoint.timeoutMs, 0); // the longest a rerank waits
     this.running = null; // the rerank under way, a promise that settles when it ends
     this.calls = 0;
@@ -172,7 +196,7 @@ export class Reranker {
   }
 
   /**
-   * Asks the models in turn, `questionOf(n)` with each one's `n` pieces of `pieces`, until one answers (oddly too):
+   * Asks the models in turn, `questionOf(n, endpoint)` with each one's `n` pieces of `pieces`, until one answers (oddly too):
    * `{asked, endpoint, n, ms, skipped}`, where `asked` is that answer, or the last failure with `endpoint` null when
    * none answered (and `failed`, the model that failed last). A model that fails rests (see failed); `stale()` stops it before the next is asked.
    */
@@ -187,7 +211,7 @@ export class Reranker {
       }
       if (last && stale()) return {asked: {ok: false, why: 'aborted', error: 'a newer search came', ms}, endpoint: null, ms, skipped};
       const n = Math.min(endpoint.top, pieces);
-      const asked = await this.ask(endpoint, state, questionOf(n));
+      const asked = await this.ask(endpoint, state, questionOf(n, endpoint));
       ms += asked.ms;
       if (asked.ok || asked.why === 'malformed') return {asked, endpoint, n, ms, skipped};
       this.failed(endpoint, asked);
@@ -230,7 +254,7 @@ export class Reranker {
       const pieces = Math.min(results.length, texts?.length ?? results.length);
       if (pieces < 2) return {ok: false, why: 'short', error: 'fewer than two pieces', ms: 0, results};
       const all = texts ?? results.map(result => pieceText(result));
-      const {asked, endpoint, n, ms, skipped, failed} = await this.askInTurn(`Search: ${query}`, pieces, count => rerankQuestion(all.slice(0, count)), stale);
+      const {asked, endpoint, n, ms, skipped, failed} = await this.askInTurn(`Search: ${query}`, pieces, (count, endpoint) => rerankQuestion(all.slice(0, count).map(text => shorten(text, endpoint.entry.chars ?? SNIPPET_CHARS))), stale);
       this.calls += 1;
       this.msTotal += ms;
       const by = endpoint ?? failed;
@@ -244,6 +268,21 @@ export class Reranker {
         this.kept += 1;
         this.log(`reranker: ${endpoint.name}: ${asked.error}; the search's order stays`);
         return {...asked, ...about, results};
+      }
+      if (asked.answer.scores) { // a cross-encoder's: a score for each piece, all of them in its order
+        const scores = Array.from({length: n}, (_, i) => asked.answer.scores[String(i + 1)]);
+        if (scores.some(score => typeof score !== 'number' || !Number.isFinite(score))) {
+          this.kept += 1;
+          this.log(`reranker: ${endpoint.name}: no score for every piece; the search's order stays`);
+          return {ok: false, why: 'malformed', error: 'no score for every piece', ...about, results};
+        }
+        endpoint.down = null;
+        endpoint.answered += 1;
+        endpoint.msAnswered += asked.ms;
+        if (stale()) return {...aborted, ...about};
+        const reordered = byScore(results, scores);
+        const moved = reordered.slice(0, n).filter((result, i) => result.file !== results[i].file || result.from !== results[i].from).length;
+        return {ok: true, results: reordered, moved, ...about};
       }
       const found = probabilitiesOf(asked.answer, n);
       if (found.why === 'flat') { // an answer all the same: the model is up

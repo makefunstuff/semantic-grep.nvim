@@ -5,8 +5,13 @@ import {homedir} from 'node:os';
 
 export const RERANK_TOP = 10;
 export const RERANK_TIMEOUT_MS = 3000;
+// Of each piece, the characters a reranker reads: a decision model's few (each costs it time, and 160 ranked as well as
+// 600), a cross-encoder's more: Qwen3-Reranker-0.6B, top 30, on the bench's dev questions (MRR): the fused list 0.593;
+// reading 160 characters 0.488, 500 0.595, 1200 0.615.
+export const DECISION_CHARS = 160;
+export const RERANK_CHARS = 1200;
 export const FALLBACK_TIMEOUT_MS = 1000; // a model another follows in the list
-export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai'];
+export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai', 'rerank'];
 const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];
 
 const isObject = value => typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -47,7 +52,8 @@ export function embeddingConfig(entry, name = 'embedding') {
 /**
  * The `rerank` entry: a decision model `{api, baseUrl, model, top?, timeoutMs?, ...key}`, or a list of them, best
  * first. `api` is "system-one" (POST <baseUrl>/systemone), "llama-cpp" (a chat model on llama.cpp's server, asked for
- * each answer's probability) or "openai" (OpenAI's Decisions API, POST <baseUrl>/decisions). Each comes back with its
+ * each answer's probability), "openai" (OpenAI's Decisions API, POST <baseUrl>/decisions) or "rerank" (a cross-encoder's
+ * POST <baseUrl>/rerank: llama.cpp's --rerank, Cohere, Jina, Voyage; it reorders every piece it reads). Each comes back with its
  * `top` (10) and `timeoutMs` (3 s; 1 s for one another follows). null without one: off.
  */
 export function rerankConfig(value, name = 'rerank') {
@@ -64,7 +70,8 @@ export function rerankConfig(value, name = 'rerank') {
     keysOf(entry, label);
     if (top !== undefined && !(Number.isInteger(top) && top >= 2 && top <= 30)) throw new Error(`${label}.top must be a whole number from 2 to 30`);
     if (timeoutMs !== undefined && !(typeof timeoutMs === 'number' && timeoutMs > 0)) throw new Error(`${label}.timeoutMs must be a number of milliseconds`);
-    return {...entry, top: top ?? RERANK_TOP, timeoutMs: timeoutMs ?? (i < all.length - 1 ? FALLBACK_TIMEOUT_MS : RERANK_TIMEOUT_MS)};
+    if (entry.chars !== undefined && !(Number.isInteger(entry.chars) && entry.chars >= 40 && entry.chars <= 4000)) throw new Error(`${label}.chars must be a whole number from 40 to 4000`);
+    return {...entry, top: top ?? RERANK_TOP, chars: entry.chars ?? (entry.api === 'rerank' ? RERANK_CHARS : DECISION_CHARS), timeoutMs: timeoutMs ?? (i < all.length - 1 ? FALLBACK_TIMEOUT_MS : RERANK_TIMEOUT_MS)};
   });
 }
 

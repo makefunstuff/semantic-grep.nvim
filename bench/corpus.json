@@ -1,0 +1,10 @@
+{
+  "repos": [
+    {"name": "hono", "url": "https://github.com/honojs/hono", "commit": "c91b60a251186fb024557c6d55a11d8e388f179c", "language": "TypeScript"},
+    {"name": "telescope", "url": "https://github.com/nvim-telescope/telescope.nvim", "commit": "40aedd8a68c78a656a10a8d62d80c54af59420fb", "language": "Lua"},
+    {"name": "flask", "url": "https://github.com/pallets/flask", "commit": "49943b5a94413a530761350f04e896f76e8d620e", "language": "Python"},
+    {"name": "cobra", "url": "https://github.com/spf13/cobra", "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e", "language": "Go"},
+    {"name": "fd", "url": "https://github.com/sharkdp/fd", "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d", "language": "Rust"},
+    {"name": "vue-docs", "url": "https://github.com/vuejs/docs", "commit": "40aa88af0094f7bab4aaf786e55c748a6a251d88", "language": "Markdown (docs)"}
+  ]
+}

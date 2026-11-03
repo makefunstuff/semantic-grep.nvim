@@ -11,8 +11,18 @@ import {homedir} from 'node:os';
 import {join, resolve} from 'node:path';
 import {readLines} from '../src/jsonl.mjs';
 
-if (!process.getBuiltinModule?.('node:sqlite')) {
-  process.stderr.write(`semantic-grep needs Node 22.13 or later (node:sqlite); this is ${process.version}\n`);
+// node:sqlite says it is experimental on stderr, which Neovim would show as the server's complaint: that one is
+// dropped, every other warning still told.
+const emitWarning = process.emitWarning;
+process.emitWarning = function (warning, ...rest) {
+  const type = typeof rest[0] === 'string' ? rest[0] : rest[0]?.type;
+  if (type === 'ExperimentalWarning' && /SQLite/.test(String(warning?.message ?? warning))) return;
+  return emitWarning.call(this, warning, ...rest);
+};
+
+const [major, minor] = process.versions.node.split('.').map(Number);
+if (!process.getBuiltinModule?.('node:sqlite') || major < 22 || (major === 22 && minor < 16)) {
+  process.stderr.write(`semantic-grep needs Node 22.16 or later (node:sqlite with FTS5); this is ${process.version}\n`);
   process.exit(1);
 }
 

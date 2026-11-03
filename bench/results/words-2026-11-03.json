@@ -1,0 +1,4649 @@
+{
+ "bench": 1,
+ "profile": "words",
+ "models": {
+  "embedding": null,
+  "rerank": null
+ },
+ "when": "2026-11-03T15:27:30.054Z",
+ "node": "v25.2.1",
+ "semanticGrep": "2f455a2",
+ "changed": [],
+ "questions": {
+  "file": "bench/questions.jsonl",
+  "sha1": "165477f54fea",
+  "count": 372,
+  "split": "all"
+ },
+ "parsers": 50,
+ "limit": 30,
+ "overall": {
+  "words": {
+   "n": 372,
+   "recall1": 0.097,
+   "recall5": 0.14,
+   "recall10": 0.142,
+   "mrr": 0.115,
+   "p50": 0.2,
+   "p95": 0.7
+  }
+ },
+ "repos": {
+  "hono": {
+   "commit": "c91b60a251186fb024557c6d55a11d8e388f179c",
+   "files": 572,
+   "pieces": 4186,
+   "embedded": 0,
+   "indexMs": 21,
+   "questions": 48,
+   "modes": {
+    "words": {
+     "n": 48,
+     "recall1": 0.104,
+     "recall5": 0.125,
+     "recall10": 0.125,
+     "mrr": 0.111,
+     "p50": 0.6,
+     "p95": 1.1
+    }
+   }
+  },
+  "telescope": {
+   "commit": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
+   "files": 103,
+   "pieces": 1558,
+   "embedded": 0,
+   "indexMs": 8,
+   "questions": 71,
+   "modes": {
+    "words": {
+     "n": 71,
+     "recall1": 0.07,
+     "recall5": 0.099,
+     "recall10": 0.113,
+     "mrr": 0.079,
+     "p50": 0.2,
+     "p95": 0.4
+    }
+   }
+  },
+  "flask": {
+   "commit": "49943b5a94413a530761350f04e896f76e8d620e",
+   "files": 227,
+   "pieces": 1589,
+   "embedded": 0,
+   "indexMs": 7,
+   "questions": 66,
+   "modes": {
+    "words": {
+     "n": 66,
+     "recall1": 0.076,
+     "recall5": 0.197,
+     "recall10": 0.197,
+     "mrr": 0.134,
+     "p50": 0.2,
+     "p95": 0.5
+    }
+   }
+  },
+  "cobra": {
+   "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+   "files": 64,
+   "pieces": 1021,
+   "embedded": 0,
+   "indexMs": 6,
+   "questions": 59,
+   "modes": {
+    "words": {
+     "n": 59,
+     "recall1": 0.153,
+     "recall5": 0.169,
+     "recall10": 0.169,
+     "mrr": 0.158,
+     "p50": 0.2,
+     "p95": 0.4
+    }
+   }
+  },
+  "fd": {
+   "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
+   "files": 57,
+   "pieces": 871,
+   "embedded": 0,
+   "indexMs": 4,
+   "questions": 64,
+   "modes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.047,
+     "recall5": 0.047,
+     "recall10": 0.047,
+     "mrr": 0.047,
+     "p50": 0.2,
+     "p95": 0.3
+    }
+   }
+  },
+  "vue-docs": {
+   "commit": "40aa88af0094f7bab4aaf786e55c748a6a251d88",
+   "files": 437,
+   "pieces": 1902,
+   "embedded": 0,
+   "indexMs": 10,
+   "questions": 64,
+   "modes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.141,
+     "recall5": 0.203,
+     "recall10": 0.203,
+     "mrr": 0.168,
+     "p50": 0.2,
+     "p95": 0.5
+    }
+   }
+  }
+ },
+ "styles": {
+  "vague": {
+   "words": {
+    "n": 119,
+    "recall1": 0.16,
+    "recall5": 0.269,
+    "recall10": 0.277,
+    "mrr": 0.206,
+    "p50": 0.2,
+    "p95": 0.8
+   }
+  },
+  "plain": {
+   "words": {
+    "n": 137,
+    "recall1": 0.109,
+    "recall5": 0.131,
+    "recall10": 0.131,
+    "mrr": 0.119,
+    "p50": 0.2,
+    "p95": 0.7
+   }
+  },
+  "multi-hop": {
+   "words": {
+    "n": 116,
+    "recall1": 0.017,
+    "recall5": 0.017,
+    "recall10": 0.017,
+    "mrr": 0.017,
+    "p50": 0.2,
+    "p95": 0.8
+   }
+  }
+ },
+ "reranked": null,
+ "perQuestion": [
+  {
+   "id": "hono-001",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-002",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-003",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1
+   }
+  },
+  {
+   "id": "hono-004",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-005",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-006",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-007",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-008",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-009",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-010",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-011",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1
+   }
+  },
+  {
+   "id": "hono-012",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-013",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-014",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-015",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "hono-016",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-017",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-018",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-019",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-020",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-021",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-022",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-023",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-024",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-025",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-026",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-027",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "hono-028",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "hono-029",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "hono-030",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 3
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "hono-031",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-032",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-033",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-034",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-035",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-036",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-037",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "hono-038",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "hono-039",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-040",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-041",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "hono-042",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-043",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "hono-044",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "hono-045",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "hono-046",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "hono-047",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "hono-048",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-001",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-002",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-003",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-004",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-005",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-006",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-007",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-008",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-009",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-010",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-011",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-012",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-013",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-014",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-015",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-016",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-017",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-018",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-019",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-020",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-021",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-022",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-023",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-024",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-025",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-026",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-027",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-028",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 8
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "telescope-029",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-030",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-031",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-032",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "telescope-033",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-034",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-035",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-036",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "telescope-037",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-038",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-039",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-040",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-041",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-042",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-043",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "telescope-044",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-045",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-046",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 4
+   },
+   "ms": {
+    "words": 3.9
+   }
+  },
+  {
+   "id": "telescope-047",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-048",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-049",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "telescope-050",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-051",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-052",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-053",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "telescope-054",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-055",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-056",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "telescope-057",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-058",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-059",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-060",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-061",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-062",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 4
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-063",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "telescope-064",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-065",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "telescope-066",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "telescope-067",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-068",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-069",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "telescope-070",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "telescope-071",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-001",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "flask-002",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "flask-003",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "flask-004",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "flask-005",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-006",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-007",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-008",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-009",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-010",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-011",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-012",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-013",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-014",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-015",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "flask-016",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-017",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-018",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-019",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-020",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "flask-021",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-022",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-023",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-024",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-025",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-026",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-027",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-028",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-029",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 3
+   },
+   "ms": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-030",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-031",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-032",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "flask-033",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-034",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-035",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-036",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-037",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "flask-038",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-039",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-040",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-041",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-042",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-043",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-044",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-045",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-046",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-047",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-048",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-049",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-050",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "flask-051",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-052",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-053",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-054",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-055",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-056",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-057",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-058",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-059",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-060",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-061",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "flask-062",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-063",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-064",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "flask-065",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "flask-066",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-001",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-002",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-003",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "cobra-004",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "cobra-005",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-006",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-007",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-008",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-009",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-010",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-011",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "cobra-012",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-013",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-014",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-015",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-016",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-017",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-018",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-019",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-020",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-021",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "cobra-022",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-023",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-024",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-025",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-026",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-027",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-028",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-029",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-030",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-031",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-032",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-033",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-034",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-035",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-036",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-037",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 3
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-038",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-039",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-040",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "cobra-041",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-042",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-043",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "cobra-044",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-045",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-046",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-047",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-048",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "cobra-049",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-050",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-051",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-052",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-053",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-054",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-055",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-056",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-057",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-058",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "cobra-059",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-001",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-002",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-003",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-004",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-005",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-006",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-007",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-008",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-009",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-010",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "fd-011",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-012",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-013",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-014",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-015",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-016",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-017",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-018",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-019",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-020",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-021",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-022",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-023",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "fd-024",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-025",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-026",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-027",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-028",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-029",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-030",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-031",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-032",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-033",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-034",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-035",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-036",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-037",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-038",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-039",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-040",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-041",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-042",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-043",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-044",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-045",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-046",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-047",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-048",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-049",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-050",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-051",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-052",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-053",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-054",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-055",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-056",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-057",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-058",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-059",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-060",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-061",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-062",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "fd-063",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-064",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "vue-docs-001",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-002",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-003",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-004",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-005",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "vue-docs-006",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-007",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-008",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-009",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-010",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-011",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-012",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-013",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-014",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-015",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-016",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-017",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-018",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-019",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-020",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-021",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-022",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-023",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "vue-docs-024",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-025",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-026",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-027",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-028",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-029",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "vue-docs-030",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-031",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-032",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-033",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-034",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-035",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-036",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-037",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "vue-docs-038",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   }
+  },
+  {
+   "id": "vue-docs-039",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-040",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-041",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-042",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-043",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-044",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 4
+   },
+   "ms": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-045",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "vue-docs-046",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-047",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "vue-docs-048",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-049",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "vue-docs-050",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-051",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-052",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-053",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-054",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-055",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-056",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-057",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-058",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-059",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "vue-docs-060",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "vue-docs-061",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-062",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-063",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "vue-docs-064",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   }
+  }
+ ]
+}

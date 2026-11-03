@@ -12,7 +12,7 @@ OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Oll
 ## Requirements
 
 - Neovim 0.10 or later (0.12 shows indexing progress in the statusline/fidget)
-- Node 22.13 or later (`node:sqlite`; no npm install, no native dependencies)
+- Node 22.16 or later (`node:sqlite` with FTS5; no npm install, no native dependencies)
 - git (or ripgrep) to list the project's files
 - Optional: [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (preferred),
   [snacks.nvim](https://github.com/folke/snacks.nvim)'s picker or [fzf-lua](https://github.com/ibhagwan/fzf-lua);
@@ -48,8 +48,10 @@ require('semantic-grep').setup({
   -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv.
   embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
   -- A decision model, or a list of them best first (the next is asked when one fails or is slower than its
-  -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp' or 'openai' (Decisions API).
-  -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows.
+  -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp', 'openai' (Decisions API) or
+  -- 'rerank' (a cross-encoder's /rerank: llama.cpp's --rerank, Cohere, Jina, Voyage; it reorders every piece it reads).
+  -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows; chars: how much
+  -- of each piece it reads (default 160, 1200 for 'rerank').
   rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
   picker = 'auto',          -- 'telescope', 'snacks', 'fzf-lua' or 'select'
   debounce_ms = 150,        -- the pause before meaning is asked
@@ -107,6 +109,13 @@ meaning by reciprocal rank. The same code is a library (`import {Meaning} from '
 program can be the picker's source instead of the server: see `lua/semantic-grep/init.lua`.
 
 Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm run test:e2e` (live models).
+
+## Benchmark
+
+`npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`): six public
+repositories pinned by commit, 372 questions written the way people search, each asked by words, by meaning, fused
+and reranked, scored by recall@1/5/10, MRR and latency. Your own searches and the pieces you opened run through the
+same bench, privately (`npm run bench:export`). See [docs/benchmark.md](docs/benchmark.md) for how, and the results.
 
 ## License
 

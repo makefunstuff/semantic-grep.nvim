@@ -1,0 +1,39 @@
+{
+  "words": {
+    "about": "No model: SQLite FTS5 words only. What every machine has."
+  },
+  "laptop": {
+    "about": "Small models on the CPU (about 16 GB of RAM, no GPU), fast enough for a live picker: EmbeddingGemma 300M and the d1-2B decision model, both on llama.cpp.",
+    "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28092/v1", "model": "embeddinggemma-300M"},
+    "rerank": {"api": "system-one", "baseUrl": "http://127.0.0.1:28091/v1", "model": "d1-2B", "top": 15, "timeoutMs": 20000},
+    "serve": {
+      "env": {"CUDA_VISIBLE_DEVICES": ""},
+      "embedding": {"gguf": "embeddinggemma-300M-Q8_0.gguf", "args": ["--embedding", "--pooling", "mean", "--ctx-size", "2048", "--batch-size", "2048", "--ubatch-size", "2048", "--gpu-layers", "0", "--threads", "4"]},
+      "rerank": {"gguf": "d1-2B-Q8_0.gguf", "args": ["--ctx-size", "8192", "--batch-size", "2048", "--ubatch-size", "2048", "--gpu-layers", "0", "--threads", "4"]}
+    }
+  },
+  "beefy": {
+    "about": "A workstation GPU (about 6 GB of a 16 GB card): Qwen3-Embedding-4B and the Qwen3-Reranker-0.6B cross-encoder, both on llama.cpp. Pick the card with CUDA_VISIBLE_DEVICES.",
+    "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28094/v1", "model": "qwen3-embedding-4b"},
+    "rerank": {"api": "rerank", "baseUrl": "http://127.0.0.1:28093/v1", "model": "qwen3-reranker-0.6b", "top": 30, "timeoutMs": 20000},
+    "serve": {
+      "embedding": {"gguf": "Qwen3-Embedding-4B-Q8_0.gguf", "args": ["--embedding", "--pooling", "last", "--ctx-size", "8192", "--batch-size", "2048", "--ubatch-size", "2048", "--gpu-layers", "99"]},
+      "rerank": {"gguf": "qwen3-reranker-0.6b-q8_0.gguf", "args": ["--rerank", "--ctx-size", "16384", "--batch-size", "2048", "--ubatch-size", "2048", "--gpu-layers", "99"]}
+    }
+  },
+  "cloud": {
+    "about": "Hosted APIs: Voyage's voyage-code-3 embeddings and rerank-2.5 cross-encoder, the key in $VOYAGE_API_KEY. The prompts are those Voyage adds for its input_type.",
+    "embedding": {"api": "openai", "baseUrl": "https://api.voyageai.com/v1", "model": "voyage-code-3", "apiKeyEnv": "VOYAGE_API_KEY", "queryPrefix": "Represent the query for retrieving supporting documents: ", "documentPrefix": "Represent the document for retrieval: "},
+    "rerank": {"api": "rerank", "baseUrl": "https://api.voyageai.com/v1", "model": "rerank-2.5", "apiKeyEnv": "VOYAGE_API_KEY", "top": 30, "timeoutMs": 10000}
+  },
+  "cloud-openai": {
+    "about": "Hosted: OpenAI's text-embedding-3-large (key in $OPENAI_API_KEY) with Cohere's rerank-v3.5 (key in $COHERE_API_KEY).",
+    "embedding": {"api": "openai", "baseUrl": "https://api.openai.com/v1", "model": "text-embedding-3-large", "dimensions": 1024, "apiKeyEnv": "OPENAI_API_KEY"},
+    "rerank": {"api": "rerank", "baseUrl": "https://api.cohere.com/v2", "model": "rerank-v3.5", "apiKeyEnv": "COHERE_API_KEY", "top": 30, "timeoutMs": 10000}
+  },
+  "cloud-gemini": {
+    "about": "Hosted: Gemini's embeddings through its OpenAI-compatible endpoint (key in $GEMINI_API_KEY), with Jina's reranker (key in $JINA_API_KEY).",
+    "embedding": {"api": "openai", "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai", "model": "gemini-embedding-001", "dimensions": 1536, "apiKeyEnv": "GEMINI_API_KEY"},
+    "rerank": {"api": "rerank", "baseUrl": "https://api.jina.ai/v1", "model": "jina-reranker-v2-base-multilingual", "apiKeyEnv": "JINA_API_KEY", "top": 30, "timeoutMs": 10000}
+  }
+}
