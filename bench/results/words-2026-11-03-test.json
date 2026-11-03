@@ -1,0 +1,4788 @@
+{
+ "bench": 1,
+ "profile": "words",
+ "models": {
+  "embedding": null,
+  "rerank": null
+ },
+ "servers": {},
+ "when": "2026-11-03T18:49:57.502Z",
+ "node": "v25.2.1",
+ "semanticGrep": "53cb9aa",
+ "changed": [],
+ "questions": {
+  "file": "bench/questions.jsonl",
+  "sha1": "0a842f81e2bf",
+  "count": 251,
+  "split": "test"
+ },
+ "parsers": 50,
+ "limit": 30,
+ "overall": {
+  "words": {
+   "n": 251,
+   "recall1": 0.084,
+   "recall5": 0.131,
+   "recall10": 0.131,
+   "mrr": 0.105,
+   "p50": 0.2,
+   "p95": 0.7
+  }
+ },
+ "files": {
+  "words": {
+   "n": 251,
+   "recall1": 0.558,
+   "recall5": 0.892,
+   "recall10": 0.96,
+   "mrr": 0.702,
+   "p50": 0.9,
+   "p95": 2.7
+  }
+ },
+ "repos": {
+  "hono": {
+   "commit": "c91b60a251186fb024557c6d55a11d8e388f179c",
+   "files": 572,
+   "pieces": 4186,
+   "embedded": 0,
+   "indexMs": 21,
+   "msPer1k": null,
+   "questions": 28,
+   "modes": {
+    "words": {
+     "n": 28,
+     "recall1": 0.143,
+     "recall5": 0.143,
+     "recall10": 0.143,
+     "mrr": 0.143,
+     "p50": 0.6,
+     "p95": 0.9
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 28,
+     "recall1": 0.571,
+     "recall5": 0.964,
+     "recall10": 1,
+     "mrr": 0.761,
+     "p50": 2.2,
+     "p95": 3.8
+    }
+   }
+  },
+  "telescope": {
+   "commit": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
+   "files": 103,
+   "pieces": 1558,
+   "embedded": 0,
+   "indexMs": 8,
+   "msPer1k": null,
+   "questions": 42,
+   "modes": {
+    "words": {
+     "n": 42,
+     "recall1": 0.071,
+     "recall5": 0.095,
+     "recall10": 0.095,
+     "mrr": 0.077,
+     "p50": 0.2,
+     "p95": 0.4
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 42,
+     "recall1": 0.405,
+     "recall5": 0.762,
+     "recall10": 0.857,
+     "mrr": 0.554,
+     "p50": 0.8,
+     "p95": 1.3
+    }
+   }
+  },
+  "flask": {
+   "commit": "49943b5a94413a530761350f04e896f76e8d620e",
+   "files": 227,
+   "pieces": 1589,
+   "embedded": 0,
+   "indexMs": 8,
+   "msPer1k": null,
+   "questions": 52,
+   "modes": {
+    "words": {
+     "n": 52,
+     "recall1": 0.077,
+     "recall5": 0.212,
+     "recall10": 0.212,
+     "mrr": 0.141,
+     "p50": 0.3,
+     "p95": 0.5
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 52,
+     "recall1": 0.481,
+     "recall5": 0.885,
+     "recall10": 0.981,
+     "mrr": 0.647,
+     "p50": 1,
+     "p95": 1.7
+    }
+   }
+  },
+  "cobra": {
+   "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+   "files": 64,
+   "pieces": 1021,
+   "embedded": 0,
+   "indexMs": 6,
+   "msPer1k": null,
+   "questions": 44,
+   "modes": {
+    "words": {
+     "n": 44,
+     "recall1": 0.068,
+     "recall5": 0.091,
+     "recall10": 0.091,
+     "mrr": 0.076,
+     "p50": 0.2,
+     "p95": 0.4
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 44,
+     "recall1": 0.614,
+     "recall5": 0.932,
+     "recall10": 1,
+     "mrr": 0.745,
+     "p50": 0.7,
+     "p95": 1.2
+    }
+   }
+  },
+  "fd": {
+   "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
+   "files": 57,
+   "pieces": 871,
+   "embedded": 0,
+   "indexMs": 5,
+   "msPer1k": null,
+   "questions": 41,
+   "modes": {
+    "words": {
+     "n": 41,
+     "recall1": 0.073,
+     "recall5": 0.073,
+     "recall10": 0.073,
+     "mrr": 0.073,
+     "p50": 0.2,
+     "p95": 0.3
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 41,
+     "recall1": 0.488,
+     "recall5": 0.878,
+     "recall10": 0.976,
+     "mrr": 0.662,
+     "p50": 0.6,
+     "p95": 0.9
+    }
+   }
+  },
+  "vue-docs": {
+   "commit": "40aa88af0094f7bab4aaf786e55c748a6a251d88",
+   "files": 437,
+   "pieces": 1902,
+   "embedded": 0,
+   "indexMs": 11,
+   "msPer1k": null,
+   "questions": 44,
+   "modes": {
+    "words": {
+     "n": 44,
+     "recall1": 0.091,
+     "recall5": 0.159,
+     "recall10": 0.159,
+     "mrr": 0.125,
+     "p50": 0.3,
+     "p95": 0.4
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 44,
+     "recall1": 0.795,
+     "recall5": 0.955,
+     "recall10": 0.955,
+     "mrr": 0.863,
+     "p50": 1.1,
+     "p95": 1.9
+    }
+   }
+  }
+ },
+ "styles": {
+  "vague": {
+   "words": {
+    "n": 82,
+    "recall1": 0.171,
+    "recall5": 0.28,
+    "recall10": 0.28,
+    "mrr": 0.221,
+    "p50": 0.2,
+    "p95": 0.6
+   }
+  },
+  "plain": {
+   "words": {
+    "n": 92,
+    "recall1": 0.065,
+    "recall5": 0.098,
+    "recall10": 0.098,
+    "mrr": 0.08,
+    "p50": 0.2,
+    "p95": 0.7
+   }
+  },
+  "multi-hop": {
+   "words": {
+    "n": 77,
+    "recall1": 0.013,
+    "recall5": 0.013,
+    "recall10": 0.013,
+    "mrr": 0.013,
+    "p50": 0.2,
+    "p95": 0.8
+   }
+  }
+ },
+ "reranked": null,
+ "build": null,
+ "perQuestion": [
+  {
+   "id": "hono-001",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 3.4
+   }
+  },
+  {
+   "id": "hono-002",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 2.8
+   }
+  },
+  {
+   "id": "hono-003",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 3.9
+   }
+  },
+  {
+   "id": "hono-004",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.7
+   }
+  },
+  {
+   "id": "hono-005",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.8
+   }
+  },
+  {
+   "id": "hono-006",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.7
+   }
+  },
+  {
+   "id": "hono-011",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.9
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 2.2
+   }
+  },
+  {
+   "id": "hono-012",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 2.3
+   }
+  },
+  {
+   "id": "hono-013",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 7
+   },
+   "fileMs": {
+    "words": 1.9
+   }
+  },
+  {
+   "id": "hono-014",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.7
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "hono-015",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.9
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2
+   }
+  },
+  {
+   "id": "hono-016",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 2.8
+   }
+  },
+  {
+   "id": "hono-017",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "hono-021",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "hono-022",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "hono-023",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "hono-027",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 1.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 3.8
+   }
+  },
+  {
+   "id": "hono-028",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 3.6
+   }
+  },
+  {
+   "id": "hono-029",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.8
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 3.1
+   }
+  },
+  {
+   "id": "hono-033",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.1
+   }
+  },
+  {
+   "id": "hono-034",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "hono-035",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.9
+   }
+  },
+  {
+   "id": "hono-036",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "hono-037",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.4
+   }
+  },
+  {
+   "id": "hono-038",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 3.2
+   }
+  },
+  {
+   "id": "hono-039",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 2.1
+   }
+  },
+  {
+   "id": "hono-040",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.7
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 2.9
+   }
+  },
+  {
+   "id": "hono-041",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.9
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 3.2
+   }
+  },
+  {
+   "id": "telescope-001",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "telescope-002",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 8
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "telescope-003",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 2.1
+   }
+  },
+  {
+   "id": "telescope-004",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "telescope-005",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-006",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-007",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-022",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-023",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "telescope-024",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "telescope-036",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "telescope-037",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "telescope-038",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "telescope-039",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-040",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-041",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "telescope-042",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-043",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "telescope-044",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "telescope-045",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-046",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 4
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "telescope-047",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "telescope-048",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 2
+   }
+  },
+  {
+   "id": "telescope-049",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 7
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-050",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-051",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 7
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "telescope-052",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-053",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-054",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 9
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "telescope-055",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-056",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-057",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "telescope-058",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "telescope-059",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "telescope-060",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "telescope-061",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 15
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "telescope-066",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "telescope-067",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "telescope-068",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "telescope-069",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "telescope-070",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "telescope-071",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-001",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "flask-002",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-003",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "flask-004",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "flask-005",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-006",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-010",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-011",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.4
+   }
+  },
+  {
+   "id": "flask-012",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-013",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "flask-014",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-015",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "flask-016",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "flask-017",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1.4
+   }
+  },
+  {
+   "id": "flask-018",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 10
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-021",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "flask-022",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-023",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-024",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-025",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-026",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 10
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "flask-027",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "flask-028",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 0
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "flask-029",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 3
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "flask-030",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "flask-031",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 7
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "flask-032",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.4
+   }
+  },
+  {
+   "id": "flask-033",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "flask-034",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-035",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 1.7
+   }
+  },
+  {
+   "id": "flask-036",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-037",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.6
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.8
+   }
+  },
+  {
+   "id": "flask-044",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 9
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-045",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-046",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "flask-047",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "flask-048",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 9
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-049",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-050",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.8
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-051",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "flask-052",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "flask-053",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-054",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "flask-055",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-056",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-057",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "flask-058",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "flask-059",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-060",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "flask-061",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "flask-062",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "flask-063",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "cobra-001",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "cobra-002",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "cobra-003",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.2
+   }
+  },
+  {
+   "id": "cobra-004",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-005",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-006",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 6
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-007",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-008",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "cobra-009",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-013",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-014",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-015",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-016",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-020",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-021",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "cobra-022",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-023",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-024",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "cobra-025",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-026",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-027",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-028",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-029",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 6
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-030",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-031",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-032",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 6
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-033",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "cobra-034",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-035",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "cobra-036",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-037",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 3
+   },
+   "ms": {
+    "words": 0.5
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-038",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-039",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-043",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "cobra-044",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "cobra-045",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-046",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "cobra-047",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "cobra-048",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "cobra-049",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "cobra-050",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "cobra-054",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "cobra-055",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "cobra-056",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "fd-001",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 10
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-002",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-003",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-014",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "fd-015",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-016",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "fd-023",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-024",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-025",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "fd-026",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-027",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-028",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-029",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-030",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-031",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-032",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.4
+   }
+  },
+  {
+   "id": "fd-033",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 6
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-034",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 5
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-035",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-036",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-037",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "fd-038",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-039",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "fd-040",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-048",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-049",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-050",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 7
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-051",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "fd-052",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "fd-053",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 10
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "fd-054",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.2
+   }
+  },
+  {
+   "id": "fd-055",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "fd-056",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "fd-057",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-058",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-059",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 15
+   },
+   "fileMs": {
+    "words": 0.3
+   }
+  },
+  {
+   "id": "fd-060",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-061",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.1
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "fd-062",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "fd-063",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "fd-064",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.5
+   }
+  },
+  {
+   "id": "vue-docs-001",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.8
+   }
+  },
+  {
+   "id": "vue-docs-002",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "vue-docs-003",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "vue-docs-007",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.7
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.7
+   }
+  },
+  {
+   "id": "vue-docs-008",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "vue-docs-009",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-010",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "vue-docs-011",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.4
+   }
+  },
+  {
+   "id": "vue-docs-012",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.9
+   }
+  },
+  {
+   "id": "vue-docs-013",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 13
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "vue-docs-014",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 2.2
+   }
+  },
+  {
+   "id": "vue-docs-015",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "vue-docs-016",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-017",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "vue-docs-018",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-019",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 4
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-020",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "vue-docs-025",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-026",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "vue-docs-027",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-028",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-029",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-030",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.6
+   }
+  },
+  {
+   "id": "vue-docs-031",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "vue-docs-032",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-033",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-034",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "vue-docs-035",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-036",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "vue-docs-037",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-038",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 2
+   },
+   "fileMs": {
+    "words": 0.6
+   }
+  },
+  {
+   "id": "vue-docs-039",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.7
+   }
+  },
+  {
+   "id": "vue-docs-047",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "vue-docs-048",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 19
+   },
+   "fileMs": {
+    "words": 2.7
+   }
+  },
+  {
+   "id": "vue-docs-049",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2
+   },
+   "ms": {
+    "words": 0.4
+   },
+   "fileRank": {
+    "words": 3
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "vue-docs-050",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-051",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1
+   }
+  },
+  {
+   "id": "vue-docs-052",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.2
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 0.9
+   }
+  },
+  {
+   "id": "vue-docs-056",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.1
+   }
+  },
+  {
+   "id": "vue-docs-057",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.3
+   }
+  },
+  {
+   "id": "vue-docs-058",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.4
+   }
+  },
+  {
+   "id": "vue-docs-062",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.5
+   }
+  },
+  {
+   "id": "vue-docs-063",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  },
+  {
+   "id": "vue-docs-064",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0
+   },
+   "ms": {
+    "words": 0.3
+   },
+   "fileRank": {
+    "words": 1
+   },
+   "fileMs": {
+    "words": 1.2
+   }
+  }
+ ]
+}

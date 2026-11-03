@@ -74,25 +74,32 @@ cobra and fd ([113 questions](../bench/results/beefy-2026-11-03-test-hono+cobra+
 
 | profile, mode | file R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
 | --- | --- | --- | --- | --- | --- | --- |
-| words | WORDS_ROW |
-| laptop meaning | LAPTOP_MEANING |
-| **laptop fused (the default)** | LAPTOP_FUSED |
-| beefy words | BEEFY_WORDS |
-| beefy meaning | BEEFY_MEANING |
-| beefy fused | BEEFY_FUSED |
-| beefy rerank | BEEFY_RERANK |
+| words | 0.558 | 0.892 | 0.960 | 0.702 | 0.9 | 2.7 |
+| laptop meaning | 0.622 | 0.916 | 0.972 | 0.745 | 17 | 22 |
+| **laptop fused (the default)** | 0.637 | 0.912 | 0.968 | 0.757 | 18 | 23 |
+| beefy words | 0.558 | 0.920 | 0.991 | 0.719 | 1.4 | 3.6 |
+| beefy meaning | 0.673 | 0.947 | 0.991 | 0.799 | 223 | 282 |
+| beefy fused | 0.681 | 0.973 | 0.991 | 0.812 | 221 | 292 |
+| beefy rerank | 0.717 | 0.973 | 0.991 | 0.833 | 370 | 450 |
 
-PER_REPO
+File recall@5 per repository (`test`):
+
+| | hono | telescope | flask | cobra | fd | vue-docs |
+| --- | --- | --- | --- | --- | --- | --- |
+| words | 0.964 | 0.762 | 0.885 | 0.932 | 0.878 | 0.955 |
+| laptop fused | 0.893 | 0.810 | 0.846 | 0.977 | 0.976 | 0.977 |
+| beefy fused | 1.000 |  |  | 0.955 | 0.976 |  |
 
 - **The target is met**: the default (no setup: the laptop's EmbeddingGemma 2 on 4 CPU threads, no reranker) has the
-  right file among the first five for LAPTOP_R5 of the `test` questions, in LAPTOP_P95 ms at p95, against the 0.85 and 300 ms
+  right file among the first five for 91% of the `test` questions (recall@5 0.912), in 23 ms at p95, against the 0.85 and 300 ms
   asked. A first index costs more than a search: about 108 s a thousand pieces on 4 threads (profiles.md).
 - **Words find files better than pieces**: a file has many pieces, and any of a sentence's words in them points at it:
-  WORDS_R5 at recall@5 without any model, against 0.15 for the words' pieces. Meaning still adds most at the top
-  (recall@1 WORDS_R1 to LAPTOP_R1).
-- **The rerank does not pay for files**: beefy's reranker, which lifts the pieces' MRR, leaves the files where they were
-  (BEEFY_RR_MRR against BEEFY_FUSED_MRR): a file's several pieces already say what one reranked piece would. It stays off on the laptop,
-  where it would cost 2 s.
+  0.892 at recall@5 without any model, against 0.15 for the words' pieces. Meaning still adds most at the top
+  (recall@1 0.558 to 0.637). On hono and flask the words alone do better at recall@5 than fused; fusing meaning with
+  the any-word list instead was worse on `dev`, so that is left for more questions to decide.
+- **The rerank adds a little for files, at the top**: beefy's reranker lifts the first file (recall@1 0.681 to 0.717,
+  MRR 0.812 to 0.833) and leaves recall@5 where it was (0.973): a file's several pieces already say much of what a
+  reranked piece would. It stays off on the laptop, where it would cost 2 s a search.
 - beefy's latency here is not its own: the GPUs were taken by other work during this run, so its Qwen3-Embedding-8B
   ran on 8 CPU threads (the reranker on a GPU); its quality is the same as on a GPU, and on one its search took 114 /
   215 ms (profiles.md).
