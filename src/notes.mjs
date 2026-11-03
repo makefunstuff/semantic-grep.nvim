@@ -23,7 +23,7 @@ const MAX_TOKENS = 160; // a note's two sentences, with room: one that runs on i
 export const NO_NOTE = 'no note in the answer';
 const ANTHROPIC_VERSION = '2026-10-21';
 // A failure that every other piece would meet too: no server, a refused key.
-const STOPS = /: (401|403) |: (ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|UND_ERR_CONNECT)$|: fetch failed$/;
+const STOPS = /: no key in |: (401|403) |: (ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|UND_ERR_CONNECT)$|: fetch failed$/;
 const LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost', '::1', '[::1]']);
 
 export const SYSTEM = 'You write notes on pieces of code for a code search index. Given one piece, write one or two '
@@ -141,6 +141,8 @@ export class NotesWriter {
 
   async ask(piece, signal) {
     const key = this.apiKey();
+    // A key named but not there: no piece goes out to be refused.
+    if (!key && (this.entry.apiKeyEnv || this.entry.apiKeyFile)) throw new Error(`${this.about}: no key in ${this.entry.apiKeyEnv ? `$${this.entry.apiKeyEnv}` : 'its apiKeyFile'}`);
     const base = this.entry.baseUrl.replace(/\/+$/, '');
     const prompt = notePrompt(piece, this.entry.chars);
     const anthropic = this.entry.api === 'anthropic';

@@ -127,6 +127,12 @@ test('the writer asks an OpenAI-compatible server without thinking, and Anthropi
     assert.deepEqual(sent.reasoning, {enabled: false});
     assert.equal(sent.max_tokens, 900);
 
+    const before = server.requests.length;
+    const keyless = new NotesWriter({entry: notesConfig({api: 'anthropic', baseUrl: server.baseUrl, model: 'claude-haiku-5-5', apiKeyEnv: 'SEMANTIC_GREP_TEST_NO_KEY'})});
+    const none = await keyless.write([piece, {...piece, hash: 'h2'}]);
+    assert.match(none.errors[0], /no key in \$SEMANTIC_GREP_TEST_NO_KEY/);
+    assert.equal(server.requests.length, before, 'no code sent without the key');
+
     server.set({mode: 'down'});
     const failed = await local.write([piece, {...piece, hash: 'h2'}]);
     assert.equal(failed.notes.length, 0);
