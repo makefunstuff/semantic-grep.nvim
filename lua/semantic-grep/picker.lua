@@ -534,9 +534,12 @@ local function ask_files(root, query, callback, still)
     ask(root, query, 'files', function(message)
       if still and not still() then return end
       tries = tries + 1
-      if message.reading and message.reading ~= vim.NIL and tries < 100 then
-        if #(message.results or {}) > 0 then callback(message) end -- what it has so far
-        return vim.defer_fn(go, 300)
+      if message.reading and message.reading ~= vim.NIL then
+        if tries < 100 then
+          if #(message.results or {}) > 0 then callback(message) end -- what it has so far
+          return vim.defer_fn(go, 300)
+        end
+        message = vim.tbl_extend('force', message, {reading = nil}) -- still reading: what it has, as the answer
       end
       callback(message)
     end)
@@ -731,7 +734,7 @@ local function fzflua_files(query)
             fzf_cb(line(item))
           end
           fzf_cb()
-        end)
+        end, function() return mine == latest end)
       end, debounce_ms())
     end
   end, {

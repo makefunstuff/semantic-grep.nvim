@@ -26,6 +26,7 @@ export const LOCAL_MODEL = {
 export const IDLE_MS = 15 * 60_000; // the server stops when nothing was embedded for this long, and starts again at the next text
 const START_MS = 120_000;
 const FOUND_MS = 30_000; // how long where llama-server is (or that it is not) is believed
+const STALL_MS = 60_000; // a download that brings nothing for this long fails
 
 /** The `name` executable on PATH, or null. */
 export function onPath(name, path = process.env.PATH ?? '') {
@@ -91,7 +92,7 @@ export class LocalModel extends HttpEmbedder {
 
   /** What is missing: `{runtime: "llama-server" | null, model: bool, bytes, path}`. */
   async needs() {
-    return {runtime: this.runtime() ? null : this.llamaServer, model: !this.hasModel(), bytes: this.spec.bytes, path: this.path, name: this.spec.name};
+    return {runtime: this.runtime() ? null : this.llamaServer, model: !this.hasModel(), own: this.own, bytes: this.spec.bytes, path: this.path, name: this.spec.name};
   }
 
   /** Downloads the model unless it is there (`progress({phase: "downloading", done, total})`): `{runtime, model}`. */
@@ -112,19 +113,30 @@ export class LocalModel extends HttpEmbedder {
     return {local: {model: this.spec.model, path: this.path, downloaded: this.hasModel(), llamaServer: this.runtime(), wanted: this.llamaServer, running: !!this.child, port: this.port ?? null, downloading: this.downloading}};
   }
 
-  /** The file, from its url into `<path>.part`, checked by its size and hash, then put in place. */
+  /**
+   * The file, from its url into a part of this process's own (another Neovim may fetch it at the same time), checked
+   * by its size and hash, then put in place; a stall of STALL_MS fails it.
+   */
   async fetchModel(progress) {
-    const part = `${this.path}.part`;
+    const part = `${this.path}.${process.pid}.part`;
     await mkdir(join(this.path, '..'), {recursive: true});
     this.downloading = {done: 0, total: this.spec.bytes};
+    const abort = new AbortController();
+    let stall;
+    const waiting = () => {
+      clearTimeout(stall);
+      stall = setTimeout(() => abort.abort(new Error(`downloading ${this.spec.file}: nothing came for ${STALL_MS / 1000} s`)), STALL_MS);
+    };
     try {
-      const response = await this.download(this.spec.url, {redirect: 'follow'});
+      waiting();
+      const response = await this.download(this.spec.url, {redirect: 'follow', signal: abort.signal});
       if (!response.ok || !response.body) throw new Error(`downloading ${this.spec.file}: the server answered ${response.status}`);
       const hash = createHash('sha256');
       const out = createWriteStream(part);
       let told = 0;
       try {
         for await (const chunk of response.body) {
+          waiting();
           hash.update(chunk);
           this.downloading.done += chunk.length;
           if (!out.write(chunk)) await new Promise(resolve => out.once('drain', resolve));
@@ -137,12 +149,13 @@ export class LocalModel extends HttpEmbedder {
       if (this.downloading.done !== this.spec.bytes || sha !== this.spec.sha256) {
         throw new Error(`downloading ${this.spec.file}: it came with ${this.downloading.done} bytes and sha256 ${sha.slice(0, 12)}…, not the ${this.spec.bytes} bytes and ${this.spec.sha256.slice(0, 12)}… expected`);
       }
-      await rename(part, this.path);
+      if (!this.hasModel()) await rename(part, this.path); // another's came first: the same bytes
       progress({phase: 'downloading', done: this.spec.bytes, total: this.spec.bytes});
     } catch (error) {
-      await rm(part, {force: true});
-      throw error;
+      throw abort.signal.aborted && abort.signal.reason instanceof Error ? abort.signal.reason : error;
     } finally {
+      clearTimeout(stall);
+      await rm(part, {force: true});
       this.downloading = null;
     }
   }
@@ -186,7 +199,10 @@ export class LocalModel extends HttpEmbedder {
     let tail = '';
     let gone = null;
     child.stderr?.on('data', chunk => { tail = (tail + chunk).slice(-2000); });
-    child.on('error', error => { gone = `cannot run ${binary}: ${error.message}`; });
+    child.on('error', error => {
+      gone = `cannot run ${binary}: ${error.message}`;
+      if (this.child === child) { this.child = null; this.port = null; }
+    });
     child.on('exit', (code, signal) => {
       gone ??= `llama-server stopped (${code ?? signal}): ${tail.trim().split('\n').slice(-3).join(' ')}`;
       if (this.child === child) { this.child = null; this.port = null; }
@@ -203,6 +219,7 @@ export class LocalModel extends HttpEmbedder {
       } catch {}
       if (Date.now() > end) {
         child.kill('SIGKILL');
+        if (this.child === child) { this.child = null; this.port = null; }
         throw new Error(`llama-server did not come up on 127.0.0.1:${port} within ${START_MS / 1000} s`);
       }
       await new Promise(resolve => setTimeout(resolve, 200));

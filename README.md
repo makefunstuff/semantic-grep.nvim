@@ -97,7 +97,7 @@ require('semantic-grep').setup({
 })
 ```
 
-In the files view, `Enter` opens the file at its best line and `<C-q>` sends the files to quickfix. A file ranks by its
+In the files view, `Enter` opens the file at its best line (in Telescope, `<C-q>` sends the files to quickfix). A file ranks by its
 pieces among the first 60 of the search's (words and meaning fused): its best one, plus half the next, a quarter of
 the one after, so a file with several close pieces goes above one with a single near one (docs/benchmark.md, "Files").
 

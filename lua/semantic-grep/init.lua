@@ -50,6 +50,7 @@ M.config = {
 }
 
 local source -- the source asked, once made
+local asked = false -- the local model looked at (asked for, or said missing) since setup
 local external = false -- another program's (setup's `source`, or register_source): its models are its own
 local configured = false
 
@@ -67,6 +68,7 @@ function M.setup(opts)
   if opts.rerank ~= nil then M.config.rerank = opts.rerank end
   if opts.embedding ~= nil then M.config.embedding = opts.embedding end
   configured = true
+  asked = false -- a new config: the local model is looked at again at the next search
   if source and source.stop then source.stop() end -- a new config: the server starts again with it at its next use
   source = opts.source
   external = opts.source ~= nil
@@ -103,8 +105,12 @@ function M.source()
 end
 
 -- The local model (no `embedding`, no profile): asked for once, before the first search that would use it.
-local asked = false
 local function declined_path() return require('semantic-grep.server').data_dir(M.config) .. '/no-local-model' end
+local function told_path() return require('semantic-grep.server').data_dir(M.config) .. '/told-no-llama-server' end
+local function mark(path, text)
+  vim.fn.mkdir(vim.fn.fnamemodify(path, ':h'), 'p')
+  vim.fn.writefile({text}, path)
+end
 
 --- `then_()` once the local model is there or not wanted: the first time, the person is asked to download it (the search
 --- opens meanwhile, by its words), or told what is missing for it.
@@ -115,7 +121,13 @@ function M.with_model(then_)
     vim.schedule(function()
       if err or not needs or needs.state == 'on' or needs.state == 'downloading' then return then_() end
       if needs.runtime and needs.runtime ~= vim.NIL then
+        if vim.uv.fs_stat(told_path()) then return then_() end -- said once; :checkhealth says it again
+        mark(told_path(), 'semantic-grep: told that llama-server is missing; :checkhealth semantic-grep says how to get it')
         vim.notify(('semantic-grep: search by words only: %s is not on PATH, and search by meaning needs it (:checkhealth semantic-grep says how to get it)'):format(needs.runtime), vim.log.levels.WARN)
+        return then_()
+      end
+      if needs.model and needs.own then
+        vim.notify(('semantic-grep: search by words only: local_model.gguf, %s, is missing'):format(needs.path), vim.log.levels.WARN)
         return then_()
       end
       if not needs.model or vim.uv.fs_stat(declined_path()) then return then_() end
@@ -124,8 +136,7 @@ function M.with_model(then_)
       vim.ui.select({yes, 'Not now', never}, {prompt = 'semantic-grep: search by meaning needs a small model on this machine'}, function(choice)
         if choice == yes then M.download()
         elseif choice == never then
-          vim.fn.mkdir(vim.fn.fnamemodify(declined_path(), ':h'), 'p')
-          vim.fn.writefile({'semantic-grep: the local model was declined; :SemanticGrep download fetches it'}, declined_path())
+          mark(declined_path(), 'semantic-grep: the local model was declined; :SemanticGrep download fetches it')
         end
         then_()
       end)

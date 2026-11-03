@@ -37,6 +37,66 @@ Flags: `--repos hono,flask`, `--split dev|test`, `--modes words,fused`, `--quest
 (index again; otherwise a run reuses the index and vectors in the cache), `--parsers none` (cut pieces by indentation, not
 Neovim's tree-sitter), `--profiles FILE` (your own profiles), `--cache DIR`.
 
+## Files
+
+`:SemanticGrep files` lists files, not pieces, so it is scored by files too: a question is answered by its labelled file
+(or a file in its `also`), anywhere in it. Each mode is asked as the files view asks it (`Meaning.files`), and the
+saved run has the same numbers for the files (`files`, and `fileModes` per repository; `fileRank` per question):
+
+| mode | the pieces a file is ranked by |
+| --- | --- |
+| `words` | the 60 with *any* of the question's words, by BM25 (a sentence's words are seldom all in one piece) |
+| `meaning` | the 60 closest in meaning, not cut by the model's band |
+| `fused` | both lists fused by reciprocal rank: meaning's, and the pieces with every word, as the pieces view fuses them |
+| `rerank` | the fused 60, their first reordered by the profile's reranker: what the files view does when there is one |
+
+A file scores by its pieces among those 60: the one at rank *r* is worth 1/(5 + *r*); its best piece counts in full,
+its next one half, the one after a quarter, and so on: the best piece first, and a small bonus for several
+(`filesOf` in `src/meaning.mjs`). The 5, the half and the 60 were chosen on the `dev` questions (121) with the laptop's
+model, from a grid of 1/(*k* + *r*) for *k* 0 to 60, the next piece's share 0 to 0.5, 30 to 100 pieces, and meaning's
+band from the model's to none:
+
+| on `dev`, fused | R@1 | R@5 | R@10 | MRR |
+| --- | --- | --- | --- | --- |
+| the files of the pieces list, each where it first comes | 0.645 | 0.901 | 0.950 | 0.758 |
+| the best piece alone (the share 0) | 0.653 | 0.917 | 0.975 | 0.769 |
+| *k* 60, a tenth of the next | 0.653 | 0.942 | 0.975 | 0.762 |
+| **k 5, half the next (chosen)** | **0.694** | **0.942** | **0.975** | **0.787** |
+| the same with meaning cut at the model's band (0.06) | 0.686 | 0.917 | 0.950 | 0.778 |
+
+For the words alone, any word rather than every word took file recall@5 from 0.18 to 0.86 on `dev`; fusing meaning
+with the any-word list instead of the every-word one was a little worse (0.934 against 0.942), so the fused list keeps
+the picker's.
+
+Results on the `test` split (not tuned on), 2026-11-03: [`words`](../bench/results/words-2026-11-03-test.json) and
+[`laptop`](../bench/results/laptop-2026-11-03-test.json) over all six repositories (251 questions), `beefy` over hono,
+cobra and fd ([113 questions](../bench/results/beefy-2026-11-03-test-hono+cobra+fd.json)):
+
+| profile, mode | file R@1 | R@5 | R@10 | MRR | p50 ms | p95 ms |
+| --- | --- | --- | --- | --- | --- | --- |
+| words | WORDS_ROW |
+| laptop meaning | LAPTOP_MEANING |
+| **laptop fused (the default)** | LAPTOP_FUSED |
+| beefy words | BEEFY_WORDS |
+| beefy meaning | BEEFY_MEANING |
+| beefy fused | BEEFY_FUSED |
+| beefy rerank | BEEFY_RERANK |
+
+PER_REPO
+
+- **The target is met**: the default (no setup: the laptop's EmbeddingGemma 2 on 4 CPU threads, no reranker) has the
+  right file among the first five for LAPTOP_R5 of the `test` questions, in LAPTOP_P95 ms at p95, against the 0.85 and 300 ms
+  asked. A first index costs more than a search: about 108 s a thousand pieces on 4 threads (profiles.md).
+- **Words find files better than pieces**: a file has many pieces, and any of a sentence's words in them points at it:
+  WORDS_R5 at recall@5 without any model, against 0.15 for the words' pieces. Meaning still adds most at the top
+  (recall@1 WORDS_R1 to LAPTOP_R1).
+- **The rerank does not pay for files**: beefy's reranker, which lifts the pieces' MRR, leaves the files where they were
+  (BEEFY_RR_MRR against BEEFY_FUSED_MRR): a file's several pieces already say what one reranked piece would. It stays off on the laptop,
+  where it would cost 2 s.
+- beefy's latency here is not its own: the GPUs were taken by other work during this run, so its Qwen3-Embedding-8B
+  ran on 8 CPU threads (the reranker on a GPU); its quality is the same as on a GPU, and on one its search took 114 /
+  215 ms (profiles.md).
+
 ## The corpus
 
 [`bench/corpus.json`](../bench/corpus.json), fetched by `bench/fetch.mjs` (one shallow fetch of each commit, not

@@ -50,7 +50,7 @@ function M.check()
 
   health.start('semantic-grep: models')
   local checked
-  err, checked = wait(registered, 'check', vim.empty_dict(), 30000)
+  err, checked = wait(registered, 'check', vim.empty_dict(), 150000) -- the local model's server may start for it
   if err then
     health.error('the models could not be checked: ' .. err)
   else

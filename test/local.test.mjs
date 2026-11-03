@@ -42,7 +42,7 @@ test('the download: once, its progress told, checked by size and hash, nothing l
   const model = new LocalModel({dataDir, spec, llamaServer: FAKE, fetch: downloadOf(bytes)});
   try {
     assert.equal(model.state(), 'off');
-    assert.deepEqual(await model.needs(), {runtime: null, model: true, bytes: 4500, path: join(dataDir, 'models', 'tiny.gguf'), name: 'EmbeddingGemma 2'});
+    assert.deepEqual(await model.needs(), {runtime: null, model: true, own: false, bytes: 4500, path: join(dataDir, 'models', 'tiny.gguf'), name: 'EmbeddingGemma 2'});
     assert.deepEqual(await model.turnOn({progress: how => told.push(how)}), {runtime: false, model: true});
     assert.deepEqual(readFileSync(model.path), Buffer.from(bytes));
     assert.deepEqual(told.at(-1), {phase: 'downloading', done: 4500, total: 4500});
@@ -50,6 +50,15 @@ test('the download: once, its progress told, checked by size and hash, nothing l
     assert.deepEqual(await model.turnOn(), {runtime: false, model: false}, 'not again');
   } finally {
     model.close();
+  }
+  // Two Neovims at once, on one data folder: each its own part, the same file in the end.
+  const shared = scratch('local-data-');
+  const both = [0, 1].map(() => new LocalModel({dataDir: shared, spec, llamaServer: FAKE, fetch: downloadOf(bytes)}));
+  try {
+    await Promise.all(both.map(each => each.turnOn()));
+    assert.deepEqual(readFileSync(both[0].path), Buffer.from(bytes));
+  } finally {
+    for (const each of both) each.close();
   }
   const bad = new LocalModel({dataDir: scratch('local-data-'), spec: {...spec, sha256: '0'.repeat(64)}, llamaServer: FAKE, fetch: downloadOf(bytes)});
   try {
@@ -98,7 +107,7 @@ test('no llama-server, or no model: the words alone, and what is missing said', 
   const root = project();
   try {
     assert.equal(meaning.state, 'off');
-    assert.deepEqual(await meaning.needs(), {runtime: 'llama-server-that-is-not-there', model: true, bytes: LOCAL_MODEL.bytes, path: join(dataDir, 'models', LOCAL_MODEL.file), name: 'EmbeddingGemma 2'});
+    assert.deepEqual(await meaning.needs(), {runtime: 'llama-server-that-is-not-there', model: true, own: false, bytes: LOCAL_MODEL.bytes, path: join(dataDir, 'models', LOCAL_MODEL.file), name: 'EmbeddingGemma 2'});
     await until(async () => (await meaning.words(root, 'quantity')).results.length === 1, 'the words');
     const files = await meaning.files(root, 'quantity cart');
     assert.deepEqual([files.state, files.results.map(result => result.file)], ['off', ['src/cart.js']]);
@@ -129,8 +138,9 @@ test('a setup with no model: the stdio server uses the local one, with the llama
     const [started] = starts(log);
     assert.equal(started.args[started.args.indexOf('--threads') + 1], '2');
     assert.equal((await server.call('status', {})).local.running, true);
-    assert.equal(await server.close(), 0);
-    await until(() => !alive(started.pid), 'its llama-server to stop with it', 5000);
+    server.child.kill('SIGTERM');
+    await server.exited;
+    await until(() => !alive(started.pid), 'its llama-server to stop with it, killed by a signal too', 5000);
   } finally {
     server.child.kill();
   }

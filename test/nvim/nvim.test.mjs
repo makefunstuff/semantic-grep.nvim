@@ -269,7 +269,8 @@ test('no model set up: the local model asked for once, its llama-server started,
     telescope.load_extension('semantic_grep')
     local state = require('telescope.actions.state')
     telescope.extensions.semantic_grep.files({default_text = 'the price of the basket in cents'})
-    local picker = state.get_current_picker(vim.api.nvim_get_current_buf())
+    local picker
+    until_(function() picker = state.get_current_picker(vim.api.nvim_get_current_buf()); return picker ~= nil end, 'the Telescope picker') -- once the model is looked at
     until_(function() return picker.manager and picker.manager:num_results() > 0 end, 'the files in Telescope')
     local shown = {}
     for i = 1, picker.manager:num_results() do shown[#shown + 1] = picker.manager:get_entry(i).value.file end
