@@ -13,7 +13,7 @@ import {existsSync} from 'node:fs';
 import {mkdir, readFile, rm, stat, writeFile} from 'node:fs/promises';
 import {isAbsolute, join, relative} from 'node:path';
 import {apiKeyOf} from './config.mjs';
-import {HttpEmbedder} from './embedder.mjs';
+import {HttpEmbedder, tuningOf} from './embedder.mjs';
 import {IndexStore, indexPlace, PROJECT_DIR, removeIndex, removeLearned} from './index-store.mjs';
 import {importLines, piecesOf, TreeSitter, withoutImports} from './pieces.mjs';
 import {pieceText, SNIPPET_CHARS} from './rerank.mjs';
@@ -29,10 +29,9 @@ const PROGRESS_MS = 2000; // how often a build in progress tells the editors how
 const HEAD_CHARS = 100;
 const RRF_K = 60;
 const LIST = 50; // of each ranking, how many go into the fusion
-const MEANING_BAND = 0.1; // meaning hits further than this below the best are left out: unrelated code scores close, too
-// A search kept (someone opened a piece for it) whose words mean at least this close to a new search's: the piece goes
-// first. EmbeddingGemma rates rewordings of one question 0.66 to 0.91, unrelated questions 0.59 (median) to 0.70 (95%).
-const PICK_NEAR = 0.75;
+// Meaning hits further below the best than the model's `band` are left out (unrelated code scores close, too); a search
+// kept (someone opened a piece for it) whose words mean at least the model's `pickNear` close to a new search's: the
+// piece goes first. Both are the model's own, measured on the bench (see embedder.mjs, tuningOf).
 const PICKED_PER_SEARCH = 3;
 // Words of a question that say nothing about where to look: left out of the word search, not the meaning's.
 const STOPWORDS = new Set('a an and are as at be but by can do does for from has have how i if in into is it its me my not of on or our so that the their them then there these this to was we were what when where which who why will with you your'.split(' '));
@@ -137,6 +136,9 @@ export class ProjectIndex {
   }
 
   get model() { return this.embedder?.id ?? 'none'; }
+
+  /** The embedder's band and pickNear: its own, or its model's (a host's embedder may not say). */
+  get tuning() { return this.embedder?.tuning ?? tuningOf({model: this.embedder?.id}); }
 
   /** What the store has of this worktree: its files, pieces and their vectors, made here or in another worktree. */
   load() {
@@ -429,13 +431,14 @@ export class ProjectIndex {
 
   /** The pieces opened for searches kept whose words mean close to the query's vector `q`, closest first: `[piece, similarity]`. */
   pickedFor(q) {
+    const {pickNear} = this.tuning;
     const best = new Map();
     for (const row of this.picks ?? []) {
       const vector = this.learnedVectors.get(this.extraKey(row));
       if (vector?.length !== q.length) continue;
       let sum = 0;
       for (let j = 0; j < q.length; j++) sum += q[j] * vector[j];
-      if (sum < PICK_NEAR) continue;
+      if (sum < pickNear) continue;
       const piece = this.pieceOfExtra(row);
       if (piece && sum > (best.get(piece) ?? -Infinity)) best.set(piece, sum);
     }
@@ -461,7 +464,8 @@ export class ProjectIndex {
     let best = -Infinity;
     for (const score of scores) if (score > best) best = score;
     const near = [];
-    for (let i = 0; i < pieces.length; i++) if (scores[i] >= best - MEANING_BAND) near.push([pieces[i], scores[i]]);
+    const {band} = this.tuning;
+    for (let i = 0; i < pieces.length; i++) if (scores[i] >= best - band) near.push([pieces[i], scores[i]]);
     // Opened before for a search worded close to this one: first.
     const picked = this.pickedFor(q);
     const first = new Set(picked.map(([piece]) => piece));

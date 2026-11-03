@@ -99,7 +99,7 @@ function M.new(config)
       end
     end
     send({jsonrpc = '2.0', id = hello, method = 'initialize', params = {
-      dataDir = data_dir(config), embedding = config.embedding, rerank = config.rerank, index = config.index,
+      dataDir = data_dir(config), profile = config.profile, embedding = config.embedding, rerank = config.rerank, index = config.index,
       parsers = vim.api.nvim_get_runtime_file('parser/*', true),
     }})
   end

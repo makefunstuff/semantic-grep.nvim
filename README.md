@@ -8,6 +8,8 @@ place, and the piece you are on stays selected.
 
 The words work with no model at all (SQLite FTS5, BM25, stemming). Meaning needs an embedding model behind an
 OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Ollama, LM Studio, vLLM, a cloud API).
+Three profiles name the models measured best for a machine: `laptop` (CPU only), `beefy` (a GPU) and `cloud` (hosted
+APIs); [docs/profiles.md](docs/profiles.md) has their numbers and how to run each model's server.
 
 ## Requirements
 
@@ -29,10 +31,7 @@ OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Oll
     {'<M-s>', '<cmd>SemanticGrep<cr>', desc = 'Search by meaning'},
     {'<M-s>', function() require('semantic-grep').find(require('semantic-grep').selected()) end, mode = 'x', desc = 'Search the selection by meaning'},
   },
-  opts = {
-    embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
-    rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
-  },
+  opts = {profile = 'laptop'}, -- or 'beefy', 'cloud': see docs/profiles.md to start its models
 }
 ```
 
@@ -43,9 +42,16 @@ The plugin sets no keymaps; `Alt-s` above is a suggestion. As a Telescope extens
 
 ```lua
 require('semantic-grep').setup({
+  -- The embedding and rerank models measured for a machine (docs/profiles.md): 'laptop', 'beefy' or 'cloud'. What
+  -- `embedding` and `rerank` set goes over the profile's (embedding = {baseUrl = ...} moves it; another model drops
+  -- the profile's settings for its own); rerank = false turns its reranker off.
+  profile = nil,
   -- An OpenAI-compatible /v1/embeddings. Known prompts are added for EmbeddingGemma, nomic-embed-text/-code and
   -- Qwen3-Embedding; set queryPrefix/documentPrefix for another ({title} in documentPrefix places each piece's
-  -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv.
+  -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv. band: how far
+  -- below the best piece a piece may mean and still be listed; pickNear: how close a search must mean to one you
+  -- opened a piece for, for that piece to go first. Both are measured per model (docs/profiles.md); 0.1 and 0.75 for
+  -- a model not measured.
   embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
   -- A decision model, or a list of them best first (the next is asked when one fails or is slower than its
   -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp', 'openai' (Decisions API) or
@@ -94,7 +100,7 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
 | `:SemanticGrep [words]` | Open the live picker, with the words typed in (with a range, the lines' words) |
 | `:SemanticGrep rebuild` | Make the project's index again from its files, every vector too |
 | `:Telescope semantic_grep` | The same picker, as a Telescope extension |
-| `:checkhealth semantic-grep` | Node, the embedding and rerank models (each asked once), and this project's index |
+| `:checkhealth semantic-grep` | Node, the profile, the embedding and rerank models (each asked once; one that nothing answers for is named unreachable), and this project's index |
 
 ## How it works
 

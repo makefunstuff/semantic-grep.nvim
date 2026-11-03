@@ -31,8 +31,8 @@ function keysOf(entry, name) {
 }
 
 /**
- * The `embedding` entry: `{api = "openai", baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, timeoutMs?,
- * apiKey | apiKeyFile | apiKeyEnv}`; null without one (words only).
+ * The `embedding` entry: `{api = "openai", baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, timeoutMs?, band?,
+ * pickNear?, apiKey | apiKeyFile | apiKeyEnv}`; null without one (words only). band and pickNear: see embedder.mjs.
  */
 export function embeddingConfig(entry, name = 'embedding') {
   if (entry === undefined || entry === null || entry === false) return null;
@@ -46,6 +46,8 @@ export function embeddingConfig(entry, name = 'embedding') {
   }
   if (entry.dimensions !== undefined && !(Number.isInteger(entry.dimensions) && entry.dimensions > 0)) throw new Error(`${name}.dimensions must be a whole number above 0`);
   if (entry.timeoutMs !== undefined && !(typeof entry.timeoutMs === 'number' && entry.timeoutMs > 0)) throw new Error(`${name}.timeoutMs must be a number of milliseconds`);
+  if (entry.band !== undefined && !(typeof entry.band === 'number' && entry.band > 0 && entry.band <= 2)) throw new Error(`${name}.band must be a number above 0, at most 2`);
+  if (entry.pickNear !== undefined && !(typeof entry.pickNear === 'number' && entry.pickNear > -1 && entry.pickNear <= 1)) throw new Error(`${name}.pickNear must be a similarity, above -1 and at most 1`);
   return {...entry, api: 'openai'};
 }
 

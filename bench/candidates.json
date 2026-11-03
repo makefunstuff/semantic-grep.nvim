@@ -1,0 +1,2406 @@
+{
+ "gpu-gemma300m": {
+  "about": "embeddinggemma-300M on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28100/v1",
+   "model": "embeddinggemma-300M",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-300M-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-gemma300m": {
+  "about": "embeddinggemma-300M on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28120/v1",
+   "model": "embeddinggemma-300M"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-300M-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-gemma2": {
+  "about": "embeddinggemma-2 on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-gemma2": {
+  "about": "embeddinggemma-2 on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-qwen06b": {
+  "about": "qwen3-embedding-0.6b on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28102/v1",
+   "model": "qwen3-embedding-0.6b",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-qwen06b": {
+  "about": "qwen3-embedding-0.6b on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28122/v1",
+   "model": "qwen3-embedding-0.6b"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-qwen4b": {
+  "about": "qwen3-embedding-4b on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28103/v1",
+   "model": "qwen3-embedding-4b",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-qwen4b": {
+  "about": "qwen3-embedding-4b on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28123/v1",
+   "model": "qwen3-embedding-4b"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-qwen8b": {
+  "about": "qwen3-embedding-8b on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-qwen8b": {
+  "about": "qwen3-embedding-8b on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28124/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-jinav2code": {
+  "about": "jina-embeddings-v2-base-code on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28105/v1",
+   "model": "jina-embeddings-v2-base-code",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "jina-embeddings-v2-base-code-q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-jinav2code": {
+  "about": "jina-embeddings-v2-base-code on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28125/v1",
+   "model": "jina-embeddings-v2-base-code"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "jina-embeddings-v2-base-code-q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-arcticl2": {
+  "about": "snowflake-arctic-embed-l-v2.0 on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28106/v1",
+   "model": "snowflake-arctic-embed-l-v2.0",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "snowflake-arctic-embed-l-v2.0-q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "cls",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-arcticl2": {
+  "about": "snowflake-arctic-embed-l-v2.0 on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28126/v1",
+   "model": "snowflake-arctic-embed-l-v2.0"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "snowflake-arctic-embed-l-v2.0-q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "cls",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-jinacode05": {
+  "about": "jina-code-embeddings-0.5b on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28107/v1",
+   "model": "jina-code-embeddings-0.5b",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "jina-code-embeddings-0.5b-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-jinacode05": {
+  "about": "jina-code-embeddings-0.5b on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28127/v1",
+   "model": "jina-code-embeddings-0.5b"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "jina-code-embeddings-0.5b-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-jinacode15": {
+  "about": "jina-code-embeddings-1.5b on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28108/v1",
+   "model": "jina-code-embeddings-1.5b",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "jina-code-embeddings-1.5b-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-jinacode15": {
+  "about": "jina-code-embeddings-1.5b on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28128/v1",
+   "model": "jina-code-embeddings-1.5b"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "jina-code-embeddings-1.5b-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "gpu-nomiccode": {
+  "about": "nomic-embed-code on a GPU, every piece in the band (for calibrate.mjs)",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28109/v1",
+   "model": "nomic-embed-code",
+   "band": 2
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "nomic-embed-code-Q4_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpu-nomiccode": {
+  "about": "nomic-embed-code on 4 CPU threads",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28129/v1",
+   "model": "nomic-embed-code"
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "nomic-embed-code-Q4_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr06-30-1200": {
+  "about": "gemma2 with qwen3-reranker-0.6b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28140/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr06-10-1200": {
+  "about": "gemma2 with qwen3-reranker-0.6b, top 10, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28141/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr06-10-500": {
+  "about": "gemma2 with qwen3-reranker-0.6b, top 10, 500 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28142/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr4b-30-1200": {
+  "about": "gemma2 with qwen3-reranker-4b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28143/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr4b-10-1200": {
+  "about": "gemma2 with qwen3-reranker-4b, top 10, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28144/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-qwenr4b-10-500": {
+  "about": "gemma2 with qwen3-reranker-4b, top 10, 500 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28145/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-bgem3-30-1200": {
+  "about": "gemma2 with bge-reranker-v2-m3, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28146/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-bgem3-10-1200": {
+  "about": "gemma2 with bge-reranker-v2-m3, top 10, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28147/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-bgem3-10-500": {
+  "about": "gemma2 with bge-reranker-v2-m3, top 10, 500 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28148/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-jinar2-30-1200": {
+  "about": "gemma2 with jina-reranker-v2-base-multilingual, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28149/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-jinar2-10-1200": {
+  "about": "gemma2 with jina-reranker-v2-base-multilingual, top 10, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28150/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-gemma2-jinar2-10-500": {
+  "about": "gemma2 with jina-reranker-v2-base-multilingual, top 10, 500 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28101/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28151/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen4b-qwenr06-30-1200": {
+  "about": "qwen4b with qwen3-reranker-0.6b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28103/v1",
+   "model": "qwen3-embedding-4b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28152/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen4b-qwenr4b-30-1200": {
+  "about": "qwen4b with qwen3-reranker-4b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28103/v1",
+   "model": "qwen3-embedding-4b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28153/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen4b-bgem3-30-1200": {
+  "about": "qwen4b with bge-reranker-v2-m3, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28103/v1",
+   "model": "qwen3-embedding-4b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28154/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen4b-jinar2-30-1200": {
+  "about": "qwen4b with jina-reranker-v2-base-multilingual, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28103/v1",
+   "model": "qwen3-embedding-4b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28155/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-4B-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-qwenr06-30-1200": {
+  "about": "qwen8b with qwen3-reranker-0.6b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28156/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-qwenr4b-30-1200": {
+  "about": "qwen8b with qwen3-reranker-4b, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28157/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-bgem3-30-1200": {
+  "about": "qwen8b with bge-reranker-v2-m3, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28158/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-jinar2-30-1200": {
+  "about": "qwen8b with jina-reranker-v2-base-multilingual, top 30, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28159/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 30,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "cpurr-qwenr06-10-500": {
+  "about": "EmbeddingGemma 2 with qwen3-reranker-0.6b, top 10, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28200/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-qwenr06-10-1200": {
+  "about": "EmbeddingGemma 2 with qwen3-reranker-0.6b, top 10, 1200 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28201/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-qwenr06-5-500": {
+  "about": "EmbeddingGemma 2 with qwen3-reranker-0.6b, top 5, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28202/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 5,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-qwenr06-20-500": {
+  "about": "EmbeddingGemma 2 with qwen3-reranker-0.6b, top 20, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28203/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 20,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-bgem3-10-500": {
+  "about": "EmbeddingGemma 2 with bge-reranker-v2-m3, top 10, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28204/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-bgem3-10-1200": {
+  "about": "EmbeddingGemma 2 with bge-reranker-v2-m3, top 10, 1200 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28205/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-bgem3-5-500": {
+  "about": "EmbeddingGemma 2 with bge-reranker-v2-m3, top 5, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28206/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 5,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-bgem3-20-500": {
+  "about": "EmbeddingGemma 2 with bge-reranker-v2-m3, top 20, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28207/v1",
+   "model": "bge-reranker-v2-m3",
+   "top": 20,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "bge-reranker-v2-m3-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-jinar2-10-500": {
+  "about": "EmbeddingGemma 2 with jina-reranker-v2-base-multilingual, top 10, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28208/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 10,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-jinar2-10-1200": {
+  "about": "EmbeddingGemma 2 with jina-reranker-v2-base-multilingual, top 10, 1200 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28209/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-jinar2-5-500": {
+  "about": "EmbeddingGemma 2 with jina-reranker-v2-base-multilingual, top 5, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28210/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 5,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "cpurr-jinar2-20-500": {
+  "about": "EmbeddingGemma 2 with jina-reranker-v2-base-multilingual, top 20, 500 characters, 4 CPU threads each",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28121/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28211/v1",
+   "model": "jina-reranker-v2-base-multilingual",
+   "top": 20,
+   "chars": 500,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "env": {
+    "CUDA_VISIBLE_DEVICES": ""
+   },
+   "embedding": {
+    "gguf": "embeddinggemma-2-Q8_0.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "mean",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   },
+   "rerank": {
+    "gguf": "jina-reranker-v2-base-multilingual-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "0",
+     "--threads",
+     "4"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-qwenr06-20-1200": {
+  "about": "qwen8b with qwen3-reranker-0.6b, top 20, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28170/v1",
+   "model": "qwen3-reranker-0.6b",
+   "top": 20,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "qwen3-reranker-0.6b-q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ },
+ "rr-qwen8b-qwenr4b-10-1200": {
+  "about": "qwen8b with qwen3-reranker-4b, top 10, 1200 characters, on a GPU",
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28104/v1",
+   "model": "qwen3-embedding-8b"
+  },
+  "rerank": {
+   "api": "rerank",
+   "baseUrl": "http://127.0.0.1:28171/v1",
+   "model": "qwen3-reranker-4b",
+   "top": 10,
+   "chars": 1200,
+   "timeoutMs": 20000
+  },
+  "serve": {
+   "embedding": {
+    "gguf": "Qwen3-Embedding-8B-Q5_K_M.gguf",
+    "args": [
+     "--embedding",
+     "--pooling",
+     "last",
+     "--ctx-size",
+     "8192",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--parallel",
+     "1",
+     "--gpu-layers",
+     "99"
+    ]
+   },
+   "rerank": {
+    "gguf": "Qwen3-Reranker-4B-Q8_0.gguf",
+    "args": [
+     "--rerank",
+     "--ctx-size",
+     "16384",
+     "--batch-size",
+     "2048",
+     "--ubatch-size",
+     "2048",
+     "--gpu-layers",
+     "99"
+    ]
+   }
+  }
+ }
+}

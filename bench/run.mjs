@@ -112,12 +112,16 @@ try {
         row.ms[mode] = Math.round((performance.now() - t) * 10) / 10;
         if (answer.problem) throw new Error(`${mode} "${question.query}": ${answer.problem}`);
         row.rank[mode] = rankOf(answer.results, question);
+        // How close in meaning the best piece and the first right one are: what calibrate.mjs sets a model's band by.
+        if (mode === 'meaning' && answer.results.length) row.similarity = {best: answer.results[0].meaning, answer: answer.results[row.rank[mode] - 1]?.meaning ?? null};
         if (mode === 'rerank') row.reranked = answer.rerank ? (answer.rerank.applied ? 'applied' : answer.rerank.why) : 'none';
       }
       rows.push(row);
     }
     perQuestion.push(...rows);
-    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, embedded: embedded - cached, indexMs, questions: rows.length, modes: summary(rows)};
+    // A build's time a thousand pieces, when this run embedded most of them (not when it reused an earlier run's vectors).
+    const msPer1k = embedded - cached > chunks / 2 ? Math.round(indexMs / (embedded - cached) * 1000) : null;
+    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, embedded: embedded - cached, indexMs, msPer1k, questions: rows.length, modes: summary(rows)};
   }
 
   const styles = [...new Set(perQuestion.map(row => row.style).filter(Boolean))];
@@ -125,7 +129,7 @@ try {
     bench: 1,
     profile: flags.profile,
     models: {embedding: redact(embedding), rerank: rerank?.map(redact) ?? null}, // as the plugin would take them, defaults filled
-    servers: served.servers, // the local models: started here from which GGUF, or found answering
+    servers: served.measured(), // the local models: started here from which GGUF (and the memory each took), or found answering
     when: new Date().toISOString(),
     node: process.version,
     semanticGrep: code.commit, changed: code.changed,
@@ -136,6 +140,7 @@ try {
     repos: repoResults,
     styles: Object.fromEntries(styles.map(style => [style, summary(perQuestion.filter(row => row.style === style))])),
     reranked: modes.includes('rerank') ? count(perQuestion.map(row => row.reranked)) : null,
+    build: buildOf(repoResults),
     perQuestion,
   };
   print(result);
@@ -182,6 +187,14 @@ function summary(rows) {
   return out;
 }
 
+/** The build of the repositories this run embedded afresh: pieces, time, and the time a thousand pieces. */
+function buildOf(repoResults) {
+  const built = Object.values(repoResults).filter(repo => repo.msPer1k !== null);
+  const pieces = built.reduce((sum, repo) => sum + repo.embedded, 0);
+  const ms = built.reduce((sum, repo) => sum + repo.indexMs, 0);
+  return pieces ? {pieces, ms, msPer1k: Math.round(ms / pieces * 1000)} : null;
+}
+
 function count(values) { return values.reduce((counts, value) => ({...counts, [value]: (counts[value] ?? 0) + 1}), {}); }
 
 /** An entry without its key, for the saved run. */
@@ -216,6 +229,8 @@ function print(result) {
   lines.push('');
   rowsOf(`all (${result.overall[modes[0]].n})`, result.overall);
   for (const [style, byMode] of Object.entries(result.styles)) rowsOf(style.slice(0, 11), byMode);
+  if (result.build) lines.push(`\nbuilt ${result.build.pieces} pieces in ${(result.build.ms / 1000).toFixed(1)} s: ${(result.build.msPer1k / 1000).toFixed(1)} s a thousand`);
+  for (const [role, server] of Object.entries(result.servers ?? {})) if (server.rssMB !== undefined) lines.push(`${role}: ${server.gguf}, ${server.rssMB} MB of RAM${server.vramMB ? `, ${server.vramMB} MB of GPU memory` : ''} at most`);
   if (result.reranked) lines.push(`\nreranks: ${Object.entries(result.reranked).map(([why, n]) => `${n} ${why}`).join(', ')}`);
   process.stdout.write(`${lines.join('\n')}\n`);
 }

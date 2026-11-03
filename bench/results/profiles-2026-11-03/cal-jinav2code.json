@@ -1,0 +1,1 @@
+{"model":"jina-embeddings-v2-base-code","band":0.15,"gaps":{"n":321,"p50":0.03,"p90":0.12,"p95":0.15},"pickNear":0.79,"rewordings":{"n":341,"p10":0.38,"p50":0.6,"through":0.06},"unrelated":{"n":11074,"p50":0.19,"p95":0.51,"p99":0.67,"p999":0.78,"max":0.87}}

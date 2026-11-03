@@ -32,7 +32,7 @@ test('the server: words, meaning, the rerank and one fused list over JSON-RPC, a
     await assert.rejects(server.call('initialize', {dataDir, embedding: {baseUrl: embeddings.baseUrl}}), /embedding\.model is missing/, 'a bad config is named');
     const hello = await server.call('initialize', {
       dataDir, parsers: [],
-      embedding: {api: 'openai', baseUrl: embeddings.baseUrl, model: 'embeddinggemma-2', dimensions: 256},
+      embedding: {api: 'openai', baseUrl: embeddings.baseUrl, model: 'embeddinggemma-2', dimensions: 256, band: 0.1}, // the fake's vectors are not the model's
       rerank: {api: 'system-one', baseUrl: decisions.baseUrl, model: 'fake-d1', top: 5},
     });
     assert.deepEqual([hello.state, hello.model], ['on', `embeddinggemma-2 at ${embeddings.baseUrl}`]);
@@ -98,7 +98,7 @@ test('without an embedding model the words still work, and meaning says so', asy
     assert.equal(words.state, 'off');
     const meaning = await server.call('meaning', {root, query: 'waiter'});
     assert.deepEqual([meaning.state, meaning.results], ['off', []]);
-    assert.deepEqual(await server.call('check', {}), {embedding: null, rerank: null});
+    assert.deepEqual(await server.call('check', {}), {profile: null, embedding: null, rerank: null});
   } finally {
     await server.close();
   }

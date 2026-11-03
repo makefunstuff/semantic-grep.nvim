@@ -1,8 +1,8 @@
 // A profile's local models, each on its own llama.cpp server (`serve` in profiles.json): started when its baseUrl does
 // not answer, from the GGUF found under the models folder, and stopped when the bench ends. A server already answering
 // at that address is used as it is, and left running.
-import {spawn} from 'node:child_process';
-import {readdirSync, statSync} from 'node:fs';
+import {execFileSync, spawn} from 'node:child_process';
+import {readdirSync, readFileSync, statSync} from 'node:fs';
 import {basename, join} from 'node:path';
 
 /** Whether a llama.cpp server answers at `baseUrl`: "up", "loading" (503 while it loads its model) or null. */
@@ -26,6 +26,22 @@ async function upAt(baseUrl, role, gone = () => null) {
   }
 }
 
+/** The most RAM the process `pid` has held (its VmHWM), in MB, or null. */
+function peakRss(pid) {
+  try { return Math.round(Number(/VmHWM:\s+(\d+) kB/.exec(readFileSync(`/proc/${pid}/status`, 'utf8'))[1]) / 1024); } catch { return null; }
+}
+
+/** The GPU memory the process `pid` holds now, in MB (nvidia-smi's), or null. */
+function gpuMemory(pid) {
+  try {
+    const out = execFileSync('nvidia-smi', ['--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'], {encoding: 'utf8', timeout: 10_000, stdio: ['ignore', 'pipe', 'ignore']});
+    const mine = out.split('\n').map(line => line.split(',').map(Number)).filter(([each]) => each === pid);
+    return mine.length ? mine.reduce((sum, [, mb]) => sum + mb, 0) : null;
+  } catch {
+    return null;
+  }
+}
+
 /** The first file named `name` under `dir`, depth first. */
 function find(dir, name, depth = 4) {
   let entries;
@@ -42,7 +58,8 @@ function find(dir, name, depth = 4) {
 }
 
 /**
- * Starts what `profile.serve` names and does not answer yet: `{stop()}`. `models` is the folder of GGUF files,
+ * Starts what `profile.serve` names and does not answer yet: `{stop(), servers, measured()}`; `measured()` is `servers`
+ * with the most RAM each server started here took so far, and the GPU memory it holds (`rssMB`, `vramMB`). `models` is the folder of GGUF files,
  * `llamaServer` the binary. The servers get `serve.env` (CUDA_VISIBLE_DEVICES "" keeps a CPU profile off the GPU,
  * which llama.cpp would otherwise use for big batches even with no layers on it), then `env`.
  */
@@ -87,6 +104,7 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
       let tail = '';
       child.stderr.on('data', chunk => { tail = (tail + chunk).slice(-2000); });
       child.on('error', error => { child.failed = error; });
+      child.role = role;
       children.push(child);
       await upAt(entry.baseUrl, role, () => (child.failed ? `cannot run ${llamaServer}: ${child.failed.message}`
         : ended(child) ? `llama-server stopped (${child.exitCode ?? child.signalCode}): ${tail.trim().split('\n').slice(-3).join(' ')}` : null));
@@ -95,5 +113,14 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
     await stop();
     throw error;
   }
-  return {stop, servers};
+  const measured = () => {
+    for (const child of children) {
+      if (ended(child) || !child.pid) continue;
+      const rssMB = peakRss(child.pid); // `nice` runs llama-server in its own process: the same pid
+      const vramMB = gpuMemory(child.pid);
+      Object.assign(servers[child.role], rssMB === null ? {} : {rssMB}, vramMB === null ? {} : {vramMB});
+    }
+    return servers;
+  };
+  return {stop, servers, measured};
 }

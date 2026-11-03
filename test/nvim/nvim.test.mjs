@@ -29,7 +29,7 @@ function project() {
 
 const setup = (embedding, rerank, dataDir) => `require('semantic-grep').setup({
   data_dir = ${JSON.stringify(dataDir)},
-  embedding = {api = 'openai', baseUrl = ${JSON.stringify(embedding)}, model = 'embeddinggemma-2', dimensions = 256},
+  embedding = {api = 'openai', baseUrl = ${JSON.stringify(embedding)}, model = 'embeddinggemma-2', dimensions = 256, band = 0.1}, -- the fake's vectors are not the model's
   ${rerank ? `rerank = {api = 'system-one', baseUrl = ${JSON.stringify(rerank)}, model = 'fake-d1', top = 5, timeoutMs = 3000},` : ''}
 })`;
 
@@ -71,18 +71,20 @@ test(':checkhealth semantic-grep: Node, the embedding model, the rerank model an
     assert.match(text, /OK.*Node v\d+/);
     assert.match(text, /OK.*it answers: search by meaning is on/);
     assert.match(text, /OK.*embedding: embeddinggemma-2 at http:\S+ answers in \d+ ms, 256 numbers a piece/);
-    assert.match(text, /OK.*rerank: fake-d1 reranks 5 pieces in \d\.\d s \(a search waits up to 3\.0 s\)/);
+    assert.match(text, /OK.*rerank: fake-d1 reranks 5 pieces in (\d+ ms|\d\.\d s) \(a search waits up to 3\.0 s\)/);
     assert.match(text, new RegExp(`OK.*${root}: \\d+ files, \\d+ pieces`));
     assert.doesNotMatch(text, /ERROR/);
 
     await decisions.close();
     const down = await runNvim(`
-      require('semantic-grep').setup({data_dir = ${JSON.stringify(join(dir, 'data'))}, embedding = {baseUrl = 'http://127.0.0.1:1/v1', model = 'gone'}, rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:1/v1', model = 'gone-d1'}})
+      require('semantic-grep').setup({data_dir = ${JSON.stringify(join(dir, 'data'))}, profile = 'beefy', embedding = {baseUrl = 'http://127.0.0.1:1/v1', model = 'gone'}, rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:1/v1', model = 'gone-d1'}})
       vim.cmd('checkhealth semantic-grep')
       emit({text = table.concat(vim.api.nvim_buf_get_lines(0, 0, -1, false), '\\n')})
     `, {cwd: root, dir});
-    assert.match(down.lines[0].text, /ERROR.*embedding: gone at http:\S+ fails: the embedding model at http:\/\/127\.0\.0\.1:1\/v1 did not answer/);
-    assert.match(down.lines[0].text, /ERROR.*rerank: gone-d1 fails/);
+    assert.match(down.lines[0].text, /profile: beefy/);
+    assert.match(down.lines[0].text, /ERROR.*embedding: gone at http:\/\/127\.0\.0\.1:1\/v1 is unreachable: the embedding model at http:\/\/127\.0\.0\.1:1\/v1 did not answer/);
+    assert.match(down.lines[0].text, /ERROR.*rerank: gone-d1 at http:\/\/127\.0\.0\.1:1\/v1 is unreachable/);
+    assert.match(down.lines[0].text, /Start it: docs\/profiles\.md, "beefy"/);
   } finally {
     await embeddings.stop();
     await decisions.close().catch(() => {});

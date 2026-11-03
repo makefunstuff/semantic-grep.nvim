@@ -2,7 +2,7 @@
 // one message a line: Neovim asks, the server answers each `id`, and tells Neovim of its own accord with notifications.
 //
 // Requests (params):
-//   initialize {dataDir, embedding?, rerank?, index?, projectDir?, parsers?}  -> {state, model, version}
+//   initialize {dataDir, profile?, embedding?, rerank?, index?, projectDir?, parsers?}  -> {state, model, version}
 //   open {root}                                   -> {state}           the project is indexed in the background
 //   words {root, query, limit?}                   -> found             on every key
 //   meaning {root, query, limit?}                 -> found             once typing stops
@@ -14,24 +14,28 @@
 //   notes {root, limit?}                          -> {pieces, pending, noted} pieces without a note, for an agent
 //   addNotes {root, notes: [{hash, note}]}        -> {added, unknown}
 //   status {}                                     -> the Meaning's snapshot
-//   check {}                                      -> {embedding, rerank} the models asked once each, for :checkhealth
+//   check {}                                      -> {profile, embedding, rerank} the models asked once each, for :checkhealth
 // Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); progress {root, phase, done,
 // total, text}, log {text} and booked {root, kind, text} (to Neovim). `found` is `{phase, query, state, results:
 // [{file, path, line, from, to, head, kind, name, meaning, words, rerank?}], chunks, embedded, problem?, ms?, ...}`.
 // The server exits when its stdin closes: when Neovim goes.
 import {readFileSync} from 'node:fs';
 import {isAbsolute, join, relative} from 'node:path';
-import {embeddingConfig, indexConfig, rerankConfig} from './config.mjs';
+import {indexConfig} from './config.mjs';
+import {profileConfig} from './profiles.mjs';
 import {readLines, writeLine} from './jsonl.mjs';
 import {Meaning} from './meaning.mjs';
 import {Reranker} from './rerank.mjs';
 
 const VERSION = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 const WHO = 'nvim'; // one Neovim per server: the asker of every picker rerank
+// A model's failure that says nothing answers where it is: not started, or another address.
+const UNREACHABLE = /ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|ENETUNREACH|EAI_AGAIN|ECONNRESET|UND_ERR_CONNECT|did not answer|fetch failed/i;
 
 /** Serves JSON-RPC on `input` and `output` until `input` ends. Resolves once it closed. */
 export function serve({input = process.stdin, output = process.stdout, meaningWith = {}} = {}) {
   let meaning = null;
+  let profile = null;
   const notify = (method, params) => writeLine(output, {jsonrpc: '2.0', method, params});
   const log = text => notify('log', {text});
 
@@ -53,8 +57,8 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
     async initialize(params = {}) {
       if (meaning) await meaning.close();
       if (typeof params.dataDir !== 'string' || !isAbsolute(params.dataDir)) throw new Error('dataDir must be an absolute path');
-      const embedding = embeddingConfig(params.embedding);
-      const rerank = rerankConfig(params.rerank);
+      const {embedding, rerank} = profileConfig(params);
+      profile = params.profile ?? null;
       const index = indexConfig(params.index);
       meaning = new Meaning({
         dataDir: params.dataDir, config: {index, ...(params.projectDir ? {projectDir: params.projectDir} : {})}, embedding,
@@ -120,11 +124,15 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
           const [vector] = await m.embedder.embed([m.embedder.query('add two numbers')], {urgent: true});
           return {ok: true, ms: Date.now() - started, dimensions: vector.length, model: m.modelName};
         } catch (error) {
-          return {ok: false, ms: Date.now() - started, error: error.message, model: m.modelName};
+          return {ok: false, ms: Date.now() - started, error: error.message, model: m.modelName, unreachable: UNREACHABLE.test(error.message)};
         }
       })() : null;
-      const rerank = m.reranker ? {...await m.reranker.probe(), timeoutMs: m.reranker.timeoutMs, models: m.reranker.name} : null;
-      return {embedding, rerank};
+      const rerank = m.reranker ? await m.reranker.probe() : null;
+      if (rerank) {
+        Object.assign(rerank, {timeoutMs: m.reranker.timeoutMs, models: m.reranker.name, unreachable: !rerank.ok && UNREACHABLE.test(rerank.error ?? '')});
+        for (const skip of rerank.skipped ?? []) skip.unreachable = UNREACHABLE.test(skip.error ?? '');
+      }
+      return {profile, embedding, rerank};
     },
   };
 
