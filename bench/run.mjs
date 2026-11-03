@@ -73,6 +73,8 @@ const repos = [...new Set(questions.map(question => question.repo))].map(name =>
   return {name, root, commit};
 });
 
+// The code that runs, read now: a commit made during a long run is not it.
+const code = {commit: gitHead(ROOT), changed: changedFiles(ROOT)};
 const served = await serveProfile(profile, {models: flags.models ?? process.env.SEMANTIC_GREP_BENCH_MODELS, llamaServer: flags['llama-server'] ?? process.env.LLAMA_SERVER ?? 'llama-server', log});
 let meaning;
 try {
@@ -89,8 +91,11 @@ try {
   const repoResults = {};
   for (const repo of repos) {
     const started = Date.now();
+    const opened = meaning.open(repo.root);
+    await opened.loaded;
+    const cached = opened.progress().embedded; // vectors from an earlier run
     const index = await settled(meaning, repo.root, ({chunks, embedded}) => log(`${repo.name}: ${embedded} of ${chunks} pieces embedded`));
-    const {files, chunks} = index.progress();
+    const {files, chunks, embedded} = index.progress();
     const indexMs = Date.now() - started;
     log(`${repo.name}: ${files} files, ${chunks} pieces, ready in ${(indexMs / 1000).toFixed(1)} s`);
     const asked = questions.filter(question => question.repo === repo.name);
@@ -110,17 +115,17 @@ try {
       rows.push(row);
     }
     perQuestion.push(...rows);
-    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, indexMs, questions: rows.length, modes: summary(rows)};
+    repoResults[repo.name] = {commit: repo.commit, files, pieces: chunks, embedded: embedded - cached, indexMs, questions: rows.length, modes: summary(rows)};
   }
 
   const styles = [...new Set(perQuestion.map(row => row.style).filter(Boolean))];
   const result = {
     bench: 1,
     profile: flags.profile,
-    models: {embedding: redact(profile.embedding), rerank: redact(profile.rerank)},
+    models: {embedding: redact(embedding), rerank: rerank?.map(redact) ?? null}, // as the plugin would take them, defaults filled
     when: new Date().toISOString(),
     node: process.version,
-    semanticGrep: gitHead(ROOT),
+    semanticGrep: code.commit, changed: code.changed,
     questions: {file: relative(ROOT, questionsPath).startsWith('..') ? 'private' : relative(ROOT, questionsPath), sha1: createHash('sha1').update(JSON.stringify(questions)).digest('hex').slice(0, 12), count: perQuestion.length, split: flags.split ?? 'all'},
     parsers: parsers.length,
     limit: LIMIT,
@@ -181,6 +186,11 @@ function redact(entry) {
   if (!entry) return null;
   const {apiKey, apiKeyFile, ...rest} = entry;
   return rest;
+}
+
+/** The files changed and not committed at `cwd` (what the commit alone does not say), or null without git. */
+function changedFiles(cwd) {
+  try { return execFileSync('git', ['status', '--porcelain', '--untracked-files=no'], {cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore']}).split('\n').filter(Boolean).map(line => line.slice(3)); } catch { return null; }
 }
 
 /** The commit checked out at `cwd` (its short form unless `full`), or null. */

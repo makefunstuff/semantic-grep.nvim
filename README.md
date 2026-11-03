@@ -50,7 +50,8 @@ require('semantic-grep').setup({
   -- A decision model, or a list of them best first (the next is asked when one fails or is slower than its
   -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp', 'openai' (Decisions API) or
   -- 'rerank' (a cross-encoder's /rerank: llama.cpp's --rerank, Cohere, Jina, Voyage; it reorders every piece it reads).
-  -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows.
+  -- top: pieces it reads (2-30, default 10); timeoutMs: default 3000, 1000 for one another follows; chars: how much
+  -- of each piece it reads (default 160, 1200 for 'rerank').
   rerank = {api = 'system-one', baseUrl = 'http://127.0.0.1:8091/v1', model = 'd1-2B', top = 15, timeoutMs = 2000},
   picker = 'auto',          -- 'telescope', 'snacks', 'fzf-lua' or 'select'
   debounce_ms = 150,        -- the pause before meaning is asked

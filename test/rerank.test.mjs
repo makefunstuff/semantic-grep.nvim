@@ -13,7 +13,7 @@ import {test} from 'node:test';
 import {classify, llamaPrompt, softmax} from '../src/classify.mjs';
 import {rerankConfig} from '../src/config.mjs';
 import {Meaning} from '../src/meaning.mjs';
-import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder, SNIPPET_CHARS} from '../src/rerank.mjs';
+import {byScore, FALLBACK_TIMEOUT_MS, pieceText, probabilitiesOf, RERANK_TIMEOUT_MS, RERANK_TOP, Reranker, rerankQuestion, reorder, shorten, SNIPPET_CHARS} from '../src/rerank.mjs';
 import {fakeEmbedder} from './fake-embedder.mjs';
 import {fakeRerankChain, fakeReranker, fakeRerankServer} from './fake-reranker.mjs';
 import {scratch} from './helpers.mjs';
@@ -547,5 +547,26 @@ test('rerank: a cross-encoder\'s /rerank scores each piece, Cohere\'s, Jina\'s a
     assert.deepEqual(byScore([{file: 'a'}, {file: 'b'}, {file: 'c'}], [0.5, 0.5]).map(result => result.file), ['a', 'b', 'c'], 'equal scores keep their order');
   } finally {
     await server.close();
+  }
+});
+
+test('chars: each model of a list reads as much of each piece as its entry says, a decision model after a cross-encoder its 160', async () => {
+  assert.equal(shorten('a.js:1 (f)  0123456789', 4), 'a.js:1 (f)  0123…');
+  assert.equal(shorten('a.js:1  0123…', 40), 'a.js:1  0123…', 'already short');
+  const decisions = await fakeRerankServer({favourite: 'waiter'});
+  try {
+    const reranker = new Reranker({entries: rerankConfig([
+      {api: 'rerank', baseUrl: 'http://127.0.0.1:9/v1', model: 'gone'}, // nothing listens there: it fails, the next is asked
+      {api: 'system-one', baseUrl: decisions.baseUrl, model: 'fake-d1'},
+    ])});
+    assert.equal(reranker.chars, 1200, 'the texts are read at the most any model reads');
+    const results = ['first', 'the waiter', 'last'].map((head, i) => ({file: `${i}.js`, from: 1, line: 1, head}));
+    const texts = results.map(result => pieceText(result, `${result.head} ${'x'.repeat(1000)}`, reranker.chars));
+    const done = await reranker.rerank('tip', results, {texts});
+    assert.deepEqual([done.ok, done.model, done.results[0].head], [true, 'fake-d1', 'the waiter']);
+    const criteria = Object.values(decisions.requests[0].questions.best.criteria);
+    assert.ok(criteria.every(text => text.length <= 12 + SNIPPET_CHARS), 'the decision model read its 160 characters');
+  } finally {
+    await decisions.close();
   }
 });

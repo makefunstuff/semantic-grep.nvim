@@ -48,12 +48,12 @@ const picks = db.prepare("SELECT hash, file, line, text FROM extras WHERE kind =
 db.close();
 // Each pick's piece as the index has it now (its lines).
 const index = existsSync(place.path) ? new DatabaseSync(place.path, {readOnly: true}) : null;
-const pieceOf = index?.prepare('SELECT line, last FROM pieces WHERE hash = ? AND tree = ? LIMIT 1');
+const pieceOf = index?.prepare('SELECT line, last FROM pieces WHERE hash = ? AND tree = ? AND file = ? LIMIT 1');
 // One question a search: a search that opened several pieces has them all as answers.
 const questions = new Map();
 let stale = 0;
 for (const pick of picks) {
-  const piece = pick.hash ? pieceOf?.get(pick.hash, place.tree) : null;
+  const piece = pick.hash ? pieceOf?.get(pick.hash, place.tree, pick.file) : null;
   if (!piece || !existsSync(join(root, pick.file))) { // its code changed since, or is gone: where it was says nothing now
     stale += 1;
     continue;

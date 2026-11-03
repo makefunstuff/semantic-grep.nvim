@@ -60,6 +60,17 @@ export function pieceText(result, text = result.head ?? '', chars = SNIPPET_CHAR
   return `${result.file}:${result.line ?? result.from}${name}  ${flat.length > chars ? `${flat.slice(0, chars)}…` : flat}`;
 }
 
+/**
+ * A piece's text (pieceText's) cut to `chars` of its own: the texts are read at the most any model of the list reads,
+ * and each model gets as much as its entry says.
+ */
+export function shorten(text, chars) {
+  const at = text.indexOf('  ');
+  if (at < 0) return text;
+  const body = text.slice(at + 2).replace(/…$/u, '');
+  return body.length > chars ? `${text.slice(0, at + 2)}${body.slice(0, chars)}…` : text;
+}
+
 /** The choice question about `texts` (each piece's pieceText): its answers are "1" to "N", in the list's order. */
 export function rerankQuestion(texts) {
   return {type: 'choice', instructions: INSTRUCTIONS, criteria: Object.fromEntries(texts.map((text, i) => [String(i + 1), text]))};
@@ -185,7 +196,7 @@ export class Reranker {
   }
 
   /**
-   * Asks the models in turn, `questionOf(n)` with each one's `n` pieces of `pieces`, until one answers (oddly too):
+   * Asks the models in turn, `questionOf(n, endpoint)` with each one's `n` pieces of `pieces`, until one answers (oddly too):
    * `{asked, endpoint, n, ms, skipped}`, where `asked` is that answer, or the last failure with `endpoint` null when
    * none answered (and `failed`, the model that failed last). A model that fails rests (see failed); `stale()` stops it before the next is asked.
    */
@@ -200,7 +211,7 @@ export class Reranker {
       }
       if (last && stale()) return {asked: {ok: false, why: 'aborted', error: 'a newer search came', ms}, endpoint: null, ms, skipped};
       const n = Math.min(endpoint.top, pieces);
-      const asked = await this.ask(endpoint, state, questionOf(n));
+      const asked = await this.ask(endpoint, state, questionOf(n, endpoint));
       ms += asked.ms;
       if (asked.ok || asked.why === 'malformed') return {asked, endpoint, n, ms, skipped};
       this.failed(endpoint, asked);
@@ -243,7 +254,7 @@ export class Reranker {
       const pieces = Math.min(results.length, texts?.length ?? results.length);
       if (pieces < 2) return {ok: false, why: 'short', error: 'fewer than two pieces', ms: 0, results};
       const all = texts ?? results.map(result => pieceText(result));
-      const {asked, endpoint, n, ms, skipped, failed} = await this.askInTurn(`Search: ${query}`, pieces, count => rerankQuestion(all.slice(0, count)), stale);
+      const {asked, endpoint, n, ms, skipped, failed} = await this.askInTurn(`Search: ${query}`, pieces, (count, endpoint) => rerankQuestion(all.slice(0, count).map(text => shorten(text, endpoint.entry.chars ?? SNIPPET_CHARS))), stale);
       this.calls += 1;
       this.msTotal += ms;
       const by = endpoint ?? failed;

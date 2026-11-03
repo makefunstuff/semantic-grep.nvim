@@ -30,7 +30,7 @@ in `rerank` all the same; the run says how many were applied (`reranks:`). The l
 where the plugin's default is 3 s, so that the rerank is measured, not its timeout: its p95 says whether it fits a
 picker's wait, and the `timeoutMs` to set in `setup()`. Per repository, overall, and by the
 style of question. Each run is saved as JSON (`bench/results/<profile>-<date>.json`, with every question's rank and
-time; a run never overwrites an earlier one), and `--compare FILE` prints the change against an earlier one, and
+time; a run saved under its default name never overwrites an earlier one), and `--compare FILE` prints the change against an earlier one, and
 whether it asked the same questions.
 
 Flags: `--repos hono,flask`, `--split dev|test`, `--modes words,fused`, `--questions FILE`, `--out FILE`, `--fresh`

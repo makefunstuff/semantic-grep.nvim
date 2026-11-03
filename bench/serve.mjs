@@ -53,7 +53,11 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
     process.off('SIGINT', signalled);
     process.off('SIGTERM', signalled);
     for (const child of children) if (!ended(child)) child.kill('SIGTERM');
-    await Promise.all(children.map(child => (ended(child) || child.failed ? null : new Promise(resolve => child.once('exit', resolve)))));
+    // Ten seconds to go, then killed: a server stuck on its way out does not keep the bench.
+    await Promise.all(children.map(child => (ended(child) || child.failed ? null : new Promise(resolve => {
+      const kill = setTimeout(() => child.kill('SIGKILL'), 10_000);
+      child.once('exit', () => { clearTimeout(kill); resolve(); });
+    }))));
   };
   // Stopped with the bench, however it ends: a signal while one loads too.
   const signalled = signal => { stop().finally(() => process.exit(128 + (signal === 'SIGINT' ? 2 : 15))); };
