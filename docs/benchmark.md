@@ -126,7 +126,8 @@ been measured yet, for want of a key. With one:
 
 ## Results
 
-The baseline, 2026-11-03, on the code of this change with nothing uncommitted (Node 25.2, 50 tree-sitter parsers);
+The baseline, 2026-11-03, on this change's code at its commit `2f455a2` with nothing uncommitted (the commits after it
+add only what a run records: these runs have no `servers` field yet) (Node 25.2, 50 tree-sitter parsers);
 `laptop` and `beefy` built their indexes afresh and started their own llama.cpp servers from the profiles' `serve`
 entries (EmbeddingGemma 300M Q8_0 and d1-2B Q8_0 on the CPU; Qwen3-Embedding-4B Q8_0 and Qwen3-Reranker-0.6B Q8_0 on
 one GPU); the runs, with every question's rank and time, are
