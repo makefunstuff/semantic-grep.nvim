@@ -35,6 +35,7 @@ const OF_THE_MODEL = ['dimensions', 'queryPrefix', 'documentPrefix', 'band', 'pi
 // The key: the config's own replaces the profile's, and a profile's key never goes to another server.
 const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];
 
+const trimmed = url => String(url).replace(/\/+$/, '');
 const isObject = value => typeof value === 'object' && value !== null && !Array.isArray(value);
 
 /**
@@ -49,7 +50,7 @@ function over(base, own, name, profile) {
     return own;
   }
   const otherModel = (own.model && own.model !== base.model) || (own.api && own.api !== base.api);
-  const otherKey = KEYS.some(key => own[key] !== undefined && own[key] !== null) || (own.baseUrl && own.baseUrl !== base.baseUrl);
+  const otherKey = KEYS.some(key => own[key] !== undefined && own[key] !== null) || (own.baseUrl && trimmed(own.baseUrl) !== trimmed(base.baseUrl));
   const kept = Object.fromEntries(Object.entries(base).filter(([key]) => !(otherModel && OF_THE_MODEL.includes(key)) && !(otherKey && KEYS.includes(key))));
   return {...kept, ...own};
 }

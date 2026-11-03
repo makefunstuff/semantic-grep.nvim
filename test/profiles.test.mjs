@@ -27,6 +27,7 @@ test('a profile fills the models; the config\'s own fields go over it, another m
   const own = profileConfig({profile: 'cloud', embedding: {apiKeyFile: '~/.voyage'}, rerank: {apiKey: 'k'}});
   assert.deepEqual([own.embedding.apiKeyFile, own.embedding.apiKeyEnv, own.rerank[0].apiKey, own.rerank[0].apiKeyEnv], ['~/.voyage', undefined, 'k', undefined], 'a key of its own replaces the profile\'s');
   assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'http://127.0.0.1:9000/v1', model: 'm'}}).embedding.apiKeyEnv, undefined, 'the profile\'s key never goes to another server');
+  assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'https://api.voyageai.com/v1/'}}).embedding.apiKeyEnv, 'VOYAGE_API_KEY', 'the same server, written with a slash');
   const d1 = profileConfig({profile: 'beefy', rerank: {api: 'system-one', model: 'd1-2B'}}).rerank[0];
   assert.deepEqual([d1.baseUrl, d1.top, d1.timeoutMs, d1.chars], [PROFILES.beefy.rerank.baseUrl, 10, 3000, 160], 'another reranker: the defaults for it, not the profile\'s top and wait');
   assert.throws(() => profileConfig({profile: 'laptop', rerank: {timeoutMs: 500}}), /rerank: profile "laptop" has none to change; give a whole entry/);
