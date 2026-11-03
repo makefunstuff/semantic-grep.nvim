@@ -16,7 +16,8 @@ require('semantic-grep').setup({
 - **When.** Only while nothing is searched: once no search came for the writer's `idleMs` (2 minutes on the laptop,
   30 s on beefy and in the cloud) and no project is being indexed. Idle means no search, not no typing: on a laptop,
   its model works on the CPU while you edit (at the nice its server runs at, below), so set `idleMs` higher, or
-  write the notes at once with the command below, if that is in the way. Then it takes the pieces with no note, the project
+  write the notes at once with the command below, if that is in the way. Then it takes the pieces with no note, the
+  project
   searched last first, a few at a time, and stops at the next search (the piece it was writing is dropped and written
   later). Each note is kept as it comes, so a Neovim closed half way keeps what was written.
 - **What.** Every piece without a note: one written by an agent is never written over. A piece whose code changed has
@@ -53,7 +54,8 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   would. The notes' own words matter as much as their meaning: the words alone go from MRR 0.100 to 0.22 with
   Claude's notes, as a search's plain words now meet the note's.
 - **Kept: one writer a profile.** The laptop's Qwen3.5-2B is the smallest that helps (pieces +0.025 over all 189,
-  files +0.010, within the noise: its gain is the pieces' list), at 1.7 s a piece on 4 CPU threads: a 5,000-piece project is noted in about 2.3 hours of idle time.
+  files +0.010, within the noise: its gain is the pieces' list), at 1.7 s a piece on 4 CPU threads: a 5,000-piece
+  project is noted in about 2.3 hours of idle time.
   Beefy's Qwen3-4B helps the files view more (+0.029) and writes 1,000 pieces in 3.4 minutes on a GPU; on a CPU
   it takes 72 minutes, which is why it is not the laptop's. The cloud's Claude Haiku 5.5 is the best
   for its price, 10 cents a thousand pieces; Claude Sonnet 5.5 is better still at 19 times that:
