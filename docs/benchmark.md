@@ -194,6 +194,23 @@ The cloud profiles are configured, checked as valid configs with their keys name
 been measured yet, for want of a key. With one:
 `VOYAGE_API_KEY=… npm run bench -- --profile cloud`, and add the numbers below.
 
+## Notes
+
+`--notes WRITER` asks the questions with a note on every piece, written by that writer of
+[`bench/writers.json`](../bench/writers.json) as the plugin's `notes` writes them (cached by piece, in
+`<cache>/notes/`), and saves what writing them took (`notes`: time, tokens and dollars a thousand pieces). On the
+`test` questions of flask, cobra and fd (137), with the laptop's embedding model, fused MRR of the pieces / of the
+files, 2026-11-03 ([runs](../bench/results/notes-2026-11-03/); docs/notes.md has the rest):
+
+| notes | pieces | files | a thousand pieces |
+| --- | --- | --- | --- |
+| none | 0.544 | 0.725 | |
+| Qwen3.5-2B (the laptop's) | 0.582 | 0.729 | 28 min on 4 CPU threads |
+| Qwen3-4B-Instruct-2507 (beefy's) | 0.571 | 0.753 | 3.4 min on a GPU |
+| Qwen3-30B-A3B (dropped) | 0.538 | 0.721 | $0.04 |
+| Claude Haiku 5.5 (the cloud's) | 0.605 | 0.760 | $0.10 |
+| Claude Sonnet 5.5 | 0.633 | 0.773 | $1.92 |
+
 ## Results
 
 The baseline, 2026-11-03, on this change's code at its commit `2f455a2` with nothing uncommitted (the commits after it

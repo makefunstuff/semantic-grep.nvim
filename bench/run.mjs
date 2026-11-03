@@ -45,7 +45,7 @@ process.emitWarning = function (warning, ...rest) {
 const {Meaning} = await import('../src/meaning.mjs');
 const {Reranker} = await import('../src/rerank.mjs');
 const {embeddingConfig, rerankConfig} = await import('../src/config.mjs');
-const {notesConfig, NotesWriter} = await import('../src/notes.mjs');
+const {notesConfig, NotesWriter, SYSTEM: NOTES_SYSTEM} = await import('../src/notes.mjs');
 
 const profiles = JSON.parse(readFileSync(resolve(flags.profiles ?? join(HERE, 'profiles.json')), 'utf8'));
 const profile = profiles[flags.profile];
@@ -94,14 +94,11 @@ try {
   // One data folder per embedding model: its vectors stay for the next run, and another model's never mix in.
   // Pieces cut by indentation are another index than tree-sitter's.
   let dataDir = join(cache, 'data', `${embedding ? `${embedding.model}${embedding.dimensions ? `-${embedding.dimensions}` : ''}`.replace(/[^\w.-]+/g, '_') : 'words'}${flags.parsers === 'none' ? '-indent' : ''}`);
-  if (flags.fresh) rmSync(dataDir, {recursive: true, force: true});
   // With notes, a data folder of their own, begun as a copy of the one without (its pieces' vectors are the same).
-  if (flags.notes && existsSync(dataDir)) {
-    const noted = `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}`;
-    if (flags.fresh) rmSync(noted, {recursive: true, force: true});
-    if (!existsSync(noted)) cpSync(dataDir, noted, {recursive: true});
-    dataDir = noted;
-  } else if (flags.notes) dataDir = `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}`;
+  const notedDir = flags.notes ? `${dataDir}-notes-${flags.notes.replace(/[^\w.-]+/g, '_')}` : null;
+  if (flags.fresh) for (const dir of [dataDir, notedDir].filter(Boolean)) rmSync(dir, {recursive: true, force: true});
+  if (notedDir && !existsSync(notedDir) && existsSync(dataDir)) cpSync(dataDir, notedDir, {recursive: true});
+  if (notedDir) dataDir = notedDir;
   const parsers = flags.parsers === 'none' ? [] : neovimParsers();
   meaning = new Meaning({dataDir, embedding, reranker: rerank ? new Reranker({entries: rerank, log}) : null, log});
   meaning.useParsers(parsers);
@@ -192,14 +189,17 @@ try {
  * written now (its server started at the first) and cached; then their vectors embedded. What the writing took.
  */
 async function noted(repo) {
-  const file = join(cache, 'notes', flags.notes.replace(/[^\w.-]+/g, '_'), `${basename(repo.name).replace(/[^\w.-]+/g, '_')}.jsonl`);
+  // Cached by what makes a note: the model, how much of the piece it reads, and the prompt.
+  const made = createHash('sha1').update(JSON.stringify([notesEntry.model, notesEntry.chars, NOTES_SYSTEM])).digest('hex').slice(0, 8);
+  const file = join(cache, 'notes', `${flags.notes.replace(/[^\w.-]+/g, '_')}-${made}`, `${basename(repo.name).replace(/[^\w.-]+/g, '_')}.jsonl`);
+  const tookFile = file.replace(/\.jsonl$/, '.took.json'); // what writing them took, the first time
   mkdirSync(dirname(file), {recursive: true});
   const cached = new Map((existsSync(file) ? readFileSync(file, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []).map(row => [row.hash, row]));
-  const {pieces} = await meaning.pendingNotes(repo.root, {limit: Infinity});
+  const {pieces, noted: had} = await meaning.pendingNotes(repo.root, {limit: Infinity});
   const put = pieces.filter(piece => cached.has(piece.hash)).map(piece => cached.get(piece.hash));
   if (put.length) await meaning.addNotes(repo.root, put, {source: `writer:${notesEntry.model}`});
   const todo = pieces.filter(piece => !cached.has(piece.hash));
-  const took = {pieces: pieces.length, cached: put.length, written: 0, failed: 0, ms: 0, input: 0, output: 0};
+  const took = {pieces: pieces.length + had, cached: put.length + had, written: 0, failed: 0, ms: 0, input: 0, output: 0, cost: 0};
   if (todo.length) {
     writerServed ??= await serveProfile({notes: notesEntry, serve: writerSpec.serve}, {models: flags.models ?? process.env.SEMANTIC_GREP_BENCH_MODELS, llamaServer: flags['llama-server'] ?? process.env.LLAMA_SERVER ?? 'llama-server', log});
     const writer = new NotesWriter({entry: notesEntry, log});
@@ -213,8 +213,12 @@ async function noted(repo) {
       Object.assign(took, {written: took.written + notes.length, failed: took.failed + batch.length - notes.length});
       log(`${repo.name}: ${took.written + took.cached} of ${pieces.length} pieces noted`);
     }
-    Object.assign(took, {ms: Date.now() - started, ...writer.tokens});
+    Object.assign(took, {ms: Date.now() - started, ...writer.tokens, cost: writer.cost});
   }
+  // What writing every cached note took, over the runs that wrote them: what the cost a thousand pieces is of.
+  const before = existsSync(tookFile) ? JSON.parse(readFileSync(tookFile, 'utf8')) : {};
+  took.total = Object.fromEntries(['written', 'ms', 'input', 'output', 'cost'].map(key => [key, (before.total?.[key] ?? before[key] ?? 0) + took[key]]));
+  if (took.written) writeFileSync(tookFile, `${JSON.stringify(took)}\n`);
   await settled(meaning, repo.root, ({chunks}) => log(`${repo.name}: the notes of ${chunks} pieces embedded`));
   return took;
 }
@@ -222,15 +226,19 @@ async function noted(repo) {
 /** The notes' cost: time and tokens a thousand pieces written here (not cached), and with the writer's price, dollars. */
 function notesOf(byRepo) {
   const rows = Object.values(byRepo);
-  const sum = key => rows.reduce((total, row) => total + row[key], 0);
+  const count = key => rows.reduce((total, row) => total + row[key], 0);
+  // Over every run that wrote the notes (took.total), not only this one.
+  const sum = key => rows.reduce((total, row) => total + row.total[key], 0);
   const written = sum('written');
   const per1k = value => (written ? Math.round(value / written * 1000) : null);
   const price = writerSpec.price; // dollars a million tokens, {input, output}
   return {
     writer: flags.notes, model: notesEntry.model, about: writerSpec.about ?? null, served: writerServed?.measured() ?? null,
-    pieces: sum('pieces'), written, cached: sum('cached'), failed: sum('failed'),
+    pieces: count('pieces'), written: count('written'), cached: count('cached'), failed: count('failed'), measuredOn: written,
     msPer1k: per1k(sum('ms')), inputPer1k: per1k(sum('input')), outputPer1k: per1k(sum('output')),
-    dollarsPer1k: price && written ? Math.round((sum('input') * price.input + sum('output') * price.output) / written * 1000 / 1e6 * 1000) / 1000 : null,
+    // What the API said the requests cost, else the tokens at the writer's price.
+    dollarsPer1k: !written ? null : sum('cost') ? Math.round(sum('cost') / written * 1000 * 1000) / 1000
+      : price ? Math.round((sum('input') * price.input + sum('output') * price.output) / written * 1000 / 1e6 * 1000) / 1000 : null,
     repos: byRepo,
   };
 }

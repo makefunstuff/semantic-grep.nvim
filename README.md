@@ -135,7 +135,8 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
   cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
   that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud profile's does). How to
-  run each, what they cost and what they gain: [docs/notes.md](docs/notes.md).
+  run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku's notes
+  take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760, for 10 cents a thousand pieces.
 
 ## Commands
 

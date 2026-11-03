@@ -118,6 +118,15 @@ test('the writer asks an OpenAI-compatible server without thinking, and Anthropi
     assert.deepEqual(messages.body.thinking, {type: 'disabled'});
     assert.equal(typeof messages.body.system, 'string');
 
+    // Elsewhere than this machine: no llama.cpp field it may refuse; `request` adds fields of the entry's own.
+    const remote = notesConfig({baseUrl: 'https://writer.example.com/v1', model: 'm', sendCode: true, request: {reasoning: {enabled: false}, max_tokens: 900}});
+    const toRemote = new NotesWriter({entry: remote, fetch: (url, options) => fetch(url.replace('https://writer.example.com/v1', server.baseUrl), options)});
+    assert.equal((await toRemote.write([piece])).notes.length, 1);
+    const sent = server.requests.at(-1).body;
+    assert.equal(sent.chat_template_kwargs, undefined);
+    assert.deepEqual(sent.reasoning, {enabled: false});
+    assert.equal(sent.max_tokens, 900);
+
     server.set({mode: 'down'});
     const failed = await local.write([piece, {...piece, hash: 'h2'}]);
     assert.equal(failed.notes.length, 0);
@@ -228,6 +237,25 @@ test('the server takes a notes entry: the health check asks the writer for a not
     assert.doesNotMatch(server.requests[0].body.messages[1].content, /notes-project/, 'its own piece, not the project\'s');
   } finally {
     await rpc.close();
+    await server.close();
+  }
+});
+
+test('closed while the writer writes: its notes are dropped, and no index is opened again', async () => {
+  const root = project();
+  const server = await fakeWriterServer({delayMs: 200});
+  let now = 1_000_000;
+  const meaning = new Meaning({dataDir: scratch('notes-data-'), embedder: fakeEmbedder(), notes: notesConfig({baseUrl: server.baseUrl, model: 'fake-writer', concurrency: 1, idleMs: 0}), now: () => now});
+  try {
+    await settled(meaning, root);
+    now += 1000;
+    const writing = meaning.writeNotes();
+    await until(() => server.requests.length === 2, 'the second piece asked', 5000);
+    await meaning.close();
+    await writing;
+    assert.equal(meaning.indexes.size, 0, 'no index again');
+    assert.equal(meaning.open(root), null);
+  } finally {
     await server.close();
   }
 });

@@ -103,7 +103,7 @@ async function notes(action, args) {
         await meaning.addNotes(root, notes, {source: writer.name});
         written += notes.length;
         const s = (Date.now() - started) / 1000;
-        process.stderr.write(`${written} notes written, ${answer.pending - notes.length} pieces without one; ${(s / written * 1000).toFixed(0)} s a thousand\n`);
+        process.stderr.write(`${written} notes written, ${answer.pending - notes.length} pieces without one; ${written ? `${(s / written * 1000).toFixed(0)} s a thousand` : 'none yet'}\n`);
       }
       const {input, output} = writer.tokens;
       process.stderr.write(`${written} notes by ${writer.about} in ${Math.round((Date.now() - started) / 1000)} s; ${input} tokens read, ${output} written\n`);

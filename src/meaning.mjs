@@ -672,7 +672,7 @@ export class Meaning {
 
   /** The project at `root` has a session: its index loads, is looked over and builds in the background. */
   open(root) {
-    if (this.disabled) return null;
+    if (this.disabled || this.closed) return null;
     this.wanted.add(root);
     if (this.indexes.has(root)) return this.indexes.get(root);
     const failed = this.failures.get(root);
@@ -1141,6 +1141,7 @@ export class Meaning {
           const {pieces, pending, problem} = await this.pendingNotes(index.root, {limit: this.writer.entry.concurrency * NOTES_BATCH, quiet: true, skip: this.notesFailed});
           if (problem || !pieces.length) break;
           const {notes, errors} = await this.writer.write(pieces, {signal: controller.signal});
+          if (this.closed || this.indexes.get(index.root) !== index || index.closed) break; // closed, or the session ended, meanwhile
           if (notes.length) { // those written before a search stopped it too
             await this.addNotes(index.root, notes, {source: this.writer.name, quiet: true});
             here += notes.length;
@@ -1154,7 +1155,8 @@ export class Meaning {
             this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(NOTES_REST_MS)}`);
             break;
           }
-          if (!unanswered) for (const piece of pieces) if (!noted.has(piece.hash)) this.notesFailed.add(piece.hash);
+          // A batch with notes: its pieces without one failed on their own (an odd answer, too long a wait), and wait for the next session.
+          for (const piece of pieces) if (!noted.has(piece.hash)) this.notesFailed.add(piece.hash);
           if (pending <= pieces.length) break;
         }
         written += here;
@@ -1258,6 +1260,7 @@ export class Meaning {
   }
 
   async close() {
+    this.closed = true; // a notes batch that ends after this opens no index again
     clearInterval(this.timer);
     clearInterval(this.notesTimer);
     this.noting?.abort();

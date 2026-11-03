@@ -7,8 +7,8 @@
 // - cloud: hosted APIs, Voyage's voyage-code-3 and rerank-2.5, the key in $VOYAGE_API_KEY (not measured yet).
 //
 // Each also names a notes writer (notes.mjs), used only when the config turns notes on (`notes = true`, or an entry
-// over the profile's; without a profile, the laptop's): a small model on the CPU, a bigger one on a GPU, both behind
-// a llama-server at port 18122, or Claude Haiku, the key in $ANTHROPIC_API_KEY (the cloud profile sends the code to
+// over the profile's; without a profile, the laptop's): Qwen3.5-2B on the CPU, Qwen3-4B-Instruct-2507 on a GPU, both
+// behind a llama-server at port 18122, or Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY (docs/notes.md: what each gains) (the cloud profile sends the code to
 // hosted models already: its writer says sendCode; a writer moved elsewhere has to say so itself).
 //
 // The local ones expect llama.cpp's llama-server on this machine: the embedding model at port 18120, the reranker at
@@ -31,7 +31,7 @@ export const PROFILES = {
   beefy: {
     embedding: {api: 'openai', baseUrl: LOCAL_EMBEDDING, model: 'qwen3-embedding-8b'},
     rerank: {api: 'rerank', baseUrl: LOCAL_RERANK, model: 'qwen3-reranker-0.6b', top: 20, timeoutMs: 1000},
-    notes: {api: 'openai', baseUrl: LOCAL_NOTES, model: 'qwen3.5-9b', concurrency: 4, chars: 3000, idleMs: 30_000},
+    notes: {api: 'openai', baseUrl: LOCAL_NOTES, model: 'qwen3-4b-instruct-2507', concurrency: 4, chars: 1500, idleMs: 30_000},
   },
   cloud: {
     embedding: {api: 'openai', baseUrl: 'https://api.voyageai.com/v1', model: 'voyage-code-3', apiKeyEnv: 'VOYAGE_API_KEY', queryPrefix: 'Represent the query for retrieving supporting documents: ', documentPrefix: 'Represent the document for retrieval: '},

@@ -2,10 +2,11 @@
 // that search by meaning finds it in the words people search with without anyone asking a coding agent (see
 // Meaning.pendingNotes and addNotes: the same path an agent's notes take, with the writer's model as their source).
 //
-// A writer is an entry `{api, baseUrl, model, ...key, concurrency?, chars?, idleMs?, timeoutMs?, sendCode?}`:
+// A writer is an entry `{api, baseUrl, model, ...key, concurrency?, chars?, idleMs?, timeoutMs?, sendCode?, request?}`
+// (`request`: fields added to each request's body, such as OpenRouter's `reasoning = {enabled = false}`):
 //
 // - api "openai": an OpenAI-compatible /chat/completions (llama.cpp's llama-server, Ollama, LM Studio, vLLM, a cloud
-//   API); a Qwen3.5 model is asked without its thinking;
+//   API); one on this machine is asked without its thinking (chat_template_kwargs, which a cloud API may refuse);
 // - api "anthropic": Anthropic's Messages API (Claude Haiku by default), POST <baseUrl>/messages.
 //
 // The code of each piece goes to the writer's model. A model on this machine (127.0.0.1, localhost, ::1) may read it;
@@ -21,6 +22,8 @@ export const NOTE_TIMEOUT_MS = 120_000; // a CPU model takes seconds a piece; on
 const MAX_TOKENS = 160; // a note's two sentences, with room: one that runs on is cut where a sentence ends
 export const NO_NOTE = 'no note in the answer';
 const ANTHROPIC_VERSION = '2026-10-21';
+// A failure that every other piece would meet too: no server, a refused key.
+const STOPS = /: (401|403) |: (ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|UND_ERR_CONNECT)$|: fetch failed$/;
 const LOCAL_HOSTS = new Set(['127.0.0.1', 'localhost', '::1', '[::1]']);
 
 export const SYSTEM = 'You write notes on pieces of code for a code search index. Given one piece, write one or two '
@@ -58,6 +61,7 @@ export function notesConfig(entry, name = 'notes') {
     if (entry[field] !== undefined && !(typeof entry[field] === 'number' && entry[field] >= 0)) throw new Error(`${name}.${field} must be a number of milliseconds`);
   }
   if (entry.sendCode !== undefined && typeof entry.sendCode !== 'boolean') throw new Error(`${name}.sendCode must be true or false`);
+  if (entry.request !== undefined && !isObject(entry.request)) throw new Error(`${name}.request must be a table of fields for the request's body`);
   if (!isLocal(entry.baseUrl) && entry.sendCode !== true) {
     throw new Error(`${name}: ${entry.baseUrl} is not this machine, and every piece's code would go to it; set sendCode = true in the notes entry to allow that`);
   }
@@ -99,6 +103,7 @@ export class NotesWriter {
     this.written = 0;
     this.ms = 0;
     this.tokens = {input: 0, output: 0};
+    this.cost = 0; // dollars, where the API says what a request cost (OpenRouter's usage.cost)
   }
 
   get name() { return `writer:${this.entry.model}`; }
@@ -114,18 +119,19 @@ export class NotesWriter {
         const piece = pieces[next++];
         try {
           const started = Date.now();
-          const {text, input, output} = await this.ask(piece, signal);
+          const {text, input, output, cost} = await this.ask(piece, signal);
           const note = cleanNote(text);
           const ms = Date.now() - started;
           this.ms += ms;
           this.tokens.input += input ?? 0;
           this.tokens.output += output ?? 0;
+          this.cost += cost ?? 0;
           if (!note) { errors.push(`${piece.file}:${piece.from}: ${NO_NOTE}`); continue; }
           this.written += 1;
-          out.push({hash: piece.hash, note, ms, input, output});
+          out.push({hash: piece.hash, note, ms, input, output, ...(cost === undefined ? {} : {cost})});
         } catch (error) {
           errors.push(`${piece.file}:${piece.from}: ${error.message}`);
-          if (/401|403|ECONNREFUSED|fetch failed|did not answer/.test(error.message)) break; // the same for every piece
+          if (STOPS.test(error.message)) break; // the same for every piece
         }
       }
     };
@@ -145,7 +151,8 @@ export class NotesWriter {
     // Haiku 5.5 thinks by default: off, at low effort, for a sentence. A Qwen3.5 on llama-server thinks unless told not to.
     const body = anthropic
       ? {model: this.entry.model, max_tokens: MAX_TOKENS, system: SYSTEM, messages: [{role: 'user', content: prompt}], thinking: {type: 'disabled'}, output_config: {effort: 'low'}}
-      : {model: this.entry.model, max_tokens: MAX_TOKENS, temperature: 0.2, messages: [{role: 'system', content: SYSTEM}, {role: 'user', content: prompt}], chat_template_kwargs: {enable_thinking: false}};
+      : {model: this.entry.model, max_tokens: MAX_TOKENS, temperature: 0.2, messages: [{role: 'system', content: SYSTEM}, {role: 'user', content: prompt}], ...(isLocal(base) ? {chat_template_kwargs: {enable_thinking: false}} : {})};
+    Object.assign(body, this.entry.request ?? {});
     const timeout = AbortSignal.timeout(this.entry.timeoutMs);
     let response;
     try {
@@ -159,6 +166,6 @@ export class NotesWriter {
       const text = (answer.content ?? []).filter(block => block.type === 'text').map(block => block.text).join('');
       return {text, input: answer.usage?.input_tokens, output: answer.usage?.output_tokens};
     }
-    return {text: answer.choices?.[0]?.message?.content ?? '', input: answer.usage?.prompt_tokens, output: answer.usage?.completion_tokens};
+    return {text: answer.choices?.[0]?.message?.content ?? '', input: answer.usage?.prompt_tokens, output: answer.usage?.completion_tokens, cost: answer.usage?.cost};
   }
 }
