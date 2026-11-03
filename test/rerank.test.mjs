@@ -48,8 +48,9 @@ test('the question: each piece an answer "1" to "N" with where it is and its tex
   assert.deepEqual(question.criteria, {1: 'a.js:1  one', 2: 'b.js:2  two'});
 
   const results = ['a', 'b', 'c', 'd'].map(file => ({file, from: 1}));
-  assert.deepEqual(reorder(results, [0.1, 0.6, 0.3]).map(result => result.file), ['b', 'c', 'a', 'd'], 'the rest stay where they were');
-  assert.deepEqual(reorder(results, [0.4, 0.2, 0.4]).map(result => result.file), ['a', 'c', 'b', 'd'], 'equal ones keep their order');
+  assert.deepEqual(reorder(results, [0.1, 0.6, 0.3]).map(result => result.file), ['b', 'a', 'c', 'd'], 'the model\'s choice first; the rest keep the search\'s order');
+  assert.deepEqual(reorder(results, [0.4, 0.2, 0.4]).map(result => result.file), ['a', 'b', 'c', 'd'], 'of equal ones, the first');
+  assert.equal(reorder(results, [0.1, 0.6, 0.3])[1].rerank, 0.1, 'each piece asked has its probability');
   assert.equal(reorder(results, [0.1, 0.6, 0.3])[0].rerank, 0.6);
 
   assert.deepEqual(probabilitiesOf({type: 'choice', probabilities: {1: 0.2, 2: 0.8}}, 2), {values: [0.2, 0.8]});
@@ -58,6 +59,9 @@ test('the question: each piece an answer "1" to "N" with where it is and its tex
   assert.equal(probabilitiesOf({type: 'choice', probabilities: {1: 0.2, 2: 7}}, 2).why, 'malformed');
   assert.equal(probabilitiesOf({type: 'bool', probability: 0.5}, 2).why, 'malformed');
   assert.equal(probabilitiesOf({type: 'choice', probabilities: {1: 0.5, 2: 0.495}}, 2).why, 'flat', 'no preference: no reorder');
+  const even = Object.fromEntries(Array.from({length: 15}, (_, i) => [String(i + 1), i === 0 ? 0.209 : i === 1 ? 0.149 : 0.642 / 13]));
+  assert.equal(probabilitiesOf({type: 'choice', probabilities: even}, 15).why, 'flat', 'the best 0.209 of 15 and 0.06 over the second: no piece stands out');
+  assert.deepEqual(probabilitiesOf({type: 'choice', probabilities: {1: 0.1, 2: 0.7, 3: 0.2}}, 3), {values: [0.1, 0.7, 0.2]}, 'over 2/n and 0.15 over the second: it does');
 });
 
 test('one fused list (vim.ui.select\'s): the first pieces reranked by the model, the ledger books it with the order before and after', async () => {
@@ -85,7 +89,7 @@ test('one fused list (vim.ui.select\'s): the first pieces reranked by the model,
     assert.equal(request.state, 'Search: price cents');
     const texts = Object.values(request.questions.best.criteria);
     assert.equal(texts.length, plain.results.length, 'each piece, as many as the list has up to top');
-    assert.ok(texts.some(text => text.startsWith('src/tip.js:2  // A tip on the price, for the waiter. export function tip(cents)')), 'where it is, and its text from its doc comment');
+    assert.ok(texts.some(text => text.startsWith('src/tip.js:2 (tip)  // A tip on the price, for the waiter. export function tip(cents)')), 'where it is, its name, and its text from its doc comment');
     const line = booked.find(entry => entry.kind === 'reranked');
     assert.match(line.text, /^"price cents" with fake-d1 in \d+ ms: \d of 4 moved, first now src\/tip\.js:2 \(was src\/\w+\.js:2\)$/);
     assert.match(line.options.detail.output, /^before:\n[\s\S]*\n\nafter \(the model's probability\):\nsrc\/tip\.js:2  0\.\d+  export function tip/);

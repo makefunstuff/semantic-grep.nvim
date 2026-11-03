@@ -15,7 +15,7 @@ import {isAbsolute, join, relative} from 'node:path';
 import {apiKeyOf} from './config.mjs';
 import {HttpEmbedder} from './embedder.mjs';
 import {IndexStore, indexPlace, PROJECT_DIR, removeIndex} from './index-store.mjs';
-import {piecesOf, TreeSitter} from './pieces.mjs';
+import {importLines, piecesOf, TreeSitter, withoutImports} from './pieces.mjs';
 import {pieceText, SNIPPET_CHARS} from './rerank.mjs';
 
 const MAX_FILE_BYTES = 512 * 1024;
@@ -57,8 +57,11 @@ export async function projectFiles(root, projectDir = PROJECT_DIR) {
   return [...new Set(listed.filter(Boolean))].filter(path => indexable(path, projectDir)).sort();
 }
 
-/** A piece is known by its file's path and its text: worktrees of a repository share its vector, a restart embeds nothing twice. */
-export const pieceHash = (file, text) => createHash('sha1').update(`${file}\n${text}`).digest('hex');
+/**
+ * A piece is known by its file's path, its name (its title's: see embedder.mjs) and its text: worktrees of a
+ * repository share its vector, a restart embeds nothing twice.
+ */
+export const pieceHash = (file, text, name = null) => createHash('sha1').update(name ? `${file}\n${name}\n${text}` : `${file}\n${text}`).digest('hex');
 
 /**
  * The words of `text` for the word search: lower case, with identifiers split too (removeUserFromTeam, retry_count:
@@ -234,7 +237,7 @@ export class ProjectIndex {
         if (this.closed) return; // the session ended, or the index is made again: its file is closed
         for (const {file, info, text} of texts) {
           const pieces = piecesOf(text, found.get(join(this.root, file))).map(piece => ({
-            ...piece, hash: pieceHash(file, piece.text), words: words(`${file} ${piece.name ?? ''} ${piece.text}`).join(' '),
+            ...piece, hash: pieceHash(file, piece.text, piece.name), words: words(`${file} ${piece.name ?? ''} ${piece.text}`).join(' '),
           }));
           for (const old of this.byFile.get(file) ?? []) this.documents.delete(old.hash); // a text gone from the file
           const stored = this.store.putFile(this.root, file, {size: info.size, mtimeMs: info.mtimeMs}, pieces);
@@ -245,7 +248,7 @@ export class ProjectIndex {
             const shared = this.store.vector(this.model, piece.hash); // made in another worktree of the repository
             if (shared) this.vectors.set(piece.hash, shared);
             // Kept to embed soon, only while there is a model: words alone read the file again when it comes.
-            else if (this.embedder && this.embedding()) this.documents.set(piece.hash, this.embedder.document(file, piece.text));
+            else if (this.embedder && this.embedding()) this.documents.set(piece.hash, this.document(file, piece.text, piece.name));
           });
         }
         reading.done = Math.min(total, start + PARSE_GROUP);
@@ -272,8 +275,11 @@ export class ProjectIndex {
     const lines = await this.lines.get(piece.file);
     if (!lines) return null;
     const text = lines.slice(piece.from - 1, piece.to).join('\n');
-    return pieceHash(piece.file, text) === piece.hash ? this.embedder.document(piece.file, text) : null; // changed since: the next scan reads it
+    return pieceHash(piece.file, text, piece.name) === piece.hash ? this.document(piece.file, text, piece.name) : null; // changed since: the next scan reads it
   }
+
+  /** What the embedder reads of a piece: its text without its imports, titled by its file and name. */
+  document(file, text, name) { return this.embedder.document(file, withoutImports(text), name); }
 
   /** Embeds the next few pieces waiting; false when none waits. The list of those is made again once it runs out, or the files change. */
   async step() {
@@ -368,20 +374,29 @@ export class ProjectIndex {
     return near.sort((a, b) => b[1] - a[1]).slice(0, limit);
   }
 
-  /** The line a piece is shown and opened at: its first that is not a comment (its doc comment is above it), with its text. */
+  /**
+   * The line a piece is shown and opened at: its first with letters that is neither a comment (its doc comment is
+   * above it) nor an import, with its text; not a `],`.
+   */
   async headOf(piece) {
     const lines = await this.lines.get(piece.file);
     const body = lines?.slice(piece.from - 1, piece.to) ?? [];
     const prose = /\.(md|markdown|txt|rst)$/i.test(piece.file); // a heading is no comment there
-    let at = body.findIndex(line => line.trim() && (prose || !COMMENT.test(line)));
+    const imports = importLines(body);
+    const letters = line => /\p{L}/u.test(line);
+    let at = body.findIndex((line, i) => letters(line) && !imports.has(i) && (prose || !COMMENT.test(line)));
+    if (at < 0) at = body.findIndex(line => letters(line));
     if (at < 0) at = Math.max(0, body.findIndex(line => line.trim()));
     return {line: piece.from + at, head: (body[at] ?? '').trim().slice(0, HEAD_CHARS)};
   }
 
-  /** A search result's text from its doc comment on, as the reranker reads it (see rerank.mjs); its head without its file. */
+  /**
+   * A search result's text from its doc comment on, as the reranker reads it (see rerank.mjs): without its imports,
+   * from its first line with letters; its head without its file.
+   */
   async textOf(result, chars) {
     const lines = await this.lines.get(result.file);
-    const text = lines?.slice(result.from - 1, result.to).join('\n').slice(0, chars);
+    const text = lines && withoutImports(lines.slice(result.from - 1, result.to).join('\n')).replace(/^[^\p{L}]*\n/u, '').slice(0, chars);
     return text?.trim() ? text : result.head ?? '';
   }
 

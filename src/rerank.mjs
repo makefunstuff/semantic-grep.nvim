@@ -1,7 +1,7 @@
 // The reranker: a small decision model (a classifier that answers a choice with a probability for each answer and
 // writes no text, such as LiquidAI's d1-2B behind a System One API) reorders the first pieces of a settled list. One
-// question names each of the top pieces as an answer, "which best matches the search?", and the pieces go best first
-// by the probability the model gives each; the rest of the list stays as it was.
+// question names each of the top pieces as an answer, "which best matches the search?", and the piece the model gives
+// the most probability goes first when it stands out (see STANDS_OUT); the rest of the list keeps the search's order.
 //
 // One rerank at a time: a model on a CPU may serve other work too, and a second question would only wait behind the
 // first. A rerank asked while one runs keeps its search's order ("busy").
@@ -21,7 +21,13 @@ export {FALLBACK_TIMEOUT_MS, RERANK_TIMEOUT_MS, RERANK_TOP} from './config.mjs';
 // Of each piece's text, its first this many characters (its doc comment, or its head and first lines): the model reads
 // them all, so they are its time. 160 ranked as well as 600, in half the time.
 export const SNIPPET_CHARS = 160;
-const FLAT = 0.02; // a model whose probabilities differ by less than this has no preference: the order stays
+// A rerank is applied only when the model's best piece stands out: at least STANDS_OUT times an even share (1/n; of a
+// short list, half), and MARGIN above its second. Then that piece goes first and the rest keep the search's order.
+// Measured with d1-2B on 41 labelled questions over two projects (recall@5 / MRR): the fused list alone 0.91 / 0.74;
+// every piece reordered by the model 0.85 / 0.68, its order below its first choice being mostly noise; this rule
+// 0.93 / 0.73, applied to 32 of the 41.
+export const STANDS_OUT = 2;
+export const MARGIN = 0.15;
 const DOWN_MS = 60_000; // after a failure, how long a rerank is not tried again
 
 // What :checkhealth asks the model: the first matches "add two numbers", and the others take its time as a search's would.
@@ -41,10 +47,14 @@ const PROBE_PIECES = [
 const INSTRUCTIONS = 'A developer searched their project with the words in the state. Which piece of code or documentation '
   + 'is the one they are looking for? Judge what each piece does, not whether it shares their words.';
 
-/** What the model reads of one piece: where it is, then its text from its doc comment on, cut short, on one line. */
+/**
+ * What the model reads of one piece: where it is and what names it (its definition, or what encloses it), then its
+ * text from its doc comment on, cut short, on one line.
+ */
 export function pieceText(result, text = result.head ?? '') {
   const flat = String(text).replace(/\s+/g, ' ').trim();
-  return `${result.file}:${result.line ?? result.from}  ${flat.length > SNIPPET_CHARS ? `${flat.slice(0, SNIPPET_CHARS)}…` : flat}`;
+  const name = result.name ? ` (${String(result.name).replace(/\s+/g, ' ')})` : '';
+  return `${result.file}:${result.line ?? result.from}${name}  ${flat.length > SNIPPET_CHARS ? `${flat.slice(0, SNIPPET_CHARS)}…` : flat}`;
 }
 
 /** The choice question about `texts` (each piece's pieceText): its answers are "1" to "N", in the list's order. */
@@ -53,8 +63,9 @@ export function rerankQuestion(texts) {
 }
 
 /**
- * The model's probabilities for "1" to "n", or why they are no answer to go by: missing or out of range ("malformed"),
- * or all about the same ("flat": the model cannot tell them apart, and a reorder would be noise).
+ * The model's probabilities for "1" to "n" (`values`), or why they are no answer to go by: missing or out of range
+ * ("malformed"), or no piece standing out ("flat", with its values: the best is under STANDS_OUT/n, or within MARGIN
+ * of the second; the model cannot tell them apart well enough for a reorder not to be noise).
  */
 export function probabilitiesOf(answer, n) {
   const probabilities = answer?.probabilities;
@@ -65,17 +76,19 @@ export function probabilitiesOf(answer, n) {
     if (typeof p !== 'number' || !Number.isFinite(p) || p < 0 || p > 1) return {why: 'malformed', error: `no probability for piece ${i}`};
     values.push(p);
   }
-  if (Math.max(...values) - Math.min(...values) < FLAT) return {why: 'flat', error: 'no piece stood out'};
+  const [best, second = 0] = values.toSorted((a, b) => b - a);
+  if (best < Math.min(STANDS_OUT / n, 0.5) || best - second < MARGIN) return {why: 'flat', values, error: `no piece stood out (best ${best.toFixed(2)}, then ${second.toFixed(2)})`};
   return {values};
 }
 
 /**
- * `results` with their first `values.length` reordered best first by `values` (the model's probability for each);
- * equal ones keep their order. The rest stay where they were.
+ * `results` with the model's choice first: the one of the first `values.length` it gives the most probability (the
+ * first of equal ones); the others keep their order. Each of those first ones has its probability as `rerank`.
  */
 export function reorder(results, values) {
-  const top = values.map((p, i) => ({p, i})).sort((a, b) => b.p - a.p || a.i - b.i).map(({i, p}) => ({...results[i], rerank: Math.round(p * 1000) / 1000}));
-  return [...top, ...results.slice(values.length)];
+  const scored = results.map((result, i) => (i < values.length ? {...result, rerank: Math.round(values[i] * 1000) / 1000} : result));
+  const best = values.indexOf(Math.max(...values));
+  return [scored[best], ...scored.filter((_, i) => i !== best)];
 }
 
 /** A host client's answer (pi-ai's shape: `{stopReason, errorMessage, answers}`) as classify's, or its error. */
@@ -233,7 +246,12 @@ export class Reranker {
         return {...asked, ...about, results};
       }
       const found = probabilitiesOf(asked.answer, n);
-      if (!found.values) {
+      if (found.why === 'flat') { // an answer all the same: the model is up
+        endpoint.down = null;
+        endpoint.answered += 1;
+        endpoint.msAnswered += asked.ms;
+      }
+      if (found.why) {
         this.kept += 1;
         if (found.why === 'malformed') this.log(`reranker: ${endpoint.name}: ${found.error}; the search's order stays`);
         return {ok: false, why: found.why, error: found.error, ...about, results};

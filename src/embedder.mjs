@@ -6,13 +6,16 @@ import {PIECE} from './pieces.mjs';
 
 // The prompts EmbeddingGemma was trained with: a piece of the project (titled by its file, or none), and a search.
 export const documentText = (title, text) => `title: ${title || 'none'} | text: ${text}`;
+/** A piece's title: its file and what names it (its definition, or what encloses it): "src/users.ts: _users: anna". */
+export const pieceTitle = (file, name) => [file, name].filter(Boolean).join(': ');
 export const queryText = query => `task: search result | query: ${query}`;
 
-// The prompts some embedding models were trained with, by their name: a search, and a piece of code.
+// The prompts some embedding models were trained with, by their name: a search, and a piece of code. `{title}` is the
+// piece's (see pieceTitle); a model whose prompt has no place for one reads it as the first line of the piece.
 const PROMPTS = [
   [/nomic-embed-code/i, {query: 'Represent this query for searching relevant code: ', document: ''}],
   [/nomic-embed-text/i, {query: 'search_query: ', document: 'search_document: '}],
-  [/embedding-?gemma/i, {query: 'task: search result | query: ', document: 'title: none | text: '}],
+  [/embedding-?gemma/i, {query: 'task: search result | query: ', document: 'title: {title} | text: '}],
   [/qwen3-embedding/i, {query: 'Instruct: Given a question, find the code that answers it\nQuery: ', document: ''}],
 ];
 const HTTP_BATCH = 16;
@@ -34,7 +37,7 @@ const unit = vector => {
 
 /**
  * The config's `embedding` entry, `{baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, ...key}`, as an
- * embedder: `id` names its vectors in the index, `query(text)` and `document(file, text)` add the model's prompts,
+ * embedder: `id` names its vectors in the index, `query(text)` and `document(file, text, name)` add the model's prompts,
  * `embed(texts, {urgent})` resolves their vectors.
  */
 export class HttpEmbedder {
@@ -54,8 +57,15 @@ export class HttpEmbedder {
   get msPerText() { return this.embedded ? this.embedMs / this.embedded : null; }
 
   // A piece is at most PIECE.chars, but a single longer line (minified code, a lockfile) is a piece of its own: its
-  // head is what the model reads, so a server's batch or the model's context is never overrun.
-  document(file, text) { return `${this.prompts.document}${text.slice(0, PIECE.chars)}`; }
+  // head is what the model reads, so a server's batch or the model's context is never overrun. Its title (its file,
+  // and the name of its definition or of what encloses it) goes where the model's prompt has room for one, else first.
+  document(file, text, name = null) {
+    const title = pieceTitle(file, name);
+    const prompt = this.prompts.document;
+    return prompt.includes('{title}')
+      ? `${prompt.replaceAll('{title}', title || 'none')}${text.slice(0, PIECE.chars)}`
+      : `${prompt}${title ? `${title}\n` : ''}${text.slice(0, PIECE.chars)}`;
+  }
 
   query(text) { return `${this.prompts.query}${text}`; }
 

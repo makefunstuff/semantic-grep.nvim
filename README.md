@@ -44,7 +44,8 @@ The plugin sets no keymaps; `Alt-s` above is a suggestion. As a Telescope extens
 ```lua
 require('semantic-grep').setup({
   -- An OpenAI-compatible /v1/embeddings. Known prompts are added for EmbeddingGemma, nomic-embed-text/-code and
-  -- Qwen3-Embedding; set queryPrefix/documentPrefix for another. Key: apiKey, apiKeyFile or apiKeyEnv.
+  -- Qwen3-Embedding; set queryPrefix/documentPrefix for another ({title} in documentPrefix places each piece's
+  -- file and name; without it they are the piece's first line). Key: apiKey, apiKeyFile or apiKeyEnv.
   embedding = {api = 'openai', baseUrl = 'http://127.0.0.1:8092/v1', model = 'embeddinggemma-2', dimensions = 768},
   -- A decision model, or a list of them best first (the next is asked when one fails or is slower than its
   -- timeoutMs; one that failed rests for a minute). api: 'system-one', 'llama-cpp' or 'openai' (Decisions API).
@@ -77,8 +78,9 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
 Each Neovim spawns one small Node server (`bin/semantic-grep-server.mjs`, JSON-RPC over stdio; it exits with
 Neovim). It lists the files git lists (tracked and untracked, `.gitignore` respected), cuts them into functions,
 classes and methods with their doc comments using Neovim's tree-sitter in a headless `nvim -u NONE`, else into
-blocks between blank lines, and keeps one SQLite file per repository: the words in FTS5 and a vector per piece's
-hash and model, no copy of the code. Worktrees of a repository share it, and a save embeds only what changed.
+blocks cut where the indentation starts a statement or an object's key, and keeps one SQLite file per repository:
+the words in FTS5 and a vector per piece's hash and model, no copy of the code. Each piece is embedded with a title,
+its file and the name of what encloses it (`config-users.ts: _users: anna`); imports alone are no piece. Worktrees of a repository share it, and a save embeds only what changed.
 Meaning is a brute-force cosine over every vector (the pieces within 0.1 of the best); a single list fuses words and
 meaning by reciprocal rank. The same code is a library (`import {Meaning} from 'semantic-grep'`), and another
 program can be the picker's source instead of the server: see `lua/semantic-grep/init.lua`.

@@ -10,7 +10,7 @@ import {appendFileSync, mkdirSync, readFileSync, rmSync, statSync} from 'node:fs
 import {basename, dirname, join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 
-const SCHEMA = 3; // pairing-buddy's too: both read and write the same index file
+const SCHEMA = 4; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors
 export const PROJECT_DIR = '.semantic-grep';
 
 const git = (args, cwd) => new Promise(resolve => {

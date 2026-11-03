@@ -33,7 +33,7 @@ export async function fakeRerankServer({favourite = '', mode = 'ok', delayMs = 0
       const answers = {};
       for (const [name, question] of Object.entries(parsed.questions ?? {})) {
         const labels = Object.keys(question.criteria);
-        const weight = label => (state.mode === 'flat' ? 1 : state.favourite && question.criteria[label].includes(state.favourite) ? 20 : 1 / (Number(label) || 1));
+        const weight = label => (state.mode === 'flat' ? 1 : state.favourite && question.criteria[label].includes(state.favourite) ? 20 : 1 / (Number(label) || 1) ** 3);
         const sum = labels.reduce((total, label) => total + weight(label), 0);
         const probabilities = Object.fromEntries(labels.map(label => [label, weight(label) / sum]));
         const choice = labels.reduce((best, label) => (probabilities[label] > probabilities[best] ? label : best), labels[0]);

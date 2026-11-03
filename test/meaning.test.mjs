@@ -12,7 +12,7 @@ import {embeddingConfig, indexConfig} from '../src/config.mjs';
 import {HttpEmbedder, promptsOf} from '../src/embedder.mjs';
 import {indexPlace} from '../src/index-store.mjs';
 import {fuse, indexable, Meaning, ProjectIndex, projectFiles, searchTerms, words} from '../src/meaning.mjs';
-import {blocks, cut, PIECE, piecesOf, TreeSitter} from '../src/pieces.mjs';
+import {blocks, cut, importLines, nameOf, PIECE, piecesOf, TreeSitter, withoutImports} from '../src/pieces.mjs';
 import {fakeEmbedder, fakeEmbeddingServer, fakeProvider, fakeVector} from './fake-embedder.mjs';
 import {hasNvim, scratch, until} from './helpers.mjs';
 
@@ -58,7 +58,7 @@ test('a file is cut at a piece\'s size, at a blank line where it can; blocks bet
   assert.ok(chunks.slice(1).every((chunk, i) => chunk.from === chunks[i].to + 1), 'no line left out or counted twice');
   assert.deepEqual(cut([`${'x'.repeat(PIECE.chars * 2)}`, 'short']), [{from: 1, to: 1}, {from: 2, to: 2}], 'a line longer than a piece is one of its own');
   const prose = ['# Title', '', 'one', 'two', '', '}', '', 'three'];
-  assert.deepEqual(blocks(prose), [{from: 1, to: 8}], 'small blocks go together, up to a piece');
+  assert.deepEqual(blocks(prose).map(({from, to}) => ({from, to})), [{from: 1, to: 8}], 'small blocks go together, up to a piece');
   assert.deepEqual(blocks(['}', '', ')']), [], 'nothing but punctuation is no piece');
 });
 
@@ -66,12 +66,48 @@ test('pieces: tree-sitter\'s definitions where it found them, blocks between the
   const text = ['import x from "y";', '', '// Adds.', 'function add(a, b) {', '  return a + b;', '}', '', 'const z = 1;', ''].join('\n');
   const found = [{from: 3, to: 6, kind: 'function_declaration', name: 'add'}];
   assert.deepEqual(piecesOf(text, found).map(piece => [piece.from, piece.to, piece.kind, piece.name]), [
-    [1, 1, 'block', null], [3, 6, 'function_declaration', 'add'], [8, 8, 'block', null],
-  ]);
+    [1, 6, 'function_declaration', 'add'], [8, 8, 'block', 'z'],
+  ], 'the import alone is no piece: it goes with the function after it');
   assert.deepEqual(piecesOf(text).map(piece => [piece.from, piece.to]), [[1, 8]], 'no parser: blocks at blank lines');
   const long = Array.from({length: 150}, (_, i) => `  step${i}();`).join('\n');
   const parts = piecesOf(long, [{from: 1, to: 150, kind: 'function_declaration', name: 'big'}]);
   assert.ok(parts.length === 3 && parts.every(piece => piece.name === 'big' && piece.to - piece.from < PIECE.lines), 'each part keeps its name');
+});
+
+test('without a parser, data is cut where its indentation starts a key, never on a closer; each piece named by what encloses it', () => {
+  const users = Array.from({length: 40}, (_, i) => [`  user${i}: {`, `    email: 'user${i}@example.com',`, '    location: Location.Home,', '    groups: [', '      Group.Admin,', '    ],', '  },']).flat();
+  const text = ['import {Location} from "./places";', 'import {', '  Group,', '} from "./groups";', '', 'const _users = {', ...users, '};', '', 'export const ADMINS = pick(_users, Group.Admin);', ''].join('\n');
+  const pieces = piecesOf(text);
+  const lines = text.split('\n');
+  assert.ok(pieces.length > 3, 'the big object is cut');
+  for (const piece of pieces) {
+    const first = lines[piece.from - 1];
+    assert.ok(/\p{L}/u.test(first), `piece ${piece.from} starts on a line with letters: ${first}`);
+    assert.ok(!/^\s*[\]})]/.test(first), `piece ${piece.from} starts on no closer`);
+    if (piece.from > 1) assert.ok(piece.to - piece.from + 1 <= PIECE.lines + 1, 'a piece\'s size, and its closer'); // the first has the imports too
+  }
+  assert.ok(pieces.slice(1).every((piece, i) => piece.from > pieces[i].to), 'in order, none twice');
+  assert.ok(pieces.filter(piece => piece.from > 6 && piece.to < lines.length - 3).every(piece => /^  user\d+: \{$/.test(lines[piece.from - 1])), 'inside the object, each starts at a key');
+  assert.match(pieces[1].name, /^_users: user\d+/, 'named by what encloses it, then its keys');
+  assert.equal(pieces[0].from, 1, 'the imports go with the piece after them');
+  assert.equal(pieces.at(-1).name, 'ADMINS');
+});
+
+test('names, imports and what the models read of a piece', () => {
+  assert.equal(nameOf('export const googleIam: Config = {'), 'googleIam');
+  assert.equal(nameOf("    'it-duty': {"), 'it-duty');
+  assert.equal(nameOf('    [RoleGroup.Google]: [GoogleRole.Viewer],'), 'RoleGroup.Google');
+  assert.equal(nameOf("        new Membership(scope, `org-member-${name}`, {"), 'Membership org-member-${name}');
+  assert.equal(nameOf('  async createServiceAccounts(project, accounts) {'), 'createServiceAccounts');
+  assert.equal(nameOf('resource "google_project" "core" {'), 'google_project.core');
+  assert.equal(nameOf("test('adds two numbers', () => {"), 'test adds two numbers');
+  assert.equal(nameOf('    if (ready) {'), null);
+  assert.equal(nameOf('  ],'), null);
+  const imports = ['import a from "a";', 'import {', '  b,', '} from "b";', '// import {c} from "c";', 'const d = require("d");', 'use(a);'];
+  assert.deepEqual([...importLines(imports)], [0, 1, 2, 3, 4, 5]);
+  assert.equal(withoutImports(imports.join('\n')), 'use(a);');
+  assert.equal(withoutImports('import a from "a";'), 'import a from "a";', 'imports alone stay what they are');
+  assert.deepEqual(piecesOf('// import {x} from "y";\n\nexport const a = 1;\n').map(piece => [piece.from, piece.to]), [[1, 3]], 'commented-out imports are none of their own');
 });
 
 test('tree-sitter in a headless Neovim finds functions with their doc comments; a file it has no parser for goes by blank lines', {skip: !hasNvim && 'nvim not installed'}, async () => {
@@ -181,7 +217,7 @@ test('the index: SQLite in the data folder, words without a model, meaning once 
     writeFileSync(join(root, 'src', 'cart.js'), `${PRICES}\nexport const free = cart => total(cart) === 0;\n`);
     await again.saved(root, join(root, 'src', 'cart.js'));
     await embedded(again, root);
-    assert.deepEqual(embedder.calls.slice(calls).flatMap(call => call.texts).map(text => text.replace(/^title: (\S+) .*$/s, '$1')), ['src/cart.js'], 'only the changed file\'s piece is embedded');
+    assert.deepEqual(embedder.calls.slice(calls).flatMap(call => call.texts).map(text => text.replace(/^title: ([^:\s|]+).*$/s, '$1')), ['src/cart.js'], 'only the changed file\'s piece is embedded');
     await again.saved(root, join(root, 'secret.txt'));
     assert.ok(!again.indexes.get(root).files.has('secret.txt'), 'a file git ignores is not indexed when saved');
     assert.deepEqual(await again.turnOn(), {runtime: null, model: false}, 'on again downloads nothing');
@@ -214,7 +250,7 @@ test('worktrees of one repository share one index file and each piece\'s vector'
     await embedded(meaning, tree);
     const [one, two] = meaning.snapshot().indexes;
     assert.equal(one.path, two.path, 'one file for both');
-    assert.deepEqual(embedder.calls.flatMap(call => call.texts).slice(first).map(text => text.replace(/^title: (\S+) .*$/s, '$1')), ['src/cart.js'], 'the second embeds only what it changed');
+    assert.deepEqual(embedder.calls.flatMap(call => call.texts).slice(first).map(text => text.replace(/^title: ([^:\s|]+).*$/s, '$1')), ['src/cart.js'], 'the second embeds only what it changed');
     assert.equal((await meaning.search(tree, 'quantity')).results[0].file, 'src/cart.js');
     assert.equal((await meaning.words(root, 'branch')).results.length, 0, 'each worktree finds its own pieces');
     assert.equal((await meaning.words(tree, 'branch')).results.length, 1);
@@ -455,7 +491,12 @@ test('an "embedding" model at a /v1/embeddings: on at once, its prompts, its key
     assert.equal(server.requests.at(-1).dimensions, 128, 'dimensions are asked for');
     assert.equal(server.requests.at(-1).input[0], 'task: search result | query: x');
     assert.equal(sized.id, 'embeddinggemma-2/128', 'vectors are kept per model and size');
-    assert.equal(sized.document('min.js', 'x'.repeat(50_000)), `title: none | text: ${'x'.repeat(PIECE.chars)}`, 'a piece of one long line is cut to what the model reads');
+    assert.equal(sized.document('min.js', 'x'.repeat(50_000)), `title: min.js | text: ${'x'.repeat(PIECE.chars)}`, 'a piece of one long line is cut to what the model reads');
+    assert.equal(sized.document('src/users.ts', 'anna: {}', '_users'), 'title: src/users.ts: _users | text: anna: {}', 'titled by its file and what encloses it');
+    const plain = new HttpEmbedder({entry: {...entry, model: 'nomic-embed-code'}});
+    assert.equal(plain.document('src/users.ts', 'anna: {}', '_users'), 'src/users.ts: _users\nanna: {}', 'a model without a title in its prompt reads it first');
+    const own = new HttpEmbedder({entry: {...entry, model: 'm', documentPrefix: 'doc [{title}]: '}});
+    assert.equal(own.document('a.js', 'x', null), 'doc [a.js]: x', 'the config\'s prompt may place it');
   } finally {
     await meaning.close();
     await server.stop();
@@ -465,7 +506,7 @@ test('an "embedding" model at a /v1/embeddings: on at once, its prompts, its key
 
 test('the prompts each model was trained with, the config\'s own first; the embedding entry and index are checked', () => {
   assert.deepEqual(promptsOf({model: 'nomic-embed-text-v1.5'}), {query: 'search_query: ', document: 'search_document: '});
-  assert.deepEqual(promptsOf({model: 'EmbeddingGemma-300m'}), {query: 'task: search result | query: ', document: 'title: none | text: '});
+  assert.deepEqual(promptsOf({model: 'EmbeddingGemma-300m'}), {query: 'task: search result | query: ', document: 'title: {title} | text: '});
   assert.match(promptsOf({model: 'Qwen3-Embedding-0.6B'}).query, /^Instruct: .*\nQuery: $/);
   assert.deepEqual(promptsOf({model: 'jina-code', queryPrefix: 'q: '}), {query: 'q: ', document: ''});
   assert.equal(embeddingConfig(undefined), null);
