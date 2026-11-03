@@ -3,7 +3,7 @@
 // at that address is used as it is, and left running.
 import {spawn} from 'node:child_process';
 import {readdirSync, statSync} from 'node:fs';
-import {join} from 'node:path';
+import {basename, join} from 'node:path';
 
 /** Whether a llama.cpp server answers at `baseUrl`: "up", "loading" (503 while it loads its model) or null. */
 async function answers(baseUrl) {
@@ -48,6 +48,7 @@ function find(dir, name, depth = 4) {
  */
 export async function serveProfile(profile, {models, llamaServer = 'llama-server', env = {}, log = () => {}}) {
   const children = [];
+  const servers = {}; // role -> what ran it: started here (its GGUF, args and env) or found answering
   const ended = child => child.exitCode !== null || child.signalCode !== null;
   const stop = async () => {
     process.off('SIGINT', signalled);
@@ -71,6 +72,7 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
       const there = await answers(entry.baseUrl);
       if (there) { // someone else's, used as it is: its model is whatever it serves
         log(`${role}: a server answers at ${entry.baseUrl} already; it is used, as ${entry.model}`);
+        servers[role] = {started: false};
         await upAt(entry.baseUrl, role);
         continue;
       }
@@ -80,6 +82,7 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
       const {hostname, port} = new URL(entry.baseUrl);
       const args = ['--model', gguf, '--host', hostname, '--port', port, '--no-webui', ...spec.args];
       log(`${role}: ${llamaServer} ${args.join(' ')}`);
+      servers[role] = {started: true, gguf: basename(gguf), args: spec.args, env: profile.serve.env ?? {}, ...(env.CUDA_VISIBLE_DEVICES ?? process.env.CUDA_VISIBLE_DEVICES ? {devices: env.CUDA_VISIBLE_DEVICES ?? process.env.CUDA_VISIBLE_DEVICES} : {})};
       const child = spawn('nice', ['-n', '19', llamaServer, ...args], {stdio: ['ignore', 'ignore', 'pipe'], env: {...process.env, ...profile.serve.env, ...env}});
       let tail = '';
       child.stderr.on('data', chunk => { tail = (tail + chunk).slice(-2000); });
@@ -92,5 +95,5 @@ export async function serveProfile(profile, {models, llamaServer = 'llama-server
     await stop();
     throw error;
   }
-  return {stop};
+  return {stop, servers};
 }

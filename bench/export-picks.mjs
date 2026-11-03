@@ -11,7 +11,7 @@
 // not a measure of what is missed.
 import {existsSync, mkdirSync, realpathSync, writeFileSync} from 'node:fs';
 import {homedir} from 'node:os';
-import {basename, dirname, join, relative, resolve} from 'node:path';
+import {basename, dirname, isAbsolute, join, relative, resolve, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {cacheDir, options} from './common.mjs';
 
@@ -27,7 +27,7 @@ const {DatabaseSync} = await import('node:sqlite');
 const {indexPlace, learnedPath} = await import('../src/index-store.mjs');
 
 if (!flags.root) {
-  log('usage: npm run bench:export -- --root DIR [--data-dir DIR] [--index data|project] [--project-dir NAME] [--out FILE]');
+  log('usage: npm run bench:export -- --root DIR [--data-dir DIR] [--index data|project] [--project-dir NAME] [--out FILE] [--cache DIR]');
   process.exit(2);
 }
 const root = realpathSync(resolve(flags.root));
@@ -39,7 +39,10 @@ if (!existsSync(learned)) throw new Error(`nothing learned for ${root} (no ${lea
 const out = resolve(flags.out ?? join(cacheDir(flags.cache), 'private', `${basename(root)}-picks.jsonl`));
 // Where it really goes, through links: the nearest folder of it that exists, resolved.
 const real = path => (existsSync(path) ? realpathSync(path) : join(real(dirname(path)), basename(path)));
-const inside = dir => !relative(realpathSync(dir), real(out)).startsWith('..');
+const inside = dir => {
+  const path = relative(realpathSync(dir), real(out));
+  return !isAbsolute(path) && path !== '..' && !path.startsWith(`..${sep}`);
+};
 const here = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 if (inside(here) || inside(root)) throw new Error(`${out} is inside ${inside(here) ? 'semantic-grep' : 'the project'}: a private questions file goes elsewhere`);
 

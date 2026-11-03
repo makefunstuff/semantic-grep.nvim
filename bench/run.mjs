@@ -46,6 +46,8 @@ const profile = profiles[flags.profile];
 if (!profile) throw new Error(`no profile "${flags.profile}" in ${flags.profiles ?? 'bench/profiles.json'} (${Object.keys(profiles).join(', ')})`);
 const embedding = embeddingConfig(profile.embedding ?? null);
 const rerank = rerankConfig(profile.rerank ?? null);
+const unknown = flags.modes ? String(flags.modes).split(',').filter(mode => !MODES.includes(mode)) : [];
+if (unknown.length) throw new Error(`no mode ${unknown.join(', ')}: the modes are ${MODES.join(', ')}`);
 const modes = (flags.modes ? String(flags.modes).split(',') : MODES).filter(mode => MODES.includes(mode)
   && (embedding || !['meaning', 'fused'].includes(mode)) && (rerank || mode !== 'rerank'));
 if (!modes.length) throw new Error(`no mode to run: ${flags.modes ? `--modes ${flags.modes} with` : ''} profile ${flags.profile} (${MODES.join(', ')}; meaning and fused need an embedding model, rerank a reranker)`);
@@ -123,6 +125,7 @@ try {
     bench: 1,
     profile: flags.profile,
     models: {embedding: redact(embedding), rerank: rerank?.map(redact) ?? null}, // as the plugin would take them, defaults filled
+    servers: served.servers, // the local models: started here from which GGUF, or found answering
     when: new Date().toISOString(),
     node: process.version,
     semanticGrep: code.commit, changed: code.changed,

@@ -78,7 +78,9 @@ A sample of 37 questions (one in ten, seeded) was read by hand against its label
 searches and answered by their label; one (`telescope-037`, "picker listing ctags entries…") is labelled with a block
 that holds that picker among two others, a few name the thing tested ("test that …") rather than the code, and a
 handful of thin pieces (an old helper kept for compatibility, a link-only docs section) are easy to miss for any
-search. Recall here is a floor: a search can find a right answer the labels do not list.
+search. Recall here is a floor: a search can find a right answer the labels do not list. Some questions use the
+plain word a file is named by ("config", "yaml", "computed": 38 of 372), and one names an identifier (`hono-003`,
+"createElement"); words alone owe some of their `vague` score to them.
 
 ## Your own searches
 
@@ -124,8 +126,10 @@ been measured yet, for want of a key. With one:
 
 ## Results
 
-The baseline, 2026-11-03: each run from a fresh index, on this repository's commit `2f455a2` with nothing changed
-(Node 25.2, 50 tree-sitter parsers); the runs, with every question's rank and time, are
+The baseline, 2026-11-03, on the code of this change with nothing uncommitted (Node 25.2, 50 tree-sitter parsers);
+`laptop` and `beefy` built their indexes afresh and started their own llama.cpp servers from the profiles' `serve`
+entries (EmbeddingGemma 300M Q8_0 and d1-2B Q8_0 on the CPU; Qwen3-Embedding-4B Q8_0 and Qwen3-Reranker-0.6B Q8_0 on
+one GPU); the runs, with every question's rank and time, are
 [`words`](../bench/results/words-2026-11-03.json), [`laptop`](../bench/results/laptop-2026-11-03.json) and
 [`beefy`](../bench/results/beefy-2026-11-03.json). Machine: 12 cores, 125 GB, two RTX 5060 Ti 16 GB, shared with other
 work; one run at a time, every model at nice 19. The words' latency is the `words` run's; within the other runs it is
