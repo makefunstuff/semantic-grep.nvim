@@ -112,6 +112,10 @@ test('a file\'s note, written from its pieces\' notes, titles its small pieces; 
     const total = index.byFile.get('src/billing/cart.js').find(piece => piece.name === 'total');
     assert.equal(total.key, pieceKey(total.hash, 'What a basket costs.\n'));
     assert.ok(index.vectors.has(total.key));
+    assert.ok(embedder.texts.includes('title: src/billing/cart.js (What a basket costs.): total | text: Note on total.'), 'its note embedded again, titled with it');
+    const before = index.learnedVectors.size;
+    index.pruneLearned();
+    assert.equal(index.learnedVectors.size, 2, `the notes' vectors titled before are gone (${before} before)`);
   } finally {
     await meaning.close();
   }

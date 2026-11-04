@@ -223,7 +223,7 @@ of the code before (`*-before.json`: the titles and fusion of 2026-11-03, the la
 on this change's code with its context switched off, those with notes on the code before it); the runs after are of
 this change's last commit, with nothing uncommitted; the profiles they ran with are in its
 `profiles.json` (the laptop's model on a GPU, the same vectors as on the CPU; beefy's on servers already running).
-Each difference has a 95% interval from a paired bootstrap over the questions.
+Each difference has a 95% interval from a paired bootstrap over the questions (`bench/paired.mjs`).
 
 ### Context for small pieces
 
@@ -302,30 +302,36 @@ All 372 questions; MRR, with recall@1 in brackets, and the difference's 95% inte
 
 | profile | mode | pieces before | after | difference | files before | after | difference |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| laptop | fused | 0.595 (0.47) | 0.592 (0.46) | −0.004 [−0.013, 0.010] | 0.765 (0.65) | **0.801** (0.69) | **+0.036** [0.016, 0.059] |
-| beefy | fused | 0.622 (0.50) | 0.620 (0.50) | −0.002 [−0.014, 0.008] | 0.781 (0.65) | **0.800** (0.68) | +0.018 [−0.004, 0.035] |
-| beefy | rerank | 0.641 (0.51) | 0.643 (0.51) | +0.003 [−0.007, 0.009] | 0.796 (0.67) | 0.801 (0.68) | +0.004 [−0.003, 0.010] |
+| laptop | fused | 0.595 (0.47) | 0.592 (0.46) | −0.004 [−0.016, 0.009] | 0.765 (0.65) | **0.801** (0.69) | **+0.036** [0.013, 0.060] |
+| beefy | fused | 0.622 (0.50) | 0.620 (0.50) | −0.002 [−0.016, 0.012] | 0.781 (0.65) | **0.800** (0.68) | **+0.018** [0.001, 0.036] |
+| beefy | rerank | 0.641 (0.51) | 0.643 (0.51) | +0.003 [−0.007, 0.012] | 0.796 (0.67) | 0.801 (0.68) | +0.004 [−0.002, 0.012] |
 
 With notes (flask, cobra and fd, 189 questions; each profile's writer, and its file notes):
 
 | profile | mode | pieces before | after | difference | files before | after | difference |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| laptop, Qwen3.5-2B's notes | fused | 0.594 | 0.607 | +0.013 [−0.010, 0.037] | 0.766 | **0.800** | **+0.034** [0.011, 0.069] |
-| beefy, Qwen3-4B's notes | fused | 0.623 | 0.620 | −0.003 [−0.031, 0.021] | 0.825 | 0.823 | −0.001 [−0.021, 0.025] |
-| beefy, Qwen3-4B's notes | rerank | 0.643 | 0.643 | +0.000 [−0.011, 0.009] | 0.810 | 0.813 | +0.003 [−0.010, 0.016] |
+| laptop, Qwen3.5-2B's notes | fused | 0.594 | 0.607 | +0.013 [−0.012, 0.039] | 0.766 | **0.800** | **+0.034** [0.001, 0.069] |
+| beefy, Qwen3-4B's notes | fused | 0.623 | 0.620 | −0.003 [−0.033, 0.027] | 0.825 | 0.823 | −0.001 [−0.030, 0.028] |
+| beefy, Qwen3-4B's notes | rerank | 0.643 | 0.643 | +0.000 [−0.010, 0.011] | 0.810 | 0.813 | +0.003 [−0.009, 0.016] |
+
+`node bench/paired.mjs BEFORE.json AFTER.json` gives these, with recall@1 and recall@5 and each style of question
+(10,000 draws of the questions from a fixed seed).
 
 - **The laptop's files view gains most**: the right file first for 69% of the questions (65% before), among the first
-  five for 95% (92%); on the `test` questions alone, MRR 0.754 to 0.799. In the same time: 5.6 / 8.6 ms (p50 / p95)
-  for the files view on the GPU, as before within a millisecond or two.
-- **MRR and recall@1 hold or gain for every profile; recall@5 of beefy's pieces is a little lower.** The pieces'
-  recall@5: laptop 0.761 to 0.761; beefy fused 0.798 to 0.788 (−0.011 [−0.027, 0.003]), reranked 0.828 to 0.820
-  (−0.008 [−0.024, 0.003]), with notes fused 0.804 to 0.767 (−0.037 [−0.079, 0.000]), reranked 0.857 to 0.847. The
-  files view's recall@5: laptop 0.922 to 0.946 (+0.024 [0.000, 0.046]), beefy fused 0.946 to 0.946, reranked 0.962 to
-  0.954 (−0.008 [−0.016, 0.000]). Every one of those drops is within its interval of none; they are the same
-  questions' right piece moving from fifth to sixth or so, as the right one moves up for others.
-- **By style**, the vague questions gain in the pieces' list with notes (laptop +0.050 [0.004, 0.099]) and with beefy's
-  reranker (+0.012 [0.004, 0.027]); the multi-hop ones lose a little with notes (laptop −0.010, beefy fused −0.053
-  [−0.107, −0.010]): the price of context the variants above showed. Beefy's reranked list, what it shows, keeps them.
+  five for 95% (92%; +0.024 [0.003, 0.046]); on the `test` questions alone, MRR 0.754 to 0.799. In the same time: 5.6
+  / 8.6 ms (p50 / p95) for the files view on the GPU, as before within a millisecond or two.
+- **Nothing moves beyond its interval for the worse on the whole, by MRR, recall@1 or recall@5, for any profile.** Some
+  move down within it: the pieces' recall@1 on the laptop (0.470 to 0.460, −0.011 [−0.030, 0.008]), the pieces'
+  recall@5 on beefy (fused −0.011 [−0.030, 0.008], reranked −0.008 [−0.022, 0.005], with notes fused 0.804 to 0.767,
+  −0.037 [−0.074, 0.000], and the laptop's with notes −0.011 [−0.048, 0.026]), beefy's reranked files at recall@5
+  (0.962 to 0.954, −0.008 [−0.019, 0.000]), and with notes its fused files at recall@1 (0.709 to 0.698). A few
+  questions leave the first five for each that enters it, some by far (with beefy's notes, `flask-006` from second to
+  seventeenth, `cobra-006` from fourth to past thirty): context moves the pieces of a file closer together, and a
+  question about one of them can find its neighbours first.
+- **By style**, the vague questions gain in the pieces' list with notes (laptop +0.050 [0.005, 0.101]) and with beefy's
+  reranker (+0.012 [0.003, 0.025]); the multi-hop ones lose with notes on beefy's fused list (−0.053 [−0.105, −0.009]),
+  the price of context the variants above showed. Beefy's reranked list, what it shows, keeps them (−0.004 [−0.019,
+  0.008]).
 - `cloud` is not measured, for want of a key; its models get the default settings, and a search kept is fused as a
   list of its own for them too.
 

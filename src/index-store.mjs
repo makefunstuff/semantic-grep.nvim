@@ -310,6 +310,14 @@ export class IndexStore {
     else this.db.prepare('DELETE FROM vectors WHERE hash NOT IN (SELECT key FROM pieces)').run();
   }
 
+  /**
+   * The vectors of what was learned that `model` does not use any more: another model's, and its own whose key none of
+   * `keys` is (a search dropped from those kept, a note whose piece or title changed).
+   */
+  pruneLearned(model, keys) {
+    this.db.prepare('DELETE FROM learned.vectors WHERE model != ? OR key NOT IN (SELECT value FROM json_each(?))').run(model, JSON.stringify([...keys]));
+  }
+
   /** Worktrees whose folders are gone leave the index, with their pieces. */
   forgetTrees(exists) {
     const trees = this.db.prepare('SELECT DISTINCT tree FROM files').all().map(row => row.tree);

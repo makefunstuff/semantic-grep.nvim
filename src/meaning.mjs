@@ -275,10 +275,24 @@ export class ProjectIndex {
     return [...this.extrasById.values()].filter(row => !this.learnedVectors.has(this.extraKey(row)) && (row.kind === 'pick' || this.pieceOfExtra(row)));
   }
 
+  /**
+   * The learned vectors of the embedder's model that no row learned yields now leave, the file and memory. Not while
+   * a note's piece is not in this worktree: its vector, titled in another worktree, is not this one's to judge.
+   */
+  pruneLearned() {
+    if (!this.embedder || !this.extrasById || this.closed) return;
+    if ([...this.extrasById.values()].some(row => row.kind === 'note' && !this.pieceOfExtra(row))) return;
+    const keys = new Set([...this.extrasById.values()].filter(row => row.kind !== 'file').map(row => this.extraKey(row)));
+    this.store.pruneLearned(this.model, keys);
+    for (const key of [...this.learnedVectors.keys()]) if (!keys.has(key)) this.learnedVectors.delete(key);
+    this.matrix = null;
+  }
+
   /** Embeds what was learned and waits, a batch of it; false when none waits. */
   async stepLearned() {
     const todo = this.learnedPending().slice(0, 16);
     if (!todo.length) return false;
+    const keys = todo.map(row => this.extraKey(row)); // as embedded: a piece read again meanwhile has another title
     const texts = todo.map(row => {
       if (row.kind === 'pick') return this.embedder.query(row.text);
       const piece = this.pieceOfExtra(row);
@@ -286,7 +300,7 @@ export class ProjectIndex {
     });
     const vectors = await this.embed(texts);
     if (this.closed) return false;
-    const entries = todo.map((row, i) => [this.extraKey(row), vectors[i]]);
+    const entries = todo.map((row, i) => [keys[i], vectors[i]]);
     this.store.putLearnedVectors(this.model, entries);
     for (const [key, vector] of entries) this.learnedVectors.set(key, vector);
     this.matrix = null;
@@ -781,6 +795,7 @@ export class Meaning {
       await index.scan();
       index.scanned = true;
       index.store.prune(index.embedder ? index.model : null);
+      index.pruneLearned();
       if (first) {
         const {chunks, embedded} = index.progress();
         index.told = this.state === 'on' && embedded < chunks;
@@ -831,6 +846,7 @@ export class Meaning {
         await index.scan();
         if (!index.closed) {
           index.store.prune(index.embedder ? index.model : null);
+          index.pruneLearned();
           index.store.checkpoint();
           index.trim();
         }
@@ -1320,6 +1336,7 @@ export class Meaning {
               if (tries >= NOTES_TRIES) this.notesFailed.add(id);
             }
           }
+          if (!unanswered) this.notesRestMs = NOTES_REST_MS; // it answers (with no note at times): an outage after is new
           if (!notes.length && unanswered) {
             this.notesRestUntil = this.now() + this.notesRestMs;
             this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(this.notesRestMs)}`);

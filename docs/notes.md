@@ -74,7 +74,7 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   reasoning effort, not this way), for a project worth $2 a thousand pieces.
 - **With each profile's own models** (2026-11-04, on this change's titles and fusion: docs/benchmark.md, "Context and
   tuning"; the same 189 questions, each profile's writer, with its notes on the files): the laptop's Qwen3.5-2B takes
-  the pieces' MRR from 0.573 to 0.607 (plain questions +0.060 [0.004, 0.120]) and leaves the files view where it is
+  the pieces' MRR from 0.573 to 0.607 (+0.035 [0.000, 0.071]; plain questions +0.060 [−0.004, 0.126]) and leaves the files view where it is
   (0.800 to 0.800), its tuned fusion having taken the files most of the way already. Beefy's Qwen3-4B, with its
   Qwen3-Embedding-8B, adds to the fused list (pieces 0.597 to 0.620, files 0.799 to 0.823) and nothing to what its
   reranker gives (pieces 0.645 to 0.643, files 0.828 to 0.813, within the noise): a strong embedder and a reranker
