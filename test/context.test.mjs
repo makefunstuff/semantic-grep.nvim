@@ -7,7 +7,8 @@ import {mkdirSync, realpathSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {test} from 'node:test';
 import {pieceTitle} from '../src/embedder.mjs';
-import {contextFor, isSmall, Meaning, pieceKey} from '../src/meaning.mjs';
+import {contextFor, isSmall, Meaning, pieceKey, ProjectIndex} from '../src/meaning.mjs';
+import {TUNING} from '../src/embedder.mjs';
 import {contextOf, fileSummary, headOf, piecesOf, sentence, TreeSitter} from '../src/pieces.mjs';
 import {fakeVector} from './fake-embedder.mjs';
 import {hasNvim, scratch, until} from './helpers.mjs';
@@ -156,6 +157,14 @@ test('a file that needs no note of its own is not read again for one until it ch
   } finally {
     await meaning.close();
   }
+});
+
+test('a host embedder\'s own tuning goes over its model\'s, field by field', () => {
+  const index = new ProjectIndex({root: '/project', store: null, embedder: {id: 'host-model', tuning: {band: undefined, pickNear: 0.9, files: {depth: 30}}}});
+  assert.equal(index.tuning.band, TUNING.band, 'unset: the model\'s');
+  assert.equal(index.tuning.pickNear, 0.9);
+  assert.deepEqual(index.tuning.files, {...TUNING.files, depth: 30});
+  assert.deepEqual(index.tuning.fusion, TUNING.fusion);
 });
 
 test('the notes writer starts near the file someone is in', async () => {

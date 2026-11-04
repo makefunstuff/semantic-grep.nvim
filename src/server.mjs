@@ -19,7 +19,7 @@
 //   rebuild {root}                                -> {path}
 //   chosen {root, query, results}                 -> {}                the piece opened: booked, and learned
 //   notes {root, limit?}                          -> {pieces, pending, noted} pieces without a note, for an agent
-//   addNotes {root, notes: [{hash, note}]}        -> {added, unknown}
+//   addNotes {root, notes: [{hash, note} | {file, note}]} -> {added, unknown}  on pieces, or on files
 //   status {}                                     -> the Meaning's snapshot
 //   check {}                                      -> {profile, embedding, rerank, notes} the models asked once each, for :checkhealth
 // Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); visited {path} (to the server: the

@@ -200,7 +200,12 @@ export class ProjectIndex {
   get model() { return this.embedder?.id ?? 'none'; }
 
   /** The embedder's band, pickNear, fusion and files: its own, over its model's (a host's embedder may say none, or some). */
-  get tuning() { return {...tuningOf({model: this.embedder?.id}), ...this.embedder?.tuning}; }
+  get tuning() {
+    const model = tuningOf({model: this.embedder?.id});
+    const own = this.embedder?.tuning ?? {};
+    const set = object => Object.fromEntries(Object.entries(object ?? {}).filter(([, value]) => value !== undefined));
+    return {...model, ...set(own), fusion: {...model.fusion, ...set(own.fusion)}, files: {...model.files, ...set(own.files)}};
+  }
 
   /** What the store has of this worktree: its files, pieces and their vectors, made here or in another worktree. */
   load() {
@@ -633,12 +638,13 @@ export class ProjectIndex {
    * The pieces a search of `mode` ranks for the files view, best first: 'words' (pieces with any of the words, by BM25:
    * a sentence's words are seldom all in one piece), 'meaning' (the query's vector against every piece's, within `band`
    * below the best, the model's by default) or 'fused' (meaning, the words and the pieces opened before, by reciprocal
-   * rank as the model's `files` says: with every word or any of them, at its k). The words alone without an embedder.
+   * rank as `files` says, the model's by default: with every word or any of them, at its k). The words alone without an
+   * embedder.
    */
-  async ranking(query, mode, {limit = this.tuning.files.depth, band} = {}) {
+  async ranking(query, mode, {limit = this.tuning.files.depth, band, files = this.tuning.files} = {}) {
     if (mode === 'words' || !this.embedder) return this.wordRanking(query, limit, {any: true});
     const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
-    const {k, any, words: weight} = this.tuning.files;
+    const {k, any, words: weight} = files;
     const {lists, weights} = this.fusing(q, query, {list: limit, band, any, weight});
     if (mode === 'meaning') return [...new Set([...lists[2], ...lists[0]])].slice(0, limit);
     return fuse(lists, k, weights).slice(0, limit);
@@ -1099,8 +1105,8 @@ export class Meaning {
         const rerank = mode === 'rerank' && this.reranker?.available;
         if (!rerank) answer.results = await index.fileSearch(query, {mode: mode === 'rerank' ? 'fused' : mode, limit});
         else {
-          // As deep as the defaults the reranked list is ranked by as files (see fileSearch).
-          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: TUNING.files.depth, band: 2})).map(piece => index.result(piece)));
+          // Fused, and ranked as files once reranked, by the default settings: those measured with a reranker (see fileSearch).
+          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: TUNING.files.depth, band: 2, files: TUNING.files})).map(piece => index.result(piece)));
           const done = await this.reranked(index, query, pieces);
           answer.rerank = done.rerank;
           answer.results = await index.fileSearch(query, {limit, results: done.results});
@@ -1181,8 +1187,8 @@ export class Meaning {
   /**
    * The pieces of `root` without a note, for a coding agent to write one each (see `addNotes`): `{pieces: [{hash, file,
    * from, to, name, text}], pending, noted}`, at most `limit` of them, those near the files someone was in first
-   * (nearFirst); `pending` counts them all (the files only as far as the list goes). Among them, once every piece of
-   * a file has a note, the file itself, `{kind:
+   * (nearFirst); `pending` counts them all (past the list, the files not yet looked at too). Among them, once every
+   * piece of a file has a note, the file itself, `{kind:
    * 'file', file, notes}`, for a note on what it is for, written from its pieces' notes: only a file of several pieces
    * that says nothing of itself (fileSummary) and has small pieces for it to title (contextFor). `skip`: pieces (hashes) and files
    * (`file:<path>`) not to list.
@@ -1213,8 +1219,10 @@ export class Meaning {
         if (text === undefined || pieceHash(piece.file, text, piece.name) !== piece.hash) continue; // changed since: read again first
         pieces.push({hash: piece.hash, file: piece.file, from: piece.from, to: piece.to, name: piece.name, text});
       }
-      // One piece: its note says it. The list full: the files are looked at again the next time.
-      if (open || own.length < 2 || pieces.length >= limit || index.fileNotes.has(file) || skip?.has(`file:${file}`)) continue;
+      // One piece: its note says it.
+      if (open || own.length < 2 || index.fileNotes.has(file) || skip?.has(`file:${file}`)) continue;
+      // The list full: a file not yet found to need none counts as pending, read the next time.
+      if (pieces.length >= limit) { if (index.noFileNote?.get(file) !== index.files.get(file)?.mtimeMs) pending += 1; continue; }
       // A file found to need none (it says what it is for itself, or has no small piece) is not read again until it changes.
       const mtimeMs = index.files.get(file)?.mtimeMs;
       if (index.noFileNote?.get(file) === mtimeMs) continue;

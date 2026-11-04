@@ -16,7 +16,7 @@ import {appendFileSync, mkdirSync, readFileSync, rmSync, statSync} from 'node:fs
 import {basename, dirname, join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 
-const SCHEMA = 5; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors, 5 adds what encloses a piece to its title
+const SCHEMA = 6; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors, 6 adds what encloses a piece to its title
 export const PROJECT_DIR = '.semantic-grep';
 const MAX_PICKS = 5000; // the searches kept, newest first
 const NOTE_CHARS = 1000;
