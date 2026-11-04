@@ -221,7 +221,7 @@ files, 2026-11-03 ([runs](../bench/results/notes-2026-11-03/); docs/notes.md has
 [`bench/results/context-2026-11-04/`](../bench/results/context-2026-11-04/), each against the same questions asked
 of the code before (`*-before.json`: the titles and fusion of 2026-11-03, the laptop's and beefy's without notes run
 on this change's code with its context switched off, those with notes on the code before it); the runs after are of
-this change's last commit, with nothing uncommitted; the profiles they ran with are in its
+this change's commit `8d706bd`, with nothing uncommitted (the one after it prunes stale vectors and changes no ranking); the profiles they ran with are in its
 `profiles.json` (the laptop's model on a GPU, the same vectors as on the CPU; beefy's on servers already running).
 Each difference has a 95% interval from a paired bootstrap over the questions (`bench/paired.mjs`).
 
