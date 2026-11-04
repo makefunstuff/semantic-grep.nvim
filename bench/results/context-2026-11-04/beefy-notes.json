@@ -19,30 +19,10 @@
   ]
  },
  "servers": {},
- "when": "2026-11-04T08:12:03.275Z",
+ "when": "2026-11-04T09:02:51.801Z",
  "node": "v25.2.1",
- "semanticGrep": "be91cd2",
- "changed": [
-  "README.md",
-  "bench/common.mjs",
-  "bench/run.mjs",
-  "bin/semantic-grep-server.mjs",
-  "docs/notes.md",
-  "docs/profiles.md",
-  "lua/semantic-grep/init.lua",
-  "package.json",
-  "src/embedder.mjs",
-  "src/index-store.mjs",
-  "src/meaning.mjs",
-  "src/notes.mjs",
-  "src/pieces.lua",
-  "src/pieces.mjs",
-  "src/profiles.mjs",
-  "src/server.mjs",
-  "test/meaning.test.mjs",
-  "test/notes.test.mjs",
-  "test/profiles.test.mjs"
- ],
+ "semanticGrep": "8d706bd",
+ "changed": [],
  "questions": {
   "file": "bench/questions.jsonl",
   "sha1": "cd36c3cc0fac",
@@ -57,9 +37,9 @@
    "recall1": 0.111,
    "recall5": 0.164,
    "recall10": 0.164,
-   "mrr": 0.132,
-   "p50": 4.3,
-   "p95": 5.8
+   "mrr": 0.133,
+   "p50": 5.1,
+   "p95": 6.9
   },
   "meaning": {
    "n": 189,
@@ -67,8 +47,8 @@
    "recall5": 0.757,
    "recall10": 0.81,
    "mrr": 0.608,
-   "p50": 29.3,
-   "p95": 32.7
+   "p50": 29.9,
+   "p95": 32.5
   },
   "fused": {
    "n": 189,
@@ -76,46 +56,46 @@
    "recall5": 0.767,
    "recall10": 0.82,
    "mrr": 0.62,
-   "p50": 30.1,
-   "p95": 32.8
+   "p50": 30.8,
+   "p95": 33.8
   },
   "rerank": {
    "n": 189,
-   "recall1": 0.503,
+   "recall1": 0.497,
    "recall5": 0.847,
    "recall10": 0.889,
-   "mrr": 0.646,
-   "p50": 153.5,
-   "p95": 227
+   "mrr": 0.643,
+   "p50": 154.2,
+   "p95": 227.7
   }
  },
  "files": {
   "words": {
    "n": 189,
    "recall1": 0.54,
-   "recall5": 0.915,
-   "recall10": 0.968,
-   "mrr": 0.688,
-   "p50": 4.5,
-   "p95": 6.6
+   "recall5": 0.884,
+   "recall10": 0.952,
+   "mrr": 0.683,
+   "p50": 4.9,
+   "p95": 8.2
   },
   "meaning": {
    "n": 189,
    "recall1": 0.693,
-   "recall5": 0.963,
+   "recall5": 0.968,
    "recall10": 0.995,
-   "mrr": 0.82,
-   "p50": 31.2,
-   "p95": 34.1
+   "mrr": 0.821,
+   "p50": 32.1,
+   "p95": 35.5
   },
   "fused": {
    "n": 189,
    "recall1": 0.698,
-   "recall5": 0.963,
+   "recall5": 0.968,
    "recall10": 0.995,
    "mrr": 0.823,
-   "p50": 30.2,
-   "p95": 33.2
+   "p50": 31,
+   "p95": 33.4
   },
   "rerank": {
    "n": 189,
@@ -123,8 +103,8 @@
    "recall5": 0.984,
    "recall10": 0.995,
    "mrr": 0.813,
-   "p50": 199.4,
-   "p95": 239
+   "p50": 200.1,
+   "p95": 237.2
   }
  },
  "repos": {
@@ -132,9 +112,9 @@
    "commit": "49943b5a94413a530761350f04e896f76e8d620e",
    "files": 227,
    "pieces": 1589,
-   "embedded": 0,
-   "indexMs": 57,
-   "msPer1k": null,
+   "embedded": 1589,
+   "indexMs": 117902,
+   "msPer1k": 74199,
    "questions": 66,
    "modes": {
     "words": {
@@ -142,9 +122,9 @@
      "recall1": 0.091,
      "recall5": 0.212,
      "recall10": 0.212,
-     "mrr": 0.142,
-     "p50": 3,
-     "p95": 3.8
+     "mrr": 0.143,
+     "p50": 3.2,
+     "p95": 4
     },
     "meaning": {
      "n": 66,
@@ -152,8 +132,8 @@
      "recall5": 0.773,
      "recall10": 0.833,
      "mrr": 0.609,
-     "p50": 30.3,
-     "p95": 33.1
+     "p50": 30.8,
+     "p95": 33.9
     },
     "fused": {
      "n": 66,
@@ -161,8 +141,8 @@
      "recall5": 0.773,
      "recall10": 0.833,
      "mrr": 0.607,
-     "p50": 31,
-     "p95": 33.2
+     "p50": 31.3,
+     "p95": 34.5
     },
     "rerank": {
      "n": 66,
@@ -170,19 +150,19 @@
      "recall5": 0.848,
      "recall10": 0.894,
      "mrr": 0.62,
-     "p50": 167.5,
-     "p95": 225.8
+     "p50": 168.3,
+     "p95": 226.5
     }
    },
    "fileModes": {
     "words": {
      "n": 66,
      "recall1": 0.515,
-     "recall5": 0.894,
-     "recall10": 0.97,
-     "mrr": 0.662,
-     "p50": 3.6,
-     "p95": 6.4
+     "recall5": 0.848,
+     "recall10": 0.939,
+     "mrr": 0.654,
+     "p50": 3.7,
+     "p95": 8.4
     },
     "meaning": {
      "n": 66,
@@ -190,8 +170,8 @@
      "recall5": 0.939,
      "recall10": 1,
      "mrr": 0.763,
-     "p50": 32.2,
-     "p95": 35.4
+     "p50": 32.7,
+     "p95": 36.7
     },
     "fused": {
      "n": 66,
@@ -199,8 +179,8 @@
      "recall5": 0.939,
      "recall10": 1,
      "mrr": 0.758,
-     "p50": 31.4,
-     "p95": 33.9
+     "p50": 31.3,
+     "p95": 33.8
     },
     "rerank": {
      "n": 66,
@@ -208,8 +188,8 @@
      "recall5": 0.97,
      "recall10": 1,
      "mrr": 0.756,
-     "p50": 205.8,
-     "p95": 235.3
+     "p50": 206.2,
+     "p95": 237.2
     }
    }
   },
@@ -217,9 +197,9 @@
    "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
    "files": 64,
    "pieces": 1021,
-   "embedded": 0,
-   "indexMs": 45,
-   "msPer1k": null,
+   "embedded": 1021,
+   "indexMs": 76220,
+   "msPer1k": 74652,
    "questions": 59,
    "modes": {
     "words": {
@@ -228,8 +208,8 @@
      "recall5": 0.22,
      "recall10": 0.22,
      "mrr": 0.198,
-     "p50": 4.3,
-     "p95": 5
+     "p50": 5.1,
+     "p95": 5.9
     },
     "meaning": {
      "n": 59,
@@ -237,8 +217,8 @@
      "recall5": 0.712,
      "recall10": 0.78,
      "mrr": 0.556,
-     "p50": 28.5,
-     "p95": 30.2
+     "p50": 29,
+     "p95": 31.3
     },
     "fused": {
      "n": 59,
@@ -246,55 +226,55 @@
      "recall5": 0.763,
      "recall10": 0.814,
      "mrr": 0.598,
-     "p50": 29.1,
-     "p95": 30.9
+     "p50": 30,
+     "p95": 32
     },
     "rerank": {
      "n": 59,
-     "recall1": 0.576,
+     "recall1": 0.559,
      "recall5": 0.898,
      "recall10": 0.915,
-     "mrr": 0.704,
-     "p50": 183.6,
-     "p95": 235.2
+     "mrr": 0.695,
+     "p50": 180.4,
+     "p95": 233.1
     }
    },
    "fileModes": {
     "words": {
      "n": 59,
-     "recall1": 0.61,
-     "recall5": 0.949,
+     "recall1": 0.593,
+     "recall5": 0.898,
      "recall10": 0.983,
-     "mrr": 0.742,
-     "p50": 4.3,
-     "p95": 5.2
+     "mrr": 0.726,
+     "p50": 4.8,
+     "p95": 10.1
     },
     "meaning": {
      "n": 59,
      "recall1": 0.695,
-     "recall5": 0.966,
+     "recall5": 0.983,
      "recall10": 1,
-     "mrr": 0.817,
-     "p50": 30,
-     "p95": 32.4
+     "mrr": 0.821,
+     "p50": 31.1,
+     "p95": 34.7
     },
     "fused": {
      "n": 59,
      "recall1": 0.746,
-     "recall5": 0.966,
+     "recall5": 0.983,
      "recall10": 1,
-     "mrr": 0.85,
-     "p50": 29.1,
-     "p95": 31.7
+     "mrr": 0.851,
+     "p50": 30.1,
+     "p95": 31.9
     },
     "rerank": {
      "n": 59,
      "recall1": 0.746,
      "recall5": 1,
      "recall10": 1,
-     "mrr": 0.853,
-     "p50": 203.4,
-     "p95": 244.5
+     "mrr": 0.855,
+     "p50": 203.1,
+     "p95": 247.6
     }
    }
   },
@@ -302,9 +282,9 @@
    "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
    "files": 57,
    "pieces": 871,
-   "embedded": 0,
-   "indexMs": 47,
-   "msPer1k": null,
+   "embedded": 871,
+   "indexMs": 61823,
+   "msPer1k": 70979,
    "questions": 64,
    "modes": {
     "words": {
@@ -313,8 +293,8 @@
      "recall5": 0.063,
      "recall10": 0.063,
      "mrr": 0.063,
-     "p50": 5.5,
-     "p95": 6.2
+     "p50": 6.5,
+     "p95": 7.1
     },
     "meaning": {
      "n": 64,
@@ -322,8 +302,8 @@
      "recall5": 0.781,
      "recall10": 0.813,
      "mrr": 0.654,
-     "p50": 29.3,
-     "p95": 32.7
+     "p50": 29.8,
+     "p95": 32.3
     },
     "fused": {
      "n": 64,
@@ -331,8 +311,8 @@
      "recall5": 0.766,
      "recall10": 0.813,
      "mrr": 0.653,
-     "p50": 29.9,
-     "p95": 32.7
+     "p50": 30.8,
+     "p95": 33.8
     },
     "rerank": {
      "n": 64,
@@ -340,19 +320,19 @@
      "recall5": 0.797,
      "recall10": 0.859,
      "mrr": 0.619,
-     "p50": 130.9,
-     "p95": 227
+     "p50": 133,
+     "p95": 226.6
     }
    },
    "fileModes": {
     "words": {
      "n": 64,
-     "recall1": 0.5,
+     "recall1": 0.516,
      "recall5": 0.906,
-     "recall10": 0.953,
-     "mrr": 0.666,
-     "p50": 5.1,
-     "p95": 11.6
+     "recall10": 0.938,
+     "mrr": 0.672,
+     "p50": 5.9,
+     "p95": 7.2
     },
     "meaning": {
      "n": 64,
@@ -360,8 +340,8 @@
      "recall5": 0.984,
      "recall10": 0.984,
      "mrr": 0.88,
-     "p50": 31.1,
-     "p95": 33.6
+     "p50": 32.2,
+     "p95": 35.4
     },
     "fused": {
      "n": 64,
@@ -369,8 +349,8 @@
      "recall5": 0.984,
      "recall10": 0.984,
      "mrr": 0.865,
-     "p50": 30,
-     "p95": 32.5
+     "p50": 31.2,
+     "p95": 33.4
     },
     "rerank": {
      "n": 64,
@@ -378,8 +358,8 @@
      "recall5": 0.984,
      "recall10": 0.984,
      "mrr": 0.833,
-     "p50": 182.9,
-     "p95": 229.6
+     "p50": 180.2,
+     "p95": 229.3
     }
    }
   }
@@ -392,8 +372,8 @@
     "recall5": 0.188,
     "recall10": 0.188,
     "mrr": 0.171,
-    "p50": 4.5,
-    "p95": 5.7
+    "p50": 5.1,
+    "p95": 6.9
    },
    "meaning": {
     "n": 69,
@@ -401,8 +381,8 @@
     "recall5": 0.812,
     "recall10": 0.87,
     "mrr": 0.672,
-    "p50": 29.5,
-    "p95": 31.8
+    "p50": 29.9,
+    "p95": 31.4
    },
    "fused": {
     "n": 69,
@@ -410,17 +390,17 @@
     "recall5": 0.812,
     "recall10": 0.884,
     "mrr": 0.701,
-    "p50": 30.2,
-    "p95": 32.2
+    "p50": 30.8,
+    "p95": 32.6
    },
    "rerank": {
     "n": 69,
-    "recall1": 0.58,
+    "recall1": 0.565,
     "recall5": 0.913,
     "recall10": 0.942,
-    "mrr": 0.72,
-    "p50": 118.5,
-    "p95": 226.8
+    "mrr": 0.713,
+    "p50": 122.4,
+    "p95": 226.5
    }
   },
   "vague": {
@@ -429,9 +409,9 @@
     "recall1": 0.148,
     "recall5": 0.279,
     "recall10": 0.279,
-    "mrr": 0.2,
-    "p50": 4.3,
-    "p95": 6.2
+    "mrr": 0.201,
+    "p50": 5,
+    "p95": 6.8
    },
    "meaning": {
     "n": 61,
@@ -439,8 +419,8 @@
     "recall5": 0.787,
     "recall10": 0.82,
     "mrr": 0.669,
-    "p50": 28.5,
-    "p95": 30.4
+    "p50": 28.9,
+    "p95": 30.9
    },
    "fused": {
     "n": 61,
@@ -448,7 +428,7 @@
     "recall5": 0.82,
     "recall10": 0.836,
     "mrr": 0.672,
-    "p50": 29.1,
+    "p50": 30,
     "p95": 31.6
    },
    "rerank": {
@@ -457,8 +437,8 @@
     "recall5": 0.836,
     "recall10": 0.902,
     "mrr": 0.634,
-    "p50": 139,
-    "p95": 225.1
+    "p50": 138.3,
+    "p95": 227.7
    }
   },
   "multi-hop": {
@@ -468,8 +448,8 @@
     "recall5": 0.017,
     "recall10": 0.017,
     "mrr": 0.017,
-    "p50": 4.3,
-    "p95": 6
+    "p50": 5.1,
+    "p95": 6.9
    },
    "meaning": {
     "n": 59,
@@ -477,8 +457,8 @@
     "recall5": 0.661,
     "recall10": 0.729,
     "mrr": 0.47,
-    "p50": 30.2,
-    "p95": 33.4
+    "p50": 31,
+    "p95": 34.1
    },
    "fused": {
     "n": 59,
@@ -486,8 +466,8 @@
     "recall5": 0.661,
     "recall10": 0.729,
     "mrr": 0.47,
-    "p50": 30.7,
-    "p95": 33.3
+    "p50": 31.6,
+    "p95": 35.8
    },
    "rerank": {
     "n": 59,
@@ -495,8 +475,8 @@
     "recall5": 0.78,
     "recall10": 0.814,
     "mrr": 0.571,
-    "p50": 179,
-    "p95": 227.3
+    "p50": 179.4,
+    "p95": 232.3
    }
   }
  },
@@ -504,7 +484,11 @@
   "applied": 183,
   "none": 6
  },
- "build": null,
+ "build": {
+  "pieces": 3481,
+  "ms": 255945,
+  "msPer1k": 73526
+ },
  "notes": {
   "writer": "laptop-qwen3-4b",
   "model": "qwen3-4b-instruct-2507",
@@ -604,10 +588,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 35.7,
-    "fused": 31.2,
-    "rerank": 84.9
+    "words": 3.2,
+    "meaning": 30.5,
+    "fused": 31.8,
+    "rerank": 87.3
    },
    "fileRank": {
     "words": 1,
@@ -616,10 +600,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 41,
-    "fused": 31.6,
-    "rerank": 223.6
+    "words": 4.2,
+    "meaning": 33.2,
+    "fused": 33.3,
+    "rerank": 226.3
    },
    "similarity": {
     "best": 0.774,
@@ -639,22 +623,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 28.7,
-    "fused": 30.5,
-    "rerank": 214.8
+    "words": 5.2,
+    "meaning": 30.1,
+    "fused": 30,
+    "rerank": 214.9
    },
    "fileRank": {
-    "words": 5,
+    "words": 7,
     "meaning": 2,
     "fused": 3,
     "rerank": 3
    },
    "fileMs": {
-    "words": 5.6,
-    "meaning": 30.7,
-    "fused": 31.4,
-    "rerank": 235.5
+    "words": 4,
+    "meaning": 30.9,
+    "fused": 30,
+    "rerank": 237.2
    },
    "similarity": {
     "best": 0.68,
@@ -674,10 +658,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 34.4,
-    "fused": 35.3,
-    "rerank": 146.2
+    "words": 3.5,
+    "meaning": 34.7,
+    "fused": 33.5,
+    "rerank": 144
    },
    "fileRank": {
     "words": 1,
@@ -687,9 +671,9 @@
    },
    "fileMs": {
     "words": 4.8,
-    "meaning": 35.5,
-    "fused": 35.2,
-    "rerank": 234.2
+    "meaning": 35.1,
+    "fused": 33.7,
+    "rerank": 232.4
    },
    "similarity": {
     "best": 0.637,
@@ -709,9 +693,9 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.1,
-    "meaning": 31.8,
-    "fused": 32.3,
+    "words": 3.6,
+    "meaning": 31.1,
+    "fused": 31.6,
     "rerank": 72.9
    },
    "fileRank": {
@@ -721,10 +705,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.8,
-    "meaning": 33.2,
-    "fused": 31.7,
-    "rerank": 222.4
+    "words": 9,
+    "meaning": 33.6,
+    "fused": 31.3,
+    "rerank": 221.2
    },
    "similarity": {
     "best": 0.811,
@@ -745,9 +729,9 @@
    },
    "ms": {
     "words": 3,
-    "meaning": 30.5,
-    "fused": 30.3,
-    "rerank": 172.4
+    "meaning": 31.3,
+    "fused": 29.6,
+    "rerank": 172.3
    },
    "fileRank": {
     "words": 1,
@@ -756,10 +740,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 31.6,
-    "fused": 30.7,
-    "rerank": 176.5
+    "words": 3.7,
+    "meaning": 31.1,
+    "fused": 32,
+    "rerank": 177.4
    },
    "similarity": {
     "best": 0.631,
@@ -779,10 +763,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.1,
-    "meaning": 33.4,
-    "fused": 31.7,
-    "rerank": 225.8
+    "words": 5.1,
+    "meaning": 32.3,
+    "fused": 32.8,
+    "rerank": 232.3
    },
    "fileRank": {
     "words": 1,
@@ -791,10 +775,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 33.8,
-    "fused": 32.5,
-    "rerank": 226.7
+    "words": 6.1,
+    "meaning": 40.3,
+    "fused": 33.2,
+    "rerank": 228.6
    },
    "similarity": {
     "best": 0.681,
@@ -814,10 +798,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.2,
-    "meaning": 29.9,
-    "fused": 31.7,
-    "rerank": 70
+    "words": 3.3,
+    "meaning": 31.4,
+    "fused": 32.8,
+    "rerank": 73.2
    },
    "fileRank": {
     "words": 3,
@@ -826,10 +810,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 32.6,
-    "fused": 32.3,
-    "rerank": 199.4
+    "words": 3.5,
+    "meaning": 34.6,
+    "fused": 33.8,
+    "rerank": 203.9
    },
    "similarity": {
     "best": 0.817,
@@ -849,10 +833,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 28.5,
-    "fused": 29.4,
-    "rerank": 100.1
+    "words": 3.1,
+    "meaning": 28.9,
+    "fused": 30.3,
+    "rerank": 106.5
    },
    "fileRank": {
     "words": 1,
@@ -861,10 +845,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 2.9,
-    "meaning": 31.1,
-    "fused": 29.2,
-    "rerank": 193.1
+    "words": 3.1,
+    "meaning": 31.2,
+    "fused": 30.8,
+    "rerank": 198.4
    },
    "similarity": {
     "best": 0.752,
@@ -884,10 +868,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 32.6,
-    "fused": 32.7,
-    "rerank": 186.6
+    "words": 3.4,
+    "meaning": 33.5,
+    "fused": 34.5,
+    "rerank": 191.6
    },
    "fileRank": {
     "words": 10,
@@ -896,10 +880,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.2,
-    "meaning": 34.5,
-    "fused": 32.4,
-    "rerank": 187.4
+    "words": 4,
+    "meaning": 36.7,
+    "fused": 34,
+    "rerank": 190.7
    },
    "similarity": {
     "best": 0.755,
@@ -919,10 +903,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 30.5,
-    "fused": 30.6,
-    "rerank": 215.3
+    "words": 3.1,
+    "meaning": 31,
+    "fused": 31.3,
+    "rerank": 220
    },
    "fileRank": {
     "words": 3,
@@ -931,10 +915,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 32.3,
-    "fused": 30.2,
-    "rerank": 217.3
+    "words": 3.6,
+    "meaning": 33.2,
+    "fused": 30.9,
+    "rerank": 217
    },
    "similarity": {
     "best": 0.762,
@@ -954,10 +938,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.6,
-    "fused": 31.1,
-    "rerank": 206
+    "words": 3.3,
+    "meaning": 30.9,
+    "fused": 30.2,
+    "rerank": 204.7
    },
    "fileRank": {
     "words": 1,
@@ -966,10 +950,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 31.3,
-    "fused": 31.4,
-    "rerank": 204.4
+    "words": 4.1,
+    "meaning": 31.5,
+    "fused": 30.3,
+    "rerank": 206.3
    },
    "similarity": {
     "best": 0.669,
@@ -989,10 +973,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 32.3,
-    "fused": 32.8,
-    "rerank": 203.9
+    "words": 3.4,
+    "meaning": 34.1,
+    "fused": 33.8,
+    "rerank": 203
    },
    "fileRank": {
     "words": 1,
@@ -1001,10 +985,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.2,
-    "meaning": 34.1,
-    "fused": 32.6,
-    "rerank": 203.1
+    "words": 4,
+    "meaning": 35,
+    "fused": 33.7,
+    "rerank": 204.6
    },
    "similarity": {
     "best": 0.67,
@@ -1024,10 +1008,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 29.2,
-    "fused": 31.4,
-    "rerank": 211.7
+    "words": 3.6,
+    "meaning": 29.7,
+    "fused": 29.9,
+    "rerank": 208.9
    },
    "fileRank": {
     "words": 1,
@@ -1036,10 +1020,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 31.9,
-    "fused": 30.7,
-    "rerank": 210.3
+    "words": 9,
+    "meaning": 32,
+    "fused": 29.3,
+    "rerank": 208.1
    },
    "similarity": {
     "best": 0.731,
@@ -1059,10 +1043,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 28.7,
-    "fused": 31.6,
-    "rerank": 100
+    "words": 3.4,
+    "meaning": 29.5,
+    "fused": 30.4,
+    "rerank": 98.4
    },
    "fileRank": {
     "words": 3,
@@ -1071,10 +1055,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.2,
-    "meaning": 31.5,
-    "fused": 33.9,
-    "rerank": 202.7
+    "words": 3.5,
+    "meaning": 32.6,
+    "fused": 31,
+    "rerank": 200.8
    },
    "similarity": {
     "best": 0.643,
@@ -1094,10 +1078,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 31.4,
-    "fused": 32,
-    "rerank": 72.5
+    "words": 3.1,
+    "meaning": 30.4,
+    "fused": 31.8,
+    "rerank": 73.7
    },
    "fileRank": {
     "words": 1,
@@ -1106,10 +1090,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.7,
-    "meaning": 33.4,
-    "fused": 32.2,
-    "rerank": 204.1
+    "words": 3.2,
+    "meaning": 37.3,
+    "fused": 32.3,
+    "rerank": 206.2
    },
    "similarity": {
     "best": 0.765,
@@ -1129,10 +1113,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.2,
-    "meaning": 31.6,
-    "fused": 32.1,
-    "rerank": 101.8
+    "words": 3.4,
+    "meaning": 31.9,
+    "fused": 32.8,
+    "rerank": 99
    },
    "fileRank": {
     "words": 5,
@@ -1141,10 +1125,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 33.9,
-    "fused": 34.5,
-    "rerank": 196.5
+    "words": 4.8,
+    "meaning": 35.5,
+    "fused": 32.5,
+    "rerank": 195.9
    },
    "similarity": {
     "best": 0.67,
@@ -1164,10 +1148,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 29.8,
-    "fused": 29.2,
-    "rerank": 53.5
+    "words": 3.1,
+    "meaning": 28.8,
+    "fused": 30.5,
+    "rerank": 56.2
    },
    "fileRank": {
     "words": 1,
@@ -1177,9 +1161,9 @@
    },
    "fileMs": {
     "words": 3.8,
-    "meaning": 31.3,
-    "fused": 30,
-    "rerank": 182.5
+    "meaning": 30.8,
+    "fused": 30.6,
+    "rerank": 184
    },
    "similarity": {
     "best": 0.788,
@@ -1199,22 +1183,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 29.1,
-    "fused": 29.6,
-    "rerank": 29.4
+    "words": 3.2,
+    "meaning": 29.6,
+    "fused": 28.8,
+    "rerank": 29
    },
    "fileRank": {
-    "words": 9,
+    "words": 12,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.6,
-    "meaning": 29.3,
-    "fused": 30.6,
-    "rerank": 191.1
+    "words": 3.7,
+    "meaning": 29.8,
+    "fused": 29.1,
+    "rerank": 191.6
    },
    "similarity": {
     "best": 0.819,
@@ -1234,10 +1218,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 29.7,
-    "fused": 30.9,
-    "rerank": 60.2
+    "words": 3.3,
+    "meaning": 30.9,
+    "fused": 32.5,
+    "rerank": 60.9
    },
    "fileRank": {
     "words": 1,
@@ -1246,10 +1230,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 31.9,
-    "fused": 31.5,
-    "rerank": 205.8
+    "words": 4,
+    "meaning": 32.8,
+    "fused": 32.9,
+    "rerank": 206
    },
    "similarity": {
     "best": 0.87,
@@ -1269,10 +1253,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 29.9,
-    "fused": 30.6,
-    "rerank": 53.9
+    "words": 3,
+    "meaning": 31.2,
+    "fused": 31.1,
+    "rerank": 54.2
    },
    "fileRank": {
     "words": 1,
@@ -1281,10 +1265,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.1,
+    "words": 8,
     "meaning": 31.2,
-    "fused": 31,
-    "rerank": 217.9
+    "fused": 31.2,
+    "rerank": 217.4
    },
    "similarity": {
     "best": 0.756,
@@ -1304,10 +1288,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 30.8,
-    "fused": 30.1,
-    "rerank": 53.3
+    "words": 3.1,
+    "meaning": 30.5,
+    "fused": 31,
+    "rerank": 53.6
    },
    "fileRank": {
     "words": 1,
@@ -1317,9 +1301,9 @@
    },
    "fileMs": {
     "words": 3.8,
-    "meaning": 32.4,
-    "fused": 30.4,
-    "rerank": 235.3
+    "meaning": 32.8,
+    "fused": 31,
+    "rerank": 237.2
    },
    "similarity": {
     "best": 0.737,
@@ -1339,10 +1323,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.6,
-    "meaning": 31.4,
+    "words": 3.5,
+    "meaning": 30.5,
     "fused": 31.3,
-    "rerank": 132.9
+    "rerank": 132
    },
    "fileRank": {
     "words": 1,
@@ -1351,10 +1335,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 34.6,
-    "fused": 31.9,
-    "rerank": 218.7
+    "words": 3.4,
+    "meaning": 32.1,
+    "fused": 32.8,
+    "rerank": 219.7
    },
    "similarity": {
     "best": 0.778,
@@ -1374,10 +1358,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 3.3,
+    "words": 3.5,
     "meaning": 30.9,
-    "fused": 31.9,
-    "rerank": 164
+    "fused": 31.4,
+    "rerank": 164.4
    },
    "fileRank": {
     "words": 1,
@@ -1386,10 +1370,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.4,
-    "meaning": 33.9,
-    "fused": 31.4,
-    "rerank": 203
+    "words": 3.5,
+    "meaning": 32.7,
+    "fused": 32.1,
+    "rerank": 205.6
    },
    "similarity": {
     "best": 0.719,
@@ -1409,10 +1393,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.3,
-    "fused": 31.3,
-    "rerank": 217.6
+    "words": 3.1,
+    "meaning": 32.4,
+    "fused": 30.9,
+    "rerank": 223.8
    },
    "fileRank": {
     "words": 4,
@@ -1421,10 +1405,10 @@
     "rerank": 9
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 34,
-    "fused": 30.6,
-    "rerank": 222.4
+    "words": 3.6,
+    "meaning": 33.2,
+    "fused": 31.1,
+    "rerank": 221.2
    },
    "similarity": {
     "best": 0.615,
@@ -1444,10 +1428,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 30.4,
-    "fused": 30.9,
-    "rerank": 211.6
+    "words": 3.7,
+    "meaning": 30.3,
+    "fused": 31.8,
+    "rerank": 209.3
    },
    "fileRank": {
     "words": 3,
@@ -1456,10 +1440,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.9,
-    "meaning": 31.3,
-    "fused": 32,
-    "rerank": 210.7
+    "words": 3.7,
+    "meaning": 33.4,
+    "fused": 30.9,
+    "rerank": 210.4
    },
    "similarity": {
     "best": 0.678,
@@ -1479,10 +1463,10 @@
     "rerank": 12
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.1,
-    "fused": 31.1,
-    "rerank": 197.8
+    "words": 3.2,
+    "meaning": 30.8,
+    "fused": 30.4,
+    "rerank": 199.8
    },
    "fileRank": {
     "words": 11,
@@ -1491,10 +1475,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 32.1,
-    "fused": 30.5,
-    "rerank": 198.5
+    "words": 4.1,
+    "meaning": 32.5,
+    "fused": 31,
+    "rerank": 203.3
    },
    "similarity": {
     "best": 0.748,
@@ -1514,10 +1498,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 31.1,
-    "fused": 32.1,
-    "rerank": 98
+    "words": 3.3,
+    "meaning": 30.8,
+    "fused": 32.5,
+    "rerank": 97.4
    },
    "fileRank": {
     "words": 1,
@@ -1526,10 +1510,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 33.2,
-    "fused": 31.9,
-    "rerank": 206.4
+    "words": 9,
+    "meaning": 32.7,
+    "fused": 31.8,
+    "rerank": 208.4
    },
    "similarity": {
     "best": 0.724,
@@ -1549,22 +1533,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 3,
-    "meaning": 33.1,
-    "fused": 33.2,
-    "rerank": 169.3
+    "words": 3.3,
+    "meaning": 33.9,
+    "fused": 34.4,
+    "rerank": 172.2
    },
    "fileRank": {
-    "words": 19,
+    "words": 0,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 35.5,
-    "fused": 34,
-    "rerank": 220.3
+    "words": 4.4,
+    "meaning": 39.7,
+    "fused": 34.8,
+    "rerank": 222.1
    },
    "similarity": {
     "best": 0.665,
@@ -1578,16 +1562,16 @@
    "style": "vague",
    "split": "test",
    "rank": {
-    "words": 5,
+    "words": 4,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "ms": {
-    "words": 3.5,
-    "meaning": 29,
-    "fused": 33.1,
-    "rerank": 193.8
+    "words": 3.7,
+    "meaning": 29.6,
+    "fused": 30.1,
+    "rerank": 192.6
    },
    "fileRank": {
     "words": 2,
@@ -1596,10 +1580,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 5.9,
-    "meaning": 31.7,
-    "fused": 30.3,
-    "rerank": 203.7
+    "words": 3.4,
+    "meaning": 35.8,
+    "fused": 29.8,
+    "rerank": 208.2
    },
    "similarity": {
     "best": 0.868,
@@ -1619,10 +1603,10 @@
     "rerank": 5
    },
    "ms": {
-    "words": 3,
-    "meaning": 30.4,
-    "fused": 33.3,
-    "rerank": 213.9
+    "words": 3.2,
+    "meaning": 31,
+    "fused": 31.6,
+    "rerank": 213.6
    },
    "fileRank": {
     "words": 1,
@@ -1631,10 +1615,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 33.4,
-    "fused": 32.3,
-    "rerank": 214.8
+    "words": 3.7,
+    "meaning": 33.8,
+    "fused": 31.9,
+    "rerank": 213.1
    },
    "similarity": {
     "best": 0.77,
@@ -1654,22 +1638,22 @@
     "rerank": 12
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 31,
-    "fused": 31.9,
-    "rerank": 209.2
+    "words": 3.2,
+    "meaning": 31.5,
+    "fused": 31.4,
+    "rerank": 205.1
    },
    "fileRank": {
-    "words": 5,
+    "words": 7,
     "meaning": 2,
     "fused": 2,
     "rerank": 4
    },
    "fileMs": {
     "words": 3.8,
-    "meaning": 31.8,
-    "fused": 33.6,
-    "rerank": 206.8
+    "meaning": 36,
+    "fused": 31.1,
+    "rerank": 205.9
    },
    "similarity": {
     "best": 0.825,
@@ -1689,10 +1673,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 30.4,
-    "fused": 32.2,
-    "rerank": 62.7
+    "words": 3.1,
+    "meaning": 30.1,
+    "fused": 30.4,
+    "rerank": 62
    },
    "fileRank": {
     "words": 1,
@@ -1701,10 +1685,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 32.4,
-    "fused": 31.7,
-    "rerank": 215
+    "words": 3.5,
+    "meaning": 32.3,
+    "fused": 31.4,
+    "rerank": 217.1
    },
    "similarity": {
     "best": 0.752,
@@ -1725,9 +1709,9 @@
    },
    "ms": {
     "words": 3.3,
-    "meaning": 28.4,
-    "fused": 28.9,
-    "rerank": 161
+    "meaning": 28.8,
+    "fused": 29,
+    "rerank": 161.3
    },
    "fileRank": {
     "words": 2,
@@ -1736,10 +1720,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6,
-    "meaning": 30.7,
-    "fused": 28.8,
-    "rerank": 224.2
+    "words": 3.3,
+    "meaning": 31.8,
+    "fused": 29.2,
+    "rerank": 226.6
    },
    "similarity": {
     "best": 0.753,
@@ -1759,10 +1743,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 30.1,
-    "fused": 31.7,
-    "rerank": 185.4
+    "words": 3.2,
+    "meaning": 30.3,
+    "fused": 32.5,
+    "rerank": 182
    },
    "fileRank": {
     "words": 1,
@@ -1771,10 +1755,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.2,
-    "meaning": 32.3,
-    "fused": 33.2,
-    "rerank": 226.9
+    "words": 3.7,
+    "meaning": 33.3,
+    "fused": 32.1,
+    "rerank": 224.6
    },
    "similarity": {
     "best": 0.668,
@@ -1794,22 +1778,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 30.5,
-    "fused": 30.4,
+    "words": 3.2,
+    "meaning": 30.8,
+    "fused": 31.2,
     "rerank": 193.2
    },
    "fileRank": {
-    "words": 5,
+    "words": 6,
     "meaning": 6,
     "fused": 6,
     "rerank": 1
    },
    "fileMs": {
     "words": 4.6,
-    "meaning": 31.9,
-    "fused": 31.5,
-    "rerank": 196.1
+    "meaning": 32.7,
+    "fused": 31.3,
+    "rerank": 191.7
    },
    "similarity": {
     "best": 0.781,
@@ -1829,10 +1813,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.5,
-    "meaning": 30.4,
-    "fused": 30.2,
-    "rerank": 188.4
+    "words": 3.3,
+    "meaning": 29.7,
+    "fused": 30,
+    "rerank": 193.1
    },
    "fileRank": {
     "words": 1,
@@ -1841,10 +1825,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.5,
-    "meaning": 31.6,
-    "fused": 30.5,
-    "rerank": 192.5
+    "words": 3.4,
+    "meaning": 30.8,
+    "fused": 31.3,
+    "rerank": 194.7
    },
    "similarity": {
     "best": 0.671,
@@ -1864,10 +1848,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.8,
-    "meaning": 30.9,
-    "fused": 31.6,
-    "rerank": 167.5
+    "words": 3.6,
+    "meaning": 30.7,
+    "fused": 32.5,
+    "rerank": 168.3
    },
    "fileRank": {
     "words": 1,
@@ -1877,9 +1861,9 @@
    },
    "fileMs": {
     "words": 4.1,
-    "meaning": 33.3,
-    "fused": 32.4,
-    "rerank": 170.3
+    "meaning": 33.9,
+    "fused": 32.2,
+    "rerank": 170.6
    },
    "similarity": {
     "best": 0.707,
@@ -1899,10 +1883,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 30,
-    "fused": 31.7,
-    "rerank": 128.5
+    "words": 3.2,
+    "meaning": 31.8,
+    "fused": 31.9,
+    "rerank": 128.6
    },
    "fileRank": {
     "words": 2,
@@ -1911,10 +1895,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 2.9,
-    "meaning": 33.5,
+    "words": 8.2,
+    "meaning": 32.7,
     "fused": 31.4,
-    "rerank": 204.3
+    "rerank": 205.6
    },
    "similarity": {
     "best": 0.794,
@@ -1934,10 +1918,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 29.8,
-    "fused": 30.1,
-    "rerank": 145.9
+    "words": 3.3,
+    "meaning": 29.9,
+    "fused": 31.9,
+    "rerank": 146.2
    },
    "fileRank": {
     "words": 3,
@@ -1946,10 +1930,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 2.8,
-    "meaning": 31.7,
-    "fused": 29.8,
-    "rerank": 208.2
+    "words": 3.2,
+    "meaning": 31.8,
+    "fused": 31.1,
+    "rerank": 208.3
    },
    "similarity": {
     "best": 0.748,
@@ -1969,10 +1953,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.1,
-    "fused": 30.4,
-    "rerank": 190.1
+    "words": 3,
+    "meaning": 31,
+    "fused": 36.2,
+    "rerank": 188.2
    },
    "fileRank": {
     "words": 6,
@@ -1981,10 +1965,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 2.9,
-    "meaning": 31.6,
-    "fused": 30.8,
-    "rerank": 193.9
+    "words": 3,
+    "meaning": 32.6,
+    "fused": 32.8,
+    "rerank": 195
    },
    "similarity": {
     "best": 0.726,
@@ -2004,10 +1988,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 28.5,
-    "fused": 28.9,
-    "rerank": 191.5
+    "words": 3.1,
+    "meaning": 29.7,
+    "fused": 30.4,
+    "rerank": 191.7
    },
    "fileRank": {
     "words": 5,
@@ -2016,10 +2000,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.4,
-    "meaning": 30.8,
-    "fused": 29,
-    "rerank": 193.9
+    "words": 4,
+    "meaning": 30,
+    "fused": 29.6,
+    "rerank": 194.4
    },
    "similarity": {
     "best": 0.839,
@@ -2039,10 +2023,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 28.6,
-    "fused": 28.9,
-    "rerank": 96.7
+    "words": 3.3,
+    "meaning": 29,
+    "fused": 29.2,
+    "rerank": 97
    },
    "fileRank": {
     "words": 1,
@@ -2051,10 +2035,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 2.8,
-    "meaning": 30.4,
-    "fused": 29.4,
-    "rerank": 200.8
+    "words": 3,
+    "meaning": 31.2,
+    "fused": 29,
+    "rerank": 200.1
    },
    "similarity": {
     "best": 0.804,
@@ -2074,10 +2058,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.8,
-    "meaning": 32.6,
+    "words": 4,
+    "meaning": 33.2,
     "fused": 33.1,
-    "rerank": 208.7
+    "rerank": 209.3
    },
    "fileRank": {
     "words": 1,
@@ -2086,10 +2070,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 34.1,
-    "fused": 32.8,
-    "rerank": 211.1
+    "words": 5.1,
+    "meaning": 34.3,
+    "fused": 32.3,
+    "rerank": 210.5
    },
    "similarity": {
     "best": 0.833,
@@ -2109,22 +2093,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.2,
-    "meaning": 28.2,
-    "fused": 29.5,
-    "rerank": 58
+    "words": 3.5,
+    "meaning": 30.2,
+    "fused": 30.3,
+    "rerank": 58.2
    },
    "fileRank": {
-    "words": 6,
+    "words": 13,
     "meaning": 2,
     "fused": 2,
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.2,
-    "meaning": 30.5,
-    "fused": 30.6,
-    "rerank": 199.4
+    "words": 3.6,
+    "meaning": 31.5,
+    "fused": 30.4,
+    "rerank": 196.2
    },
    "similarity": {
     "best": 0.809,
@@ -2144,10 +2128,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.8,
-    "fused": 31.3,
-    "rerank": 86.4
+    "words": 3,
+    "meaning": 30.1,
+    "fused": 30.4,
+    "rerank": 85
    },
    "fileRank": {
     "words": 2,
@@ -2156,10 +2140,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.5,
-    "meaning": 33.6,
-    "fused": 33.6,
-    "rerank": 199.5
+    "words": 8.4,
+    "meaning": 33.8,
+    "fused": 32.1,
+    "rerank": 198.2
    },
    "similarity": {
     "best": 0.691,
@@ -2179,22 +2163,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.2,
-    "fused": 31.8,
-    "rerank": 84
+    "words": 3.1,
+    "meaning": 31.1,
+    "fused": 30.7,
+    "rerank": 83.4
    },
    "fileRank": {
-    "words": 2,
+    "words": 4,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
     "words": 3.7,
-    "meaning": 33.7,
-    "fused": 32.6,
-    "rerank": 201.2
+    "meaning": 32.7,
+    "fused": 31.8,
+    "rerank": 201.4
    },
    "similarity": {
     "best": 0.714,
@@ -2214,10 +2198,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.2,
-    "meaning": 28.7,
-    "fused": 29.1,
-    "rerank": 192.8
+    "words": 3.4,
+    "meaning": 30.1,
+    "fused": 31.3,
+    "rerank": 198.3
    },
    "fileRank": {
     "words": 1,
@@ -2226,10 +2210,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 2.9,
-    "meaning": 30.7,
-    "fused": 28.8,
-    "rerank": 199.1
+    "words": 3.4,
+    "meaning": 32.1,
+    "fused": 31.3,
+    "rerank": 195.6
    },
    "similarity": {
     "best": 0.694,
@@ -2249,22 +2233,22 @@
     "rerank": 24
    },
    "ms": {
-    "words": 3,
-    "meaning": 30.5,
-    "fused": 31.1,
-    "rerank": 195.7
+    "words": 3.2,
+    "meaning": 31.4,
+    "fused": 32.5,
+    "rerank": 195.4
    },
    "fileRank": {
-    "words": 9,
+    "words": 8,
     "meaning": 8,
     "fused": 8,
     "rerank": 8
    },
    "fileMs": {
-    "words": 3.1,
+    "words": 3.3,
     "meaning": 33.3,
-    "fused": 31.5,
-    "rerank": 196.6
+    "fused": 31.3,
+    "rerank": 195.1
    },
    "similarity": {
     "best": 0.632,
@@ -2284,10 +2268,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 29,
-    "fused": 30.3,
-    "rerank": 28.7
+    "words": 3.2,
+    "meaning": 29.8,
+    "fused": 29.9,
+    "rerank": 29.1
    },
    "fileRank": {
     "words": 1,
@@ -2296,10 +2280,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.1,
-    "meaning": 32.5,
-    "fused": 29.4,
-    "rerank": 178.5
+    "words": 3.3,
+    "meaning": 30.8,
+    "fused": 30.2,
+    "rerank": 180.7
    },
    "similarity": {
     "best": 0.855,
@@ -2319,10 +2303,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.5,
+    "words": 4.1,
     "meaning": 29.6,
-    "fused": 30.4,
-    "rerank": 226.8
+    "fused": 30.2,
+    "rerank": 226.5
    },
    "fileRank": {
     "words": 2,
@@ -2331,10 +2315,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.2,
-    "meaning": 31.5,
-    "fused": 30.1,
-    "rerank": 222
+    "words": 3.5,
+    "meaning": 30.4,
+    "fused": 29.9,
+    "rerank": 220.7
    },
    "similarity": {
     "best": 0.725,
@@ -2354,10 +2338,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.2,
-    "fused": 31.1,
-    "rerank": 110.9
+    "words": 4,
+    "meaning": 30.9,
+    "fused": 31.3,
+    "rerank": 111.2
    },
    "fileRank": {
     "words": 1,
@@ -2366,10 +2350,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 32.5,
-    "fused": 31.8,
-    "rerank": 224.7
+    "words": 5.3,
+    "meaning": 32.9,
+    "fused": 31.3,
+    "rerank": 228.3
    },
    "similarity": {
     "best": 0.718,
@@ -2389,10 +2373,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.6,
-    "fused": 31,
-    "rerank": 208.6
+    "words": 3.4,
+    "meaning": 36.1,
+    "fused": 32.3,
+    "rerank": 210.4
    },
    "fileRank": {
     "words": 5,
@@ -2401,10 +2385,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 6.5,
-    "meaning": 32.2,
-    "fused": 30.9,
-    "rerank": 210.1
+    "words": 3.7,
+    "meaning": 33.2,
+    "fused": 31.1,
+    "rerank": 209.7
    },
    "similarity": {
     "best": 0.69,
@@ -2424,10 +2408,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3,
-    "meaning": 28.8,
-    "fused": 30.3,
-    "rerank": 244.1
+    "words": 3.5,
+    "meaning": 29.7,
+    "fused": 30,
+    "rerank": 243.5
    },
    "fileRank": {
     "words": 1,
@@ -2436,10 +2420,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3,
-    "meaning": 31.1,
-    "fused": 30.1,
-    "rerank": 251.7
+    "words": 3.6,
+    "meaning": 32.2,
+    "fused": 29.7,
+    "rerank": 249.8
    },
    "similarity": {
     "best": 0.652,
@@ -2459,10 +2443,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 3.2,
-    "meaning": 30,
-    "fused": 29.9,
-    "rerank": 91.2
+    "words": 3.1,
+    "meaning": 31,
+    "fused": 30.8,
+    "rerank": 92.2
    },
    "fileRank": {
     "words": 1,
@@ -2471,10 +2455,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 31.8,
-    "fused": 30.3,
-    "rerank": 243.9
+    "words": 8.2,
+    "meaning": 32.1,
+    "fused": 32,
+    "rerank": 242.1
    },
    "similarity": {
     "best": 0.689,
@@ -2494,10 +2478,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 30.9,
-    "fused": 31.9,
-    "rerank": 65.3
+    "words": 3,
+    "meaning": 31.2,
+    "fused": 31.1,
+    "rerank": 65.7
    },
    "fileRank": {
     "words": 2,
@@ -2506,10 +2490,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 33.1,
-    "fused": 33.3,
-    "rerank": 216.3
+    "words": 3.3,
+    "meaning": 33.4,
+    "fused": 31.4,
+    "rerank": 216.5
    },
    "similarity": {
     "best": 0.626,
@@ -2529,10 +2513,10 @@
     "rerank": 6
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 30.6,
-    "fused": 30.9,
-    "rerank": 220.9
+    "words": 3.3,
+    "meaning": 31.1,
+    "fused": 32.3,
+    "rerank": 219.8
    },
    "fileRank": {
     "words": 2,
@@ -2541,10 +2525,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 3,
-    "meaning": 32.4,
-    "fused": 31.4,
-    "rerank": 229.9
+    "words": 3.3,
+    "meaning": 32.8,
+    "fused": 32.6,
+    "rerank": 231.8
    },
    "similarity": {
     "best": 0.7,
@@ -2564,10 +2548,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 28.4,
-    "fused": 29.5,
-    "rerank": 136
+    "words": 3.2,
+    "meaning": 30.8,
+    "fused": 30.2,
+    "rerank": 136.1
    },
    "fileRank": {
     "words": 2,
@@ -2576,10 +2560,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.1,
-    "meaning": 30.1,
-    "fused": 32,
-    "rerank": 214.9
+    "words": 3.7,
+    "meaning": 32.1,
+    "fused": 30.3,
+    "rerank": 218.9
    },
    "similarity": {
     "best": 0.655,
@@ -2599,10 +2583,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3,
-    "meaning": 29.5,
-    "fused": 30.2,
-    "rerank": 196
+    "words": 3.2,
+    "meaning": 30.2,
+    "fused": 31.2,
+    "rerank": 197.9
    },
    "fileRank": {
     "words": 1,
@@ -2611,10 +2595,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 2.7,
-    "meaning": 32.2,
-    "fused": 30.3,
-    "rerank": 199
+    "words": 3.2,
+    "meaning": 34.3,
+    "fused": 30.6,
+    "rerank": 198.7
    },
    "similarity": {
     "best": 0.677,
@@ -2634,10 +2618,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 3,
-    "meaning": 30.1,
-    "fused": 31,
-    "rerank": 169.1
+    "words": 3.1,
+    "meaning": 31.1,
+    "fused": 32,
+    "rerank": 172.3
    },
    "fileRank": {
     "words": 1,
@@ -2646,10 +2630,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 32,
-    "fused": 32.3,
-    "rerank": 180.7
+    "words": 3.5,
+    "meaning": 33.3,
+    "fused": 32.6,
+    "rerank": 182.5
    },
    "similarity": {
     "best": 0.774,
@@ -2669,10 +2653,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.6,
-    "fused": 30.9,
-    "rerank": 54.3
+    "words": 3.2,
+    "meaning": 31.7,
+    "fused": 31.4,
+    "rerank": 53.6
    },
    "fileRank": {
     "words": 1,
@@ -2681,10 +2665,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 3.5,
-    "meaning": 32.6,
-    "fused": 31.8,
-    "rerank": 198.2
+    "words": 3.7,
+    "meaning": 32,
+    "fused": 31.6,
+    "rerank": 199.3
    },
    "similarity": {
     "best": 0.796,
@@ -2704,10 +2688,10 @@
     "rerank": 7
    },
    "ms": {
-    "words": 2.6,
-    "meaning": 28.5,
-    "fused": 28.6,
-    "rerank": 193.6
+    "words": 2.9,
+    "meaning": 30,
+    "fused": 31.2,
+    "rerank": 193.5
    },
    "fileRank": {
     "words": 4,
@@ -2716,10 +2700,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 2.9,
-    "meaning": 30.3,
-    "fused": 28.6,
-    "rerank": 194.6
+    "words": 8.2,
+    "meaning": 30.9,
+    "fused": 30.3,
+    "rerank": 194.7
    },
    "similarity": {
     "best": 0.79,
@@ -2739,10 +2723,10 @@
     "rerank": 8
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 30,
-    "fused": 30.3,
-    "rerank": 195
+    "words": 3.4,
+    "meaning": 30.7,
+    "fused": 32.6,
+    "rerank": 193.7
    },
    "fileRank": {
     "words": 4,
@@ -2751,10 +2735,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 2.8,
-    "meaning": 31.8,
-    "fused": 30.4,
-    "rerank": 206.7
+    "words": 3.1,
+    "meaning": 34.1,
+    "fused": 31.3,
+    "rerank": 205.7
    },
    "similarity": {
     "best": 0.838,
@@ -2774,10 +2758,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 2.9,
-    "meaning": 30.4,
-    "fused": 30.6,
-    "rerank": 194.1
+    "words": 3,
+    "meaning": 31.1,
+    "fused": 35.9,
+    "rerank": 194.3
    },
    "fileRank": {
     "words": 2,
@@ -2786,10 +2770,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.4,
-    "meaning": 31.2,
-    "fused": 30.3,
-    "rerank": 195.8
+    "words": 3.4,
+    "meaning": 31.8,
+    "fused": 31.3,
+    "rerank": 195.6
    },
    "similarity": {
     "best": 0.733,
@@ -2809,10 +2793,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 2.8,
-    "meaning": 31,
-    "fused": 30.4,
-    "rerank": 81.2
+    "words": 3.4,
+    "meaning": 30.8,
+    "fused": 30.5,
+    "rerank": 82
    },
    "fileRank": {
     "words": 1,
@@ -2821,10 +2805,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.4,
-    "meaning": 31.6,
-    "fused": 30.1,
-    "rerank": 230.5
+    "words": 4.2,
+    "meaning": 31.4,
+    "fused": 31.7,
+    "rerank": 229.6
    },
    "similarity": {
     "best": 0.78,
@@ -2844,10 +2828,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 3.3,
-    "meaning": 33.1,
-    "fused": 33.6,
-    "rerank": 228.3
+    "words": 3.2,
+    "meaning": 32.7,
+    "fused": 34.6,
+    "rerank": 227.2
    },
    "fileRank": {
     "words": 1,
@@ -2856,10 +2840,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 35.4,
-    "fused": 33.8,
-    "rerank": 224.6
+    "words": 3.9,
+    "meaning": 35.5,
+    "fused": 34.1,
+    "rerank": 227.4
    },
    "similarity": {
     "best": 0.634,
@@ -2879,22 +2863,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 3.1,
-    "meaning": 30.2,
-    "fused": 30.7,
-    "rerank": 92
+    "words": 3.2,
+    "meaning": 30.3,
+    "fused": 30.9,
+    "rerank": 91.1
    },
    "fileRank": {
-    "words": 4,
+    "words": 3,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 32.4,
-    "fused": 32.4,
-    "rerank": 212.7
+    "words": 3.6,
+    "meaning": 31.7,
+    "fused": 30.7,
+    "rerank": 214.4
    },
    "similarity": {
     "best": 0.685,
@@ -2911,13 +2895,13 @@
     "words": 0,
     "meaning": 1,
     "fused": 1,
-    "rerank": 1
+    "rerank": 2
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 29,
-    "fused": 29.4,
-    "rerank": 154
+    "words": 5.1,
+    "meaning": 28.9,
+    "fused": 31,
+    "rerank": 162.2
    },
    "fileRank": {
     "words": 1,
@@ -2926,10 +2910,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 31.4,
-    "fused": 28.5,
-    "rerank": 239
+    "words": 4.7,
+    "meaning": 31.8,
+    "fused": 30.2,
+    "rerank": 233.8
    },
    "similarity": {
     "best": 0.766,
@@ -2949,10 +2933,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 27.3,
-    "fused": 27.9,
-    "rerank": 86.4
+    "words": 4.9,
+    "meaning": 28.7,
+    "fused": 28.8,
+    "rerank": 85.5
    },
    "fileRank": {
     "words": 1,
@@ -2961,10 +2945,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 29.3,
-    "fused": 27.7,
-    "rerank": 218.5
+    "words": 10,
+    "meaning": 31.4,
+    "fused": 28,
+    "rerank": 220.1
    },
    "similarity": {
     "best": 0.763,
@@ -2984,10 +2968,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.6,
-    "meaning": 30.2,
-    "fused": 30.9,
-    "rerank": 78
+    "words": 5.1,
+    "meaning": 30.8,
+    "fused": 33.5,
+    "rerank": 79.7
    },
    "fileRank": {
     "words": 1,
@@ -2996,10 +2980,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 32.4,
-    "fused": 30.5,
-    "rerank": 256
+    "words": 5.4,
+    "meaning": 33.2,
+    "fused": 33,
+    "rerank": 253.8
    },
    "similarity": {
     "best": 0.811,
@@ -3019,10 +3003,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 4.7,
-    "meaning": 29,
-    "fused": 29.6,
-    "rerank": 252
+    "words": 5.6,
+    "meaning": 29.6,
+    "fused": 30.6,
+    "rerank": 253.7
    },
    "fileRank": {
     "words": 1,
@@ -3031,10 +3015,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 31.3,
-    "fused": 29.6,
-    "rerank": 253
+    "words": 4.7,
+    "meaning": 32.1,
+    "fused": 31,
+    "rerank": 253.7
    },
    "similarity": {
     "best": 0.783,
@@ -3054,10 +3038,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.6,
-    "meaning": 29.2,
+    "words": 5.1,
+    "meaning": 28.9,
     "fused": 29.6,
-    "rerank": 235.2
+    "rerank": 233.1
    },
    "fileRank": {
     "words": 2,
@@ -3066,10 +3050,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 31,
-    "fused": 29.9,
-    "rerank": 232.3
+    "words": 4.9,
+    "meaning": 31.2,
+    "fused": 29.3,
+    "rerank": 234.7
    },
    "similarity": {
     "best": 0.723,
@@ -3089,10 +3073,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 26.8,
+    "words": 5,
+    "meaning": 27.2,
     "fused": 28.1,
-    "rerank": 239.9
+    "rerank": 241.7
    },
    "fileRank": {
     "words": 6,
@@ -3101,10 +3085,10 @@
     "rerank": 4
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 31.8,
-    "fused": 28.1,
-    "rerank": 242.5
+    "words": 4.5,
+    "meaning": 28.6,
+    "fused": 28.9,
+    "rerank": 245.6
    },
    "similarity": {
     "best": 0.678,
@@ -3124,22 +3108,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 11.2,
-    "meaning": 26.6,
-    "fused": 27.8,
-    "rerank": 128.1
+    "words": 5.4,
+    "meaning": 28.7,
+    "fused": 29.7,
+    "rerank": 128.4
    },
    "fileRank": {
-    "words": 2,
+    "words": 1,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 28.8,
-    "fused": 28.1,
-    "rerank": 191.8
+    "words": 5.6,
+    "meaning": 30.7,
+    "fused": 30.1,
+    "rerank": 191.7
    },
    "similarity": {
     "best": 0.811,
@@ -3159,22 +3143,22 @@
     "rerank": 4
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 29.1,
-    "fused": 28.9,
-    "rerank": 78.6
+    "words": 4.9,
+    "meaning": 30.2,
+    "fused": 30.6,
+    "rerank": 82.4
    },
    "fileRank": {
-    "words": 3,
+    "words": 2,
     "meaning": 2,
     "fused": 2,
     "rerank": 3
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 31.3,
-    "fused": 29.2,
-    "rerank": 191.4
+    "words": 4.9,
+    "meaning": 32.2,
+    "fused": 31.9,
+    "rerank": 196.5
    },
    "similarity": {
     "best": 0.735,
@@ -3194,10 +3178,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 29.3,
-    "fused": 29.8,
-    "rerank": 125.8
+    "words": 5.1,
+    "meaning": 30.7,
+    "fused": 31.6,
+    "rerank": 126.6
    },
    "fileRank": {
     "words": 1,
@@ -3206,10 +3190,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 30.9,
-    "fused": 31.7,
-    "rerank": 195.4
+    "words": 5.5,
+    "meaning": 34.8,
+    "fused": 31.4,
+    "rerank": 195.8
    },
    "similarity": {
     "best": 0.775,
@@ -3229,22 +3213,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.6,
-    "meaning": 28.4,
-    "fused": 29.1,
-    "rerank": 195.3
+    "words": 4.9,
+    "meaning": 28.8,
+    "fused": 29.8,
+    "rerank": 198
    },
    "fileRank": {
-    "words": 5,
+    "words": 4,
     "meaning": 1,
     "fused": 1,
     "rerank": 3
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 30.1,
-    "fused": 29.7,
-    "rerank": 195.7
+    "words": 4.7,
+    "meaning": 30.7,
+    "fused": 30.9,
+    "rerank": 199.3
    },
    "similarity": {
     "best": 0.67,
@@ -3264,10 +3248,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5,
-    "meaning": 29,
-    "fused": 29.4,
-    "rerank": 199.9
+    "words": 5.3,
+    "meaning": 29.3,
+    "fused": 31.4,
+    "rerank": 201.4
    },
    "fileRank": {
     "words": 2,
@@ -3276,10 +3260,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.2,
-    "meaning": 31.2,
-    "fused": 30.5,
-    "rerank": 222.5
+    "words": 10.1,
+    "meaning": 31.9,
+    "fused": 30.1,
+    "rerank": 225.1
    },
    "similarity": {
     "best": 0.845,
@@ -3299,22 +3283,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 29.9,
-    "fused": 32.2,
-    "rerank": 225.4
+    "words": 5.2,
+    "meaning": 31.6,
+    "fused": 31.6,
+    "rerank": 232.6
    },
    "fileRank": {
-    "words": 5,
+    "words": 6,
     "meaning": 2,
     "fused": 2,
     "rerank": 3
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 32.9,
-    "fused": 31.7,
-    "rerank": 227.3
+    "words": 5.7,
+    "meaning": 33,
+    "fused": 31.3,
+    "rerank": 242.1
    },
    "similarity": {
     "best": 0.705,
@@ -3334,22 +3318,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.6,
-    "meaning": 26.6,
-    "fused": 28.3,
-    "rerank": 190.3
+    "words": 5.5,
+    "meaning": 26.7,
+    "fused": 28.1,
+    "rerank": 201.4
    },
    "fileRank": {
-    "words": 1,
+    "words": 2,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 28.3,
-    "fused": 28.3,
-    "rerank": 207.3
+    "words": 4.8,
+    "meaning": 29.3,
+    "fused": 27.8,
+    "rerank": 203.1
    },
    "similarity": {
     "best": 0.768,
@@ -3369,10 +3353,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28.4,
-    "fused": 29.1,
-    "rerank": 211.6
+    "words": 4.8,
+    "meaning": 28.7,
+    "fused": 29.8,
+    "rerank": 217
    },
    "fileRank": {
     "words": 2,
@@ -3381,10 +3365,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4,
-    "meaning": 30,
-    "fused": 28.9,
-    "rerank": 215.1
+    "words": 4.6,
+    "meaning": 30.9,
+    "fused": 29.6,
+    "rerank": 219.5
    },
    "similarity": {
     "best": 0.748,
@@ -3404,10 +3388,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28,
-    "fused": 28,
-    "rerank": 184.9
+    "words": 5,
+    "meaning": 28.5,
+    "fused": 30.3,
+    "rerank": 180.4
    },
    "fileRank": {
     "words": 1,
@@ -3416,10 +3400,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 29.3,
-    "fused": 28.9,
-    "rerank": 224.7
+    "words": 4.7,
+    "meaning": 30.6,
+    "fused": 28.8,
+    "rerank": 231.3
    },
    "similarity": {
     "best": 0.823,
@@ -3439,22 +3423,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.4,
-    "meaning": 28,
-    "fused": 28.5,
-    "rerank": 213.4
+    "words": 5.2,
+    "meaning": 28.8,
+    "fused": 30,
+    "rerank": 214.6
    },
    "fileRank": {
-    "words": 4,
+    "words": 5,
     "meaning": 1,
     "fused": 1,
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 29.4,
-    "fused": 28.1,
-    "rerank": 218.6
+    "words": 4.6,
+    "meaning": 30.8,
+    "fused": 29.9,
+    "rerank": 216.6
    },
    "similarity": {
     "best": 0.737,
@@ -3474,10 +3458,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.7,
-    "meaning": 30.1,
-    "fused": 29.9,
-    "rerank": 219.1
+    "words": 7.3,
+    "meaning": 29.5,
+    "fused": 29.7,
+    "rerank": 207.9
    },
    "fileRank": {
     "words": 1,
@@ -3486,10 +3470,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.6,
-    "meaning": 31.3,
-    "fused": 30.1,
-    "rerank": 222.6
+    "words": 4.7,
+    "meaning": 30.1,
+    "fused": 30,
+    "rerank": 209.4
    },
    "similarity": {
     "best": 0.782,
@@ -3509,22 +3493,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.6,
-    "meaning": 29,
+    "words": 5,
+    "meaning": 28.9,
     "fused": 29.9,
-    "rerank": 202.7
+    "rerank": 198.4
    },
    "fileRank": {
     "words": 1,
-    "meaning": 3,
+    "meaning": 2,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
     "words": 4.2,
-    "meaning": 29.5,
-    "fused": 30.7,
-    "rerank": 203.8
+    "meaning": 30,
+    "fused": 31,
+    "rerank": 200.8
    },
    "similarity": {
     "best": 0.75,
@@ -3544,22 +3528,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 29,
-    "fused": 29.5,
-    "rerank": 227.3
+    "words": 5,
+    "meaning": 29.3,
+    "fused": 29.2,
+    "rerank": 226.3
    },
    "fileRank": {
-    "words": 1,
+    "words": 5,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.2,
-    "meaning": 29.6,
-    "fused": 31,
-    "rerank": 227.6
+    "words": 4.7,
+    "meaning": 31.1,
+    "fused": 29.1,
+    "rerank": 230.1
    },
    "similarity": {
     "best": 0.752,
@@ -3579,10 +3563,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5,
-    "meaning": 26.7,
-    "fused": 28.8,
-    "rerank": 129.8
+    "words": 5.1,
+    "meaning": 27.7,
+    "fused": 29.3,
+    "rerank": 129.6
    },
    "fileRank": {
     "words": 1,
@@ -3591,10 +3575,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 30.8,
-    "fused": 28.5,
-    "rerank": 221.6
+    "words": 4.3,
+    "meaning": 29.5,
+    "fused": 29.5,
+    "rerank": 223.8
    },
    "similarity": {
     "best": 0.797,
@@ -3614,10 +3598,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.8,
-    "meaning": 28.8,
-    "fused": 28.8,
-    "rerank": 111.6
+    "words": 7.3,
+    "meaning": 29.4,
+    "fused": 31.2,
+    "rerank": 113.1
    },
    "fileRank": {
     "words": 1,
@@ -3626,10 +3610,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 30.4,
-    "fused": 28.7,
-    "rerank": 232
+    "words": 5.3,
+    "meaning": 35.2,
+    "fused": 31.4,
+    "rerank": 231.7
    },
    "similarity": {
     "best": 0.831,
@@ -3644,27 +3628,27 @@
    "split": "test",
    "rank": {
     "words": 0,
-    "meaning": 9,
-    "fused": 9,
+    "meaning": 8,
+    "fused": 8,
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
+    "words": 4.8,
     "meaning": 29.2,
-    "fused": 30,
-    "rerank": 183.6
+    "fused": 30.7,
+    "rerank": 183.2
    },
    "fileRank": {
     "words": 1,
-    "meaning": 6,
-    "fused": 6,
-    "rerank": 4
+    "meaning": 4,
+    "fused": 4,
+    "rerank": 3
    },
    "fileMs": {
-    "words": 10.7,
-    "meaning": 30.4,
-    "fused": 29.3,
-    "rerank": 184.7
+    "words": 4.7,
+    "meaning": 32.2,
+    "fused": 30.4,
+    "rerank": 186.2
    },
    "similarity": {
     "best": 0.661,
@@ -3684,10 +3668,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 26.8,
-    "fused": 27.4,
-    "rerank": 201.5
+    "words": 5.1,
+    "meaning": 28.4,
+    "fused": 28.7,
+    "rerank": 207.2
    },
    "fileRank": {
     "words": 1,
@@ -3696,10 +3680,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4,
-    "meaning": 28.1,
-    "fused": 26.7,
-    "rerank": 203.1
+    "words": 4.6,
+    "meaning": 29.5,
+    "fused": 28.6,
+    "rerank": 208.6
    },
    "similarity": {
     "best": 0.76,
@@ -3719,10 +3703,10 @@
     "rerank": 7
    },
    "ms": {
-    "words": 4.4,
-    "meaning": 26.6,
-    "fused": 27.7,
-    "rerank": 225.1
+    "words": 5,
+    "meaning": 28.1,
+    "fused": 28.2,
+    "rerank": 227.7
    },
    "fileRank": {
     "words": 3,
@@ -3731,10 +3715,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 28.2,
-    "fused": 27,
-    "rerank": 226.8
+    "words": 10.1,
+    "meaning": 28.8,
+    "fused": 28.2,
+    "rerank": 227.4
    },
    "similarity": {
     "best": 0.846,
@@ -3754,10 +3738,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28.4,
-    "fused": 28.5,
-    "rerank": 208.3
+    "words": 4.9,
+    "meaning": 30.1,
+    "fused": 29.9,
+    "rerank": 212.1
    },
    "fileRank": {
     "words": 1,
@@ -3766,10 +3750,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 29.5,
-    "fused": 28.2,
-    "rerank": 211.1
+    "words": 4.9,
+    "meaning": 31.6,
+    "fused": 29.3,
+    "rerank": 218.5
    },
    "similarity": {
     "best": 0.786,
@@ -3789,22 +3773,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.2,
-    "fused": 29.2,
-    "rerank": 108.3
+    "words": 5.4,
+    "meaning": 30.1,
+    "fused": 31,
+    "rerank": 110.5
    },
    "fileRank": {
-    "words": 4,
+    "words": 6,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 30.9,
-    "fused": 29,
-    "rerank": 244.5
+    "words": 5.7,
+    "meaning": 32.8,
+    "fused": 31.7,
+    "rerank": 247.6
    },
    "similarity": {
     "best": 0.849,
@@ -3824,10 +3808,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.8,
-    "meaning": 29.6,
-    "fused": 30.4,
-    "rerank": 89.5
+    "words": 5.1,
+    "meaning": 30.1,
+    "fused": 31.6,
+    "rerank": 91.8
    },
    "fileRank": {
     "words": 1,
@@ -3836,10 +3820,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.2,
-    "meaning": 31.8,
-    "fused": 29.9,
-    "rerank": 220.7
+    "words": 5.6,
+    "meaning": 32.2,
+    "fused": 31.5,
+    "rerank": 229.1
    },
    "similarity": {
     "best": 0.678,
@@ -3859,10 +3843,10 @@
     "rerank": 5
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 29.1,
-    "fused": 28.9,
-    "rerank": 179
+    "words": 5,
+    "meaning": 28.9,
+    "fused": 30.9,
+    "rerank": 174.6
    },
    "fileRank": {
     "words": 1,
@@ -3871,10 +3855,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4,
-    "meaning": 30,
-    "fused": 29,
-    "rerank": 230.8
+    "words": 4.7,
+    "meaning": 32.6,
+    "fused": 31.1,
+    "rerank": 229.9
    },
    "similarity": {
     "best": 0.807,
@@ -3894,22 +3878,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 26.9,
-    "fused": 27.9,
-    "rerank": 195.9
+    "words": 5.3,
+    "meaning": 27.1,
+    "fused": 29.2,
+    "rerank": 199.9
    },
    "fileRank": {
-    "words": 6,
+    "words": 7,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 28.6,
-    "fused": 28.2,
-    "rerank": 195.9
+    "words": 4.7,
+    "meaning": 29.8,
+    "fused": 29,
+    "rerank": 201.4
    },
    "similarity": {
     "best": 0.666,
@@ -3929,10 +3913,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28,
-    "fused": 29.7,
-    "rerank": 171.1
+    "words": 5,
+    "meaning": 28.9,
+    "fused": 30.3,
+    "rerank": 174.1
    },
    "fileRank": {
     "words": 2,
@@ -3941,10 +3925,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 29.5,
-    "fused": 30.3,
-    "rerank": 170.7
+    "words": 4.8,
+    "meaning": 30.4,
+    "fused": 30.8,
+    "rerank": 177.1
    },
    "similarity": {
     "best": 0.643,
@@ -3964,10 +3948,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 28.2,
-    "fused": 28.5,
-    "rerank": 118.5
+    "words": 4.9,
+    "meaning": 31.3,
+    "fused": 31,
+    "rerank": 128.4
    },
    "fileRank": {
     "words": 1,
@@ -3976,10 +3960,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.2,
-    "meaning": 30,
-    "fused": 28.1,
-    "rerank": 202
+    "words": 4.7,
+    "meaning": 32.1,
+    "fused": 30,
+    "rerank": 196.4
    },
    "similarity": {
     "best": 0.719,
@@ -3999,22 +3983,22 @@
     "rerank": 0
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.5,
-    "fused": 28.5,
-    "rerank": 215.3
+    "words": 5.1,
+    "meaning": 28.6,
+    "fused": 29.9,
+    "rerank": 216.8
    },
    "fileRank": {
-    "words": 4,
+    "words": 6,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 29.4,
-    "fused": 28.4,
-    "rerank": 217.5
+    "words": 4.8,
+    "meaning": 30.7,
+    "fused": 30.6,
+    "rerank": 218.9
    },
    "similarity": {
     "best": 0.668,
@@ -4034,10 +4018,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 35.5,
-    "fused": 28.9,
-    "rerank": 159.3
+    "words": 4.9,
+    "meaning": 29.2,
+    "fused": 29.5,
+    "rerank": 159.4
    },
    "fileRank": {
     "words": 2,
@@ -4046,10 +4030,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 30.2,
+    "words": 4.9,
+    "meaning": 31.8,
     "fused": 29.3,
-    "rerank": 212.3
+    "rerank": 215
    },
    "similarity": {
     "best": 0.75,
@@ -4069,10 +4053,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28,
-    "fused": 28.2,
-    "rerank": 164.4
+    "words": 5,
+    "meaning": 29.4,
+    "fused": 28.8,
+    "rerank": 163.8
    },
    "fileRank": {
     "words": 3,
@@ -4081,10 +4065,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.2,
-    "meaning": 28.8,
-    "fused": 27.9,
-    "rerank": 188.1
+    "words": 4.9,
+    "meaning": 29,
+    "fused": 29.2,
+    "rerank": 189.5
    },
    "similarity": {
     "best": 0.661,
@@ -4104,10 +4088,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.1,
-    "meaning": 26.5,
-    "fused": 28.2,
-    "rerank": 105.1
+    "words": 4.8,
+    "meaning": 28.5,
+    "fused": 28.4,
+    "rerank": 106
    },
    "fileRank": {
     "words": 1,
@@ -4116,10 +4100,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.6,
-    "meaning": 28.3,
-    "fused": 28.2,
-    "rerank": 188.4
+    "words": 4.1,
+    "meaning": 30.2,
+    "fused": 29.2,
+    "rerank": 189.4
    },
    "similarity": {
     "best": 0.649,
@@ -4139,10 +4123,10 @@
     "rerank": 12
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.3,
-    "fused": 28.2,
-    "rerank": 192
+    "words": 5,
+    "meaning": 30.5,
+    "fused": 31.4,
+    "rerank": 197.3
    },
    "fileRank": {
     "words": 1,
@@ -4151,10 +4135,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 29.7,
-    "fused": 28.4,
-    "rerank": 195.2
+    "words": 5.4,
+    "meaning": 32.8,
+    "fused": 31.1,
+    "rerank": 197.9
    },
    "similarity": {
     "best": 0.629,
@@ -4174,9 +4158,9 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.3,
-    "fused": 30.9,
+    "words": 5.8,
+    "meaning": 30.4,
+    "fused": 31.3,
     "rerank": 194.9
    },
    "fileRank": {
@@ -4186,10 +4170,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.7,
-    "meaning": 31.6,
-    "fused": 30.5,
-    "rerank": 192.2
+    "words": 11.4,
+    "meaning": 33.3,
+    "fused": 31.9,
+    "rerank": 197.7
    },
    "similarity": {
     "best": 0.839,
@@ -4209,10 +4193,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 26.8,
-    "fused": 27.1,
-    "rerank": 206.3
+    "words": 4.9,
+    "meaning": 27.1,
+    "fused": 29.2,
+    "rerank": 205.8
    },
    "fileRank": {
     "words": 1,
@@ -4221,10 +4205,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 4.2,
-    "meaning": 28.4,
-    "fused": 27,
-    "rerank": 208.2
+    "words": 4.8,
+    "meaning": 29.6,
+    "fused": 29.5,
+    "rerank": 209.5
    },
    "similarity": {
     "best": 0.785,
@@ -4244,10 +4228,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28.1,
-    "fused": 28.9,
-    "rerank": 196.1
+    "words": 5.3,
+    "meaning": 28.4,
+    "fused": 30.9,
+    "rerank": 198.1
    },
    "fileRank": {
     "words": 5,
@@ -4256,10 +4240,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 29.9,
-    "fused": 29.1,
-    "rerank": 197.4
+    "words": 4.7,
+    "meaning": 31.6,
+    "fused": 30.1,
+    "rerank": 197.9
    },
    "similarity": {
     "best": 0.849,
@@ -4279,10 +4263,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.9,
-    "meaning": 28.7,
-    "fused": 30.3,
-    "rerank": 96.5
+    "words": 5.2,
+    "meaning": 28.5,
+    "fused": 30,
+    "rerank": 97.5
    },
    "fileRank": {
     "words": 1,
@@ -4291,10 +4275,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 30.5,
+    "words": 4.8,
+    "meaning": 31.4,
     "fused": 29.9,
-    "rerank": 218.8
+    "rerank": 210.2
    },
    "similarity": {
     "best": 0.773,
@@ -4314,22 +4298,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.6,
-    "fused": 29.1,
-    "rerank": 63
+    "words": 5,
+    "meaning": 28.7,
+    "fused": 30.3,
+    "rerank": 64.4
    },
    "fileRank": {
-    "words": 13,
+    "words": 0,
     "meaning": 2,
     "fused": 2,
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 29.9,
-    "fused": 29.6,
-    "rerank": 191.2
+    "words": 4.7,
+    "meaning": 30.4,
+    "fused": 29.9,
+    "rerank": 198.3
    },
    "similarity": {
     "best": 0.742,
@@ -4349,10 +4333,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.3,
+    "words": 5,
     "meaning": 28.5,
-    "fused": 29.6,
-    "rerank": 197.6
+    "fused": 29.1,
+    "rerank": 199.5
    },
    "fileRank": {
     "words": 1,
@@ -4361,10 +4345,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 30.6,
-    "fused": 29,
-    "rerank": 200.9
+    "words": 4.8,
+    "meaning": 30.5,
+    "fused": 30.6,
+    "rerank": 200.6
    },
    "similarity": {
     "best": 0.796,
@@ -4384,10 +4368,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.7,
-    "meaning": 28,
-    "fused": 28.3,
-    "rerank": 61.9
+    "words": 5.3,
+    "meaning": 28.8,
+    "fused": 29.6,
+    "rerank": 62.6
    },
    "fileRank": {
     "words": 1,
@@ -4396,10 +4380,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 29.4,
-    "fused": 27.9,
-    "rerank": 201.2
+    "words": 4.4,
+    "meaning": 30.9,
+    "fused": 29.6,
+    "rerank": 203.1
    },
    "similarity": {
     "best": 0.811,
@@ -4419,10 +4403,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.4,
-    "meaning": 26.7,
-    "fused": 28.6,
-    "rerank": 91.3
+    "words": 5,
+    "meaning": 27.2,
+    "fused": 31.6,
+    "rerank": 92.4
    },
    "fileRank": {
     "words": 2,
@@ -4431,10 +4415,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 30.1,
-    "fused": 27.9,
-    "rerank": 199.2
+    "words": 4.3,
+    "meaning": 29.1,
+    "fused": 28.8,
+    "rerank": 201.3
    },
    "similarity": {
     "best": 0.813,
@@ -4454,10 +4438,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 30.6,
-    "fused": 30.7,
-    "rerank": 129.5
+    "words": 5.2,
+    "meaning": 31.3,
+    "fused": 32,
+    "rerank": 129.9
    },
    "fileRank": {
     "words": 1,
@@ -4466,10 +4450,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 32,
-    "fused": 31.7,
-    "rerank": 214.8
+    "words": 5,
+    "meaning": 34.7,
+    "fused": 32.2,
+    "rerank": 214
    },
    "similarity": {
     "best": 0.756,
@@ -4489,10 +4473,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.1,
-    "meaning": 27.7,
-    "fused": 27.6,
-    "rerank": 146.3
+    "words": 4.8,
+    "meaning": 29,
+    "fused": 30.5,
+    "rerank": 97
    },
    "fileRank": {
     "words": 1,
@@ -4501,10 +4485,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.7,
-    "meaning": 29,
-    "fused": 27.7,
-    "rerank": 175.2
+    "words": 4.4,
+    "meaning": 32.1,
+    "fused": 31.1,
+    "rerank": 184.3
    },
    "similarity": {
     "best": 0.558,
@@ -4524,10 +4508,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.2,
-    "fused": 28,
-    "rerank": 28
+    "words": 4.9,
+    "meaning": 29.3,
+    "fused": 29.2,
+    "rerank": 30.5
    },
    "fileRank": {
     "words": 1,
@@ -4536,10 +4520,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.1,
-    "meaning": 28.9,
-    "fused": 28.4,
-    "rerank": 166.8
+    "words": 4.7,
+    "meaning": 30.7,
+    "fused": 30.2,
+    "rerank": 176.8
    },
    "similarity": {
     "best": 0.613,
@@ -4559,10 +4543,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 4.4,
-    "meaning": 29.2,
-    "fused": 30,
-    "rerank": 176
+    "words": 4.8,
+    "meaning": 30.2,
+    "fused": 29.6,
+    "rerank": 180
    },
    "fileRank": {
     "words": 1,
@@ -4571,10 +4555,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 30,
-    "fused": 30.3,
-    "rerank": 182.7
+    "words": 4.4,
+    "meaning": 31,
+    "fused": 30.4,
+    "rerank": 180.7
    },
    "similarity": {
     "best": 0.495,
@@ -4594,10 +4578,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.8,
+    "words": 5.1,
     "meaning": 29,
-    "fused": 30.2,
-    "rerank": 191.7
+    "fused": 29.7,
+    "rerank": 189.9
    },
    "fileRank": {
     "words": 1,
@@ -4606,10 +4590,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 30.8,
-    "fused": 29.7,
-    "rerank": 189.7
+    "words": 5.1,
+    "meaning": 31.1,
+    "fused": 30,
+    "rerank": 192.4
    },
    "similarity": {
     "best": 0.852,
@@ -4629,10 +4613,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 29,
-    "fused": 29.3,
-    "rerank": 219.9
+    "words": 5,
+    "meaning": 29.6,
+    "fused": 32,
+    "rerank": 222.7
    },
    "fileRank": {
     "words": 1,
@@ -4642,9 +4626,9 @@
    },
    "fileMs": {
     "words": 4.8,
-    "meaning": 31,
-    "fused": 29.4,
-    "rerank": 222.9
+    "meaning": 32.9,
+    "fused": 31.6,
+    "rerank": 225.8
    },
    "similarity": {
     "best": 0.804,
@@ -4664,10 +4648,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 28.7,
-    "fused": 29.1,
-    "rerank": 211.5
+    "words": 5.9,
+    "meaning": 30.9,
+    "fused": 30.8,
+    "rerank": 212.8
    },
    "fileRank": {
     "words": 1,
@@ -4676,10 +4660,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 10.4,
-    "meaning": 30.2,
-    "fused": 29.3,
-    "rerank": 213.2
+    "words": 5.2,
+    "meaning": 32.5,
+    "fused": 31.1,
+    "rerank": 213
    },
    "similarity": {
     "best": 0.775,
@@ -4699,10 +4683,10 @@
     "rerank": 4
    },
    "ms": {
-    "words": 4.5,
-    "meaning": 28.8,
-    "fused": 28.8,
-    "rerank": 190.5
+    "words": 5.1,
+    "meaning": 29,
+    "fused": 29.4,
+    "rerank": 192.9
    },
    "fileRank": {
     "words": 1,
@@ -4711,10 +4695,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.9,
-    "meaning": 29,
-    "fused": 28.4,
-    "rerank": 192.6
+    "words": 10.2,
+    "meaning": 30.1,
+    "fused": 29.6,
+    "rerank": 194
    },
    "similarity": {
     "best": 0.792,
@@ -4734,10 +4718,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28.4,
-    "fused": 30.2,
-    "rerank": 203.2
+    "words": 4.9,
+    "meaning": 29,
+    "fused": 29.8,
+    "rerank": 204.1
    },
    "fileRank": {
     "words": 2,
@@ -4746,10 +4730,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4,
-    "meaning": 35,
-    "fused": 30,
-    "rerank": 203.4
+    "words": 4.7,
+    "meaning": 31.4,
+    "fused": 29.4,
+    "rerank": 209.4
    },
    "similarity": {
     "best": 0.782,
@@ -4769,10 +4753,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.8,
-    "fused": 29.9,
-    "rerank": 96.7
+    "words": 5.2,
+    "meaning": 29.3,
+    "fused": 29.2,
+    "rerank": 99.7
    },
    "fileRank": {
     "words": 3,
@@ -4781,9 +4765,9 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.4,
-    "meaning": 30,
-    "fused": 29.5,
+    "words": 4.8,
+    "meaning": 30.4,
+    "fused": 30.2,
     "rerank": 195.1
    },
    "similarity": {
@@ -4804,10 +4788,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 28.9,
-    "fused": 29.4,
-    "rerank": 187.4
+    "words": 5.4,
+    "meaning": 29.6,
+    "fused": 30.6,
+    "rerank": 189.5
    },
    "fileRank": {
     "words": 3,
@@ -4816,10 +4800,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 30.7,
-    "fused": 29.4,
-    "rerank": 190.6
+    "words": 5.4,
+    "meaning": 31.4,
+    "fused": 29.7,
+    "rerank": 192.3
    },
    "similarity": {
     "best": 0.731,
@@ -4839,10 +4823,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.7,
-    "meaning": 29.1,
-    "fused": 29.5,
-    "rerank": 122.9
+    "words": 5.2,
+    "meaning": 29.6,
+    "fused": 30.4,
+    "rerank": 125.9
    },
    "fileRank": {
     "words": 1,
@@ -4851,10 +4835,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 30.6,
-    "fused": 29.1,
-    "rerank": 196.7
+    "words": 5.4,
+    "meaning": 31.8,
+    "fused": 30.3,
+    "rerank": 200
    },
    "similarity": {
     "best": 0.75,
@@ -4874,10 +4858,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.3,
-    "meaning": 26.7,
-    "fused": 27.4,
-    "rerank": 84.8
+    "words": 5.2,
+    "meaning": 29.5,
+    "fused": 29.2,
+    "rerank": 86.6
    },
    "fileRank": {
     "words": 1,
@@ -4886,10 +4870,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.3,
-    "meaning": 28.4,
-    "fused": 26.9,
-    "rerank": 179.6
+    "words": 4.7,
+    "meaning": 31.4,
+    "fused": 29.7,
+    "rerank": 179.5
    },
    "similarity": {
     "best": 0.756,
@@ -4909,10 +4893,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.8,
-    "meaning": 30,
-    "fused": 30.3,
-    "rerank": 84.3
+    "words": 5,
+    "meaning": 28.5,
+    "fused": 30.2,
+    "rerank": 81.9
    },
    "fileRank": {
     "words": 1,
@@ -4921,10 +4905,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.3,
-    "meaning": 31.3,
-    "fused": 29.9,
-    "rerank": 190.4
+    "words": 4.2,
+    "meaning": 30.8,
+    "fused": 30.1,
+    "rerank": 188.8
    },
    "similarity": {
     "best": 0.692,
@@ -4944,10 +4928,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 4.2,
-    "meaning": 28.2,
-    "fused": 28.6,
-    "rerank": 80.7
+    "words": 4.8,
+    "meaning": 28.3,
+    "fused": 30.4,
+    "rerank": 81
    },
    "fileRank": {
     "words": 1,
@@ -4956,10 +4940,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 3.8,
-    "meaning": 29.4,
-    "fused": 30.1,
-    "rerank": 196.1
+    "words": 4,
+    "meaning": 30.6,
+    "fused": 30.7,
+    "rerank": 187.4
    },
    "similarity": {
     "best": 0.71,
@@ -4979,22 +4963,22 @@
     "rerank": 0
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.2,
-    "fused": 30.2,
-    "rerank": 138.5
+    "words": 6.8,
+    "meaning": 29.8,
+    "fused": 30.8,
+    "rerank": 138.3
    },
    "fileRank": {
-    "words": 10,
+    "words": 11,
     "meaning": 2,
     "fused": 2,
     "rerank": 2
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 30.5,
-    "fused": 29.4,
-    "rerank": 138.1
+    "words": 6.1,
+    "meaning": 32,
+    "fused": 31.7,
+    "rerank": 141.3
    },
    "similarity": {
     "best": 0.708,
@@ -5014,10 +4998,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.9,
-    "meaning": 30.3,
-    "fused": 30.7,
-    "rerank": 153.5
+    "words": 7.2,
+    "meaning": 30.4,
+    "fused": 31.1,
+    "rerank": 154.2
    },
    "fileRank": {
     "words": 1,
@@ -5026,10 +5010,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 11.6,
-    "meaning": 31.7,
-    "fused": 30.5,
-    "rerank": 155.8
+    "words": 7.4,
+    "meaning": 32,
+    "fused": 30.6,
+    "rerank": 156.2
    },
    "similarity": {
     "best": 0.743,
@@ -5049,10 +5033,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.6,
-    "fused": 30.1,
-    "rerank": 159.4
+    "words": 6.5,
+    "meaning": 30.3,
+    "fused": 32,
+    "rerank": 161
    },
    "fileRank": {
     "words": 2,
@@ -5061,10 +5045,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 31.3,
-    "fused": 29.3,
-    "rerank": 169.6
+    "words": 5.8,
+    "meaning": 32.5,
+    "fused": 31.5,
+    "rerank": 161.8
    },
    "similarity": {
     "best": 0.725,
@@ -5084,10 +5068,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.8,
-    "meaning": 28,
-    "fused": 29.9,
-    "rerank": 167.8
+    "words": 6.6,
+    "meaning": 30.4,
+    "fused": 30.4,
+    "rerank": 173.1
    },
    "fileRank": {
     "words": 1,
@@ -5096,10 +5080,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 29.8,
-    "fused": 28.8,
-    "rerank": 169.8
+    "words": 8.1,
+    "meaning": 32.2,
+    "fused": 30.8,
+    "rerank": 173.7
    },
    "similarity": {
     "best": 0.798,
@@ -5119,10 +5103,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.6,
-    "fused": 29.5,
-    "rerank": 56
+    "words": 6.8,
+    "meaning": 31,
+    "fused": 31.6,
+    "rerank": 56.6
    },
    "fileRank": {
     "words": 2,
@@ -5131,10 +5115,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 31.1,
-    "fused": 29.8,
-    "rerank": 193.8
+    "words": 6.5,
+    "meaning": 35.2,
+    "fused": 32,
+    "rerank": 193.7
    },
    "similarity": {
     "best": 0.775,
@@ -5154,22 +5138,22 @@
     "rerank": 5
    },
    "ms": {
-    "words": 6,
-    "meaning": 32.7,
-    "fused": 32.2,
-    "rerank": 174.6
+    "words": 6.5,
+    "meaning": 31.9,
+    "fused": 32.4,
+    "rerank": 178.8
    },
    "fileRank": {
-    "words": 4,
+    "words": 5,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.6,
-    "meaning": 33.6,
-    "fused": 31.8,
-    "rerank": 187.9
+    "words": 6.1,
+    "meaning": 34.9,
+    "fused": 35.3,
+    "rerank": 188.5
    },
    "similarity": {
     "best": 0.75,
@@ -5189,22 +5173,22 @@
     "rerank": 16
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.9,
-    "fused": 28.4,
-    "rerank": 155.2
+    "words": 6.5,
+    "meaning": 27.7,
+    "fused": 28.8,
+    "rerank": 156.5
    },
    "fileRank": {
-    "words": 5,
+    "words": 4,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.2,
-    "meaning": 30.3,
-    "fused": 29.4,
-    "rerank": 156.4
+    "words": 6,
+    "meaning": 30.5,
+    "fused": 29.7,
+    "rerank": 157.8
    },
    "similarity": {
     "best": 0.652,
@@ -5224,10 +5208,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 29.2,
-    "fused": 30.5,
-    "rerank": 130.5
+    "words": 6.8,
+    "meaning": 29.4,
+    "fused": 30.6,
+    "rerank": 131.8
    },
    "fileRank": {
     "words": 1,
@@ -5236,10 +5220,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 31.9,
-    "fused": 30.4,
-    "rerank": 175.1
+    "words": 6,
+    "meaning": 32.2,
+    "fused": 30,
+    "rerank": 174.2
    },
    "similarity": {
     "best": 0.735,
@@ -5259,10 +5243,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 29,
-    "fused": 30.2,
-    "rerank": 135.5
+    "words": 6.3,
+    "meaning": 31,
+    "fused": 30.7,
+    "rerank": 133.3
    },
    "fileRank": {
     "words": 3,
@@ -5271,10 +5255,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 29.3,
-    "fused": 31.6,
-    "rerank": 136.3
+    "words": 5.7,
+    "meaning": 32.9,
+    "fused": 30.5,
+    "rerank": 132.7
    },
    "similarity": {
     "best": 0.602,
@@ -5294,10 +5278,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 30.1,
-    "fused": 31.6,
-    "rerank": 175.5
+    "words": 6.4,
+    "meaning": 29.7,
+    "fused": 30.4,
+    "rerank": 173.1
    },
    "fileRank": {
     "words": 2,
@@ -5306,10 +5290,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.4,
-    "meaning": 32.2,
-    "fused": 31.4,
-    "rerank": 185.5
+    "words": 6.1,
+    "meaning": 32.1,
+    "fused": 30.6,
+    "rerank": 184.1
    },
    "similarity": {
     "best": 0.749,
@@ -5329,10 +5313,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 36.4,
-    "fused": 31.8,
-    "rerank": 194.5
+    "words": 6.7,
+    "meaning": 29.7,
+    "fused": 30.8,
+    "rerank": 190
    },
    "fileRank": {
     "words": 1,
@@ -5341,10 +5325,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.4,
-    "meaning": 33.3,
-    "fused": 32.4,
-    "rerank": 194.4
+    "words": 6.2,
+    "meaning": 31.9,
+    "fused": 30,
+    "rerank": 193.5
    },
    "similarity": {
     "best": 0.726,
@@ -5364,10 +5348,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 7.3,
-    "meaning": 28.8,
-    "fused": 29.1,
-    "rerank": 181.6
+    "words": 6.4,
+    "meaning": 28.6,
+    "fused": 30.2,
+    "rerank": 180.6
    },
    "fileRank": {
     "words": 1,
@@ -5376,10 +5360,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.7,
-    "meaning": 30.5,
-    "fused": 30.8,
-    "rerank": 185.2
+    "words": 6.1,
+    "meaning": 31.8,
+    "fused": 30.3,
+    "rerank": 182.2
    },
    "similarity": {
     "best": 0.732,
@@ -5399,10 +5383,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 30.8,
-    "fused": 31.5,
-    "rerank": 180.7
+    "words": 6.5,
+    "meaning": 29.8,
+    "fused": 30.5,
+    "rerank": 179.3
    },
    "fileRank": {
     "words": 1,
@@ -5411,10 +5395,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 13,
-    "meaning": 32.6,
-    "fused": 31.8,
-    "rerank": 200.6
+    "words": 6,
+    "meaning": 32.2,
+    "fused": 30.1,
+    "rerank": 202.5
    },
    "similarity": {
     "best": 0.748,
@@ -5434,10 +5418,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 27.3,
-    "fused": 28.1,
-    "rerank": 127.9
+    "words": 6.6,
+    "meaning": 28.3,
+    "fused": 29.7,
+    "rerank": 128.4
    },
    "fileRank": {
     "words": 1,
@@ -5446,10 +5430,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 28.2,
-    "fused": 27.3,
-    "rerank": 193.6
+    "words": 5.6,
+    "meaning": 30.5,
+    "fused": 28.5,
+    "rerank": 187.8
    },
    "similarity": {
     "best": 0.673,
@@ -5469,10 +5453,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.8,
-    "meaning": 29.5,
-    "fused": 30.5,
-    "rerank": 173.4
+    "words": 6.6,
+    "meaning": 33.3,
+    "fused": 32.1,
+    "rerank": 179.4
    },
    "fileRank": {
     "words": 1,
@@ -5481,10 +5465,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 31.4,
-    "fused": 30,
-    "rerank": 201
+    "words": 6.6,
+    "meaning": 35.6,
+    "fused": 32.4,
+    "rerank": 204
    },
    "similarity": {
     "best": 0.714,
@@ -5504,10 +5488,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.7,
-    "fused": 31.1,
-    "rerank": 251.8
+    "words": 6.5,
+    "meaning": 30.4,
+    "fused": 32.1,
+    "rerank": 252.6
    },
    "fileRank": {
     "words": 1,
@@ -5516,10 +5500,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 31.5,
-    "fused": 30.4,
-    "rerank": 252.2
+    "words": 6.2,
+    "meaning": 33.2,
+    "fused": 31.4,
+    "rerank": 253.1
    },
    "similarity": {
     "best": 0.699,
@@ -5539,10 +5523,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 27.3,
-    "fused": 28.6,
-    "rerank": 74.6
+    "words": 6.5,
+    "meaning": 29.6,
+    "fused": 28.9,
+    "rerank": 76.4
    },
    "fileRank": {
     "words": 1,
@@ -5551,10 +5535,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 29.6,
-    "fused": 27.8,
-    "rerank": 175.7
+    "words": 5.7,
+    "meaning": 30.9,
+    "fused": 28.7,
+    "rerank": 174.4
    },
    "similarity": {
     "best": 0.694,
@@ -5574,10 +5558,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 29,
-    "fused": 29.9,
-    "rerank": 155.8
+    "words": 6.3,
+    "meaning": 30.1,
+    "fused": 32,
+    "rerank": 155.7
    },
    "fileRank": {
     "words": 1,
@@ -5586,10 +5570,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 30.6,
-    "fused": 30.2,
-    "rerank": 183.8
+    "words": 5.8,
+    "meaning": 33.8,
+    "fused": 31.6,
+    "rerank": 185
    },
    "similarity": {
     "best": 0.623,
@@ -5609,10 +5593,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 31.3,
-    "fused": 32.4,
-    "rerank": 172.4
+    "words": 6.4,
+    "meaning": 32.3,
+    "fused": 33,
+    "rerank": 173.7
    },
    "fileRank": {
     "words": 2,
@@ -5621,10 +5605,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 32.7,
-    "fused": 31.7,
-    "rerank": 176
+    "words": 5.8,
+    "meaning": 34.5,
+    "fused": 32.5,
+    "rerank": 175.6
    },
    "similarity": {
     "best": 0.654,
@@ -5644,10 +5628,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 28.9,
-    "fused": 33.3,
-    "rerank": 53.3
+    "words": 6.4,
+    "meaning": 28.1,
+    "fused": 27.8,
+    "rerank": 52.2
    },
    "fileRank": {
     "words": 0,
@@ -5656,10 +5640,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.4,
-    "meaning": 30.3,
-    "fused": 30.4,
-    "rerank": 143.8
+    "words": 5.5,
+    "meaning": 29.6,
+    "fused": 28.6,
+    "rerank": 140.3
    },
    "similarity": {
     "best": 0.564,
@@ -5679,10 +5663,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 30,
-    "fused": 31.4,
-    "rerank": 32.1
+    "words": 6.6,
+    "meaning": 31.4,
+    "fused": 31.6,
+    "rerank": 30.1
    },
    "fileRank": {
     "words": 1,
@@ -5691,10 +5675,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 32.5,
-    "fused": 30.6,
-    "rerank": 166
+    "words": 6.2,
+    "meaning": 33.7,
+    "fused": 31.5,
+    "rerank": 163.5
    },
    "similarity": {
     "best": 0.754,
@@ -5714,10 +5698,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 30.7,
-    "fused": 30.6,
-    "rerank": 31.6
+    "words": 6.2,
+    "meaning": 29.9,
+    "fused": 30.5,
+    "rerank": 35.5
    },
    "fileRank": {
     "words": 1,
@@ -5726,10 +5710,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 11,
-    "meaning": 32.8,
-    "fused": 31.8,
-    "rerank": 164.1
+    "words": 5.6,
+    "meaning": 32.6,
+    "fused": 31.2,
+    "rerank": 164.3
    },
    "similarity": {
     "best": 0.685,
@@ -5749,10 +5733,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 6.3,
-    "meaning": 27.6,
-    "fused": 28.4,
-    "rerank": 52.4
+    "words": 7.1,
+    "meaning": 28,
+    "fused": 29.5,
+    "rerank": 52.3
    },
    "fileRank": {
     "words": 1,
@@ -5761,10 +5745,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 29,
-    "fused": 28,
-    "rerank": 205.5
+    "words": 5.9,
+    "meaning": 30.8,
+    "fused": 28.9,
+    "rerank": 204.8
    },
    "similarity": {
     "best": 0.751,
@@ -5784,10 +5768,10 @@
     "rerank": 16
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 30.1,
-    "fused": 30.4,
-    "rerank": 168.1
+    "words": 6.4,
+    "meaning": 29.9,
+    "fused": 31.4,
+    "rerank": 167.7
    },
    "fileRank": {
     "words": 5,
@@ -5796,8 +5780,8 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 32,
+    "words": 5.8,
+    "meaning": 33.3,
     "fused": 31.4,
     "rerank": 169
    },
@@ -5819,10 +5803,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 31.1,
-    "fused": 29.6,
-    "rerank": 47
+    "words": 6.9,
+    "meaning": 30.5,
+    "fused": 31.3,
+    "rerank": 49.9
    },
    "fileRank": {
     "words": 1,
@@ -5831,10 +5815,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.9,
-    "meaning": 32.4,
-    "fused": 28.9,
-    "rerank": 203.2
+    "words": 7,
+    "meaning": 32.3,
+    "fused": 30.5,
+    "rerank": 204.7
    },
    "similarity": {
     "best": 0.834,
@@ -5854,10 +5838,10 @@
     "rerank": 8
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 29.7,
-    "fused": 28.1,
-    "rerank": 169.1
+    "words": 6.5,
+    "meaning": 28.1,
+    "fused": 30.1,
+    "rerank": 174.5
    },
    "fileRank": {
     "words": 1,
@@ -5866,10 +5850,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 12.1,
-    "meaning": 30.1,
-    "fused": 27.9,
-    "rerank": 170.4
+    "words": 5.9,
+    "meaning": 30.7,
+    "fused": 31.4,
+    "rerank": 174.7
    },
    "similarity": {
     "best": 0.598,
@@ -5889,10 +5873,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.3,
-    "fused": 29.1,
-    "rerank": 90.3
+    "words": 6.7,
+    "meaning": 30.8,
+    "fused": 33.5,
+    "rerank": 94.4
    },
    "fileRank": {
     "words": 1,
@@ -5901,10 +5885,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 30.5,
-    "fused": 29,
-    "rerank": 171.6
+    "words": 6.9,
+    "meaning": 33.9,
+    "fused": 33.4,
+    "rerank": 169.1
    },
    "similarity": {
     "best": 0.728,
@@ -5924,10 +5908,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 29.2,
-    "fused": 30.4,
-    "rerank": 166
+    "words": 6.7,
+    "meaning": 31.8,
+    "fused": 35.8,
+    "rerank": 170.9
    },
    "fileRank": {
     "words": 1,
@@ -5936,10 +5920,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 30.6,
-    "fused": 31.1,
-    "rerank": 166.8
+    "words": 7.3,
+    "meaning": 33.2,
+    "fused": 32.5,
+    "rerank": 172.2
    },
    "similarity": {
     "best": 0.736,
@@ -5959,10 +5943,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 27.2,
-    "fused": 28.2,
-    "rerank": 68.8
+    "words": 6.9,
+    "meaning": 28,
+    "fused": 30.6,
+    "rerank": 67
    },
    "fileRank": {
     "words": 1,
@@ -5971,10 +5955,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 29.8,
-    "fused": 28.8,
-    "rerank": 213.2
+    "words": 5.6,
+    "meaning": 30.2,
+    "fused": 29.2,
+    "rerank": 214.1
    },
    "similarity": {
     "best": 0.811,
@@ -5994,10 +5978,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.1,
-    "fused": 29,
-    "rerank": 110.8
+    "words": 6.3,
+    "meaning": 35.9,
+    "fused": 31.7,
+    "rerank": 114.6
    },
    "fileRank": {
     "words": 3,
@@ -6006,10 +5990,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 30.8,
-    "fused": 29.3,
-    "rerank": 196.8
+    "words": 5.5,
+    "meaning": 33.7,
+    "fused": 32.7,
+    "rerank": 198.7
    },
    "similarity": {
     "best": 0.783,
@@ -6029,10 +6013,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.1,
-    "fused": 29.9,
-    "rerank": 47.6
+    "words": 6.6,
+    "meaning": 29.7,
+    "fused": 31.2,
+    "rerank": 49.2
    },
    "fileRank": {
     "words": 1,
@@ -6041,10 +6025,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 30.7,
-    "fused": 30.2,
-    "rerank": 207.9
+    "words": 6.7,
+    "meaning": 31.5,
+    "fused": 31.7,
+    "rerank": 207.3
    },
    "similarity": {
     "best": 0.796,
@@ -6064,10 +6048,10 @@
     "rerank": 7
    },
    "ms": {
-    "words": 5.8,
-    "meaning": 29.5,
-    "fused": 29.8,
-    "rerank": 150.1
+    "words": 6.5,
+    "meaning": 28.5,
+    "fused": 30.4,
+    "rerank": 147.6
    },
    "fileRank": {
     "words": 5,
@@ -6078,8 +6062,8 @@
    "fileMs": {
     "words": 5.7,
     "meaning": 30.7,
-    "fused": 29.8,
-    "rerank": 166.6
+    "fused": 30.6,
+    "rerank": 164.5
    },
    "similarity": {
     "best": 0.687,
@@ -6099,22 +6083,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.4,
-    "fused": 32.4,
-    "rerank": 64.7
+    "words": 6.4,
+    "meaning": 29.3,
+    "fused": 30.8,
+    "rerank": 66
    },
    "fileRank": {
-    "words": 3,
+    "words": 4,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 31.6,
-    "fused": 31.6,
-    "rerank": 159.5
+    "words": 5.8,
+    "meaning": 32.4,
+    "fused": 31,
+    "rerank": 158.3
    },
    "similarity": {
     "best": 0.749,
@@ -6134,10 +6118,10 @@
     "rerank": 30
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 32.8,
-    "fused": 33.3,
-    "rerank": 160.6
+    "words": 6.5,
+    "meaning": 31.6,
+    "fused": 32.3,
+    "rerank": 157.6
    },
    "fileRank": {
     "words": 5,
@@ -6146,10 +6130,10 @@
     "rerank": 3
    },
    "fileMs": {
-    "words": 5.8,
-    "meaning": 34.7,
-    "fused": 33,
-    "rerank": 160.2
+    "words": 5.6,
+    "meaning": 34.1,
+    "fused": 32.2,
+    "rerank": 161.3
    },
    "similarity": {
     "best": 0.746,
@@ -6169,10 +6153,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 6.2,
-    "meaning": 28.1,
-    "fused": 29.1,
-    "rerank": 78.5
+    "words": 6.6,
+    "meaning": 28,
+    "fused": 28.9,
+    "rerank": 77.8
    },
    "fileRank": {
     "words": 2,
@@ -6181,10 +6165,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.6,
-    "meaning": 31.1,
-    "fused": 28.9,
-    "rerank": 174.8
+    "words": 5.4,
+    "meaning": 31.3,
+    "fused": 28.4,
+    "rerank": 174
    },
    "similarity": {
     "best": 0.767,
@@ -6204,10 +6188,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.3,
-    "fused": 30.7,
-    "rerank": 76.9
+    "words": 6.2,
+    "meaning": 29.9,
+    "fused": 31.9,
+    "rerank": 76.4
    },
    "fileRank": {
     "words": 1,
@@ -6216,10 +6200,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 31.5,
-    "fused": 30,
-    "rerank": 168.3
+    "words": 5.3,
+    "meaning": 33.1,
+    "fused": 31.3,
+    "rerank": 168
    },
    "similarity": {
     "best": 0.75,
@@ -6239,10 +6223,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 29.1,
-    "fused": 30.4,
-    "rerank": 72.2
+    "words": 6.4,
+    "meaning": 29.7,
+    "fused": 31.8,
+    "rerank": 72.7
    },
    "fileRank": {
     "words": 1,
@@ -6251,10 +6235,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.5,
-    "meaning": 31.1,
-    "fused": 30.9,
-    "rerank": 184
+    "words": 5.7,
+    "meaning": 31.8,
+    "fused": 31,
+    "rerank": 185
    },
    "similarity": {
     "best": 0.748,
@@ -6274,10 +6258,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 27.6,
-    "fused": 30.2,
-    "rerank": 140.4
+    "words": 6.5,
+    "meaning": 28.5,
+    "fused": 31.5,
+    "rerank": 145.2
    },
    "fileRank": {
     "words": 1,
@@ -6286,10 +6270,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 29.8,
-    "fused": 29.6,
-    "rerank": 185.5
+    "words": 6,
+    "meaning": 32.2,
+    "fused": 31.3,
+    "rerank": 190
    },
    "similarity": {
     "best": 0.682,
@@ -6309,10 +6293,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 34.7,
-    "fused": 32,
-    "rerank": 53.2
+    "words": 6.6,
+    "meaning": 32.5,
+    "fused": 34.9,
+    "rerank": 55
    },
    "fileRank": {
     "words": 1,
@@ -6321,10 +6305,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 34,
-    "fused": 33.1,
-    "rerank": 167
+    "words": 6.7,
+    "meaning": 36.5,
+    "fused": 34,
+    "rerank": 171.6
    },
    "similarity": {
     "best": 0.802,
@@ -6344,10 +6328,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.1,
-    "fused": 29.9,
-    "rerank": 28.9
+    "words": 6.5,
+    "meaning": 30.6,
+    "fused": 31.7,
+    "rerank": 33.3
    },
    "fileRank": {
     "words": 1,
@@ -6356,10 +6340,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 31.2,
-    "fused": 29.2,
-    "rerank": 196.2
+    "words": 6.6,
+    "meaning": 33.3,
+    "fused": 32.5,
+    "rerank": 197.6
    },
    "similarity": {
     "best": 0.776,
@@ -6379,10 +6363,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.9,
-    "meaning": 27.5,
-    "fused": 29,
-    "rerank": 129.5
+    "words": 6.7,
+    "meaning": 29.4,
+    "fused": 29.8,
+    "rerank": 130.6
    },
    "fileRank": {
     "words": 1,
@@ -6391,10 +6375,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 29.3,
-    "fused": 28.3,
-    "rerank": 170.7
+    "words": 6.4,
+    "meaning": 31.6,
+    "fused": 28.8,
+    "rerank": 172
    },
    "similarity": {
     "best": 0.795,
@@ -6414,10 +6398,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.8,
-    "meaning": 30.5,
-    "fused": 29.9,
-    "rerank": 82.8
+    "words": 6.3,
+    "meaning": 29.8,
+    "fused": 30.8,
+    "rerank": 83.7
    },
    "fileRank": {
     "words": 2,
@@ -6427,9 +6411,9 @@
    },
    "fileMs": {
     "words": 5.5,
-    "meaning": 31.2,
-    "fused": 30.6,
-    "rerank": 175.4
+    "meaning": 33,
+    "fused": 32.2,
+    "rerank": 180
    },
    "similarity": {
     "best": 0.872,
@@ -6449,22 +6433,22 @@
     "rerank": 9
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 30.6,
-    "fused": 32.7,
-    "rerank": 189.1
+    "words": 6.5,
+    "meaning": 31.9,
+    "fused": 31.9,
+    "rerank": 194.9
    },
    "fileRank": {
-    "words": 6,
+    "words": 5,
     "meaning": 2,
     "fused": 2,
     "rerank": 4
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 32.7,
-    "fused": 32.5,
-    "rerank": 192
+    "words": 5.6,
+    "meaning": 34.6,
+    "fused": 31.7,
+    "rerank": 193.9
    },
    "similarity": {
     "best": 0.763,
@@ -6484,10 +6468,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.3,
-    "fused": 31,
-    "rerank": 137.1
+    "words": 6.9,
+    "meaning": 31.5,
+    "fused": 30.7,
+    "rerank": 133.1
    },
    "fileRank": {
     "words": 1,
@@ -6496,10 +6480,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.8,
-    "meaning": 32.1,
-    "fused": 31.2,
-    "rerank": 178.5
+    "words": 5.9,
+    "meaning": 32,
+    "fused": 30,
+    "rerank": 176.2
    },
    "similarity": {
     "best": 0.771,
@@ -6519,22 +6503,22 @@
     "rerank": 7
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 29,
-    "fused": 29.3,
-    "rerank": 150.1
+    "words": 6.3,
+    "meaning": 29.9,
+    "fused": 30.9,
+    "rerank": 154.1
    },
    "fileRank": {
-    "words": 2,
+    "words": 1,
     "meaning": 1,
     "fused": 1,
     "rerank": 3
    },
    "fileMs": {
-    "words": 5.2,
-    "meaning": 29.7,
-    "fused": 28.9,
-    "rerank": 205.4
+    "words": 5.7,
+    "meaning": 32.1,
+    "fused": 32,
+    "rerank": 204.9
    },
    "similarity": {
     "best": 0.726,
@@ -6554,22 +6538,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 27.6,
-    "fused": 28.6,
-    "rerank": 70.8
+    "words": 6.4,
+    "meaning": 27.5,
+    "fused": 29.5,
+    "rerank": 77.6
    },
    "fileRank": {
-    "words": 7,
+    "words": 10,
     "meaning": 1,
     "fused": 1,
     "rerank": 3
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 28.3,
-    "fused": 28.4,
-    "rerank": 170.7
+    "words": 5.8,
+    "meaning": 30.5,
+    "fused": 29.1,
+    "rerank": 172.2
    },
    "similarity": {
     "best": 0.822,
@@ -6589,22 +6573,22 @@
     "rerank": 4
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 30.2,
-    "fused": 29.4,
-    "rerank": 113.8
+    "words": 6.7,
+    "meaning": 29.8,
+    "fused": 31.6,
+    "rerank": 114.2
    },
    "fileRank": {
-    "words": 1,
+    "words": 2,
     "meaning": 2,
     "fused": 2,
     "rerank": 2
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 32,
-    "fused": 29.1,
-    "rerank": 185.1
+    "words": 6.1,
+    "meaning": 33.7,
+    "fused": 31,
+    "rerank": 184.1
    },
    "similarity": {
     "best": 0.731,
@@ -6624,22 +6608,22 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.8,
-    "meaning": 27.5,
-    "fused": 29,
-    "rerank": 59.9
+    "words": 6.2,
+    "meaning": 28.7,
+    "fused": 29.8,
+    "rerank": 62
    },
    "fileRank": {
-    "words": 2,
+    "words": 3,
     "meaning": 1,
     "fused": 1,
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.6,
-    "meaning": 30.3,
-    "fused": 29.7,
-    "rerank": 163.4
+    "words": 5.7,
+    "meaning": 33,
+    "fused": 29.9,
+    "rerank": 164.1
    },
    "similarity": {
     "best": 0.744,
@@ -6659,10 +6643,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 28.7,
-    "fused": 29.3,
-    "rerank": 106.9
+    "words": 6.4,
+    "meaning": 30,
+    "fused": 29.9,
+    "rerank": 106.2
    },
    "fileRank": {
     "words": 2,
@@ -6671,10 +6655,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 30.8,
-    "fused": 29.2,
-    "rerank": 165.2
+    "words": 6,
+    "meaning": 31.4,
+    "fused": 31.3,
+    "rerank": 167.7
    },
    "similarity": {
     "best": 0.729,
@@ -6694,22 +6678,22 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.3,
-    "fused": 29.5,
-    "rerank": 185.8
+    "words": 7,
+    "meaning": 31.5,
+    "fused": 32.5,
+    "rerank": 189.9
    },
    "fileRank": {
-    "words": 5,
+    "words": 7,
     "meaning": 1,
     "fused": 1,
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.9,
-    "meaning": 31.7,
-    "fused": 29.7,
-    "rerank": 189
+    "words": 7.2,
+    "meaning": 33.3,
+    "fused": 32,
+    "rerank": 190.8
    },
    "similarity": {
     "best": 0.676,
@@ -6729,10 +6713,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 27.3,
-    "fused": 28,
-    "rerank": 139
+    "words": 6.4,
+    "meaning": 28,
+    "fused": 29.6,
+    "rerank": 140.5
    },
    "fileRank": {
     "words": 1,
@@ -6741,10 +6725,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 29.5,
-    "fused": 28,
-    "rerank": 172.5
+    "words": 5.8,
+    "meaning": 31.5,
+    "fused": 29.1,
+    "rerank": 174.4
    },
    "similarity": {
     "best": 0.754,
@@ -6764,10 +6748,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 30.5,
+    "words": 6.5,
+    "meaning": 29.7,
     "fused": 30.2,
-    "rerank": 83.7
+    "rerank": 89.2
    },
    "fileRank": {
     "words": 1,
@@ -6776,10 +6760,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 32.2,
-    "fused": 31.2,
-    "rerank": 217.4
+    "words": 5.9,
+    "meaning": 32,
+    "fused": 31.6,
+    "rerank": 220.7
    },
    "similarity": {
     "best": 0.799,
@@ -6799,10 +6783,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 30.8,
-    "fused": 31.6,
-    "rerank": 114.7
+    "words": 7.3,
+    "meaning": 31.9,
+    "fused": 33.8,
+    "rerank": 116.6
    },
    "fileRank": {
     "words": 11,
@@ -6811,10 +6795,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.6,
-    "meaning": 33,
-    "fused": 31.3,
-    "rerank": 215.2
+    "words": 7.1,
+    "meaning": 35.4,
+    "fused": 33.5,
+    "rerank": 217.2
    },
    "similarity": {
     "best": 0.728,
@@ -6834,10 +6818,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 29.2,
-    "fused": 28,
-    "rerank": 130.9
+    "words": 7.2,
+    "meaning": 28.6,
+    "fused": 29.7,
+    "rerank": 133
    },
    "fileRank": {
     "words": 1,
@@ -6846,10 +6830,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 12.5,
-    "meaning": 29.6,
-    "fused": 27.7,
-    "rerank": 132.7
+    "words": 6.1,
+    "meaning": 31.4,
+    "fused": 29.3,
+    "rerank": 133.5
    },
    "similarity": {
     "best": 0.546,
@@ -6869,10 +6853,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.6,
-    "meaning": 29.7,
-    "fused": 30.3,
-    "rerank": 121.1
+    "words": 6.4,
+    "meaning": 29.4,
+    "fused": 32.6,
+    "rerank": 122.4
    },
    "fileRank": {
     "words": 1,
@@ -6881,10 +6865,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 6.4,
-    "meaning": 31.2,
-    "fused": 31.4,
-    "rerank": 188.2
+    "words": 5.7,
+    "meaning": 32.1,
+    "fused": 32.6,
+    "rerank": 180.2
    },
    "similarity": {
     "best": 0.675,
@@ -6904,22 +6888,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 6.1,
-    "meaning": 32.4,
-    "fused": 33,
-    "rerank": 148.4
+    "words": 6.6,
+    "meaning": 29.5,
+    "fused": 31.1,
+    "rerank": 144.9
    },
    "fileRank": {
-    "words": 2,
+    "words": 1,
     "meaning": 2,
     "fused": 2,
     "rerank": 2
    },
    "fileMs": {
-    "words": 6.5,
-    "meaning": 32.4,
-    "fused": 34.7,
-    "rerank": 185.8
+    "words": 6.2,
+    "meaning": 31.7,
+    "fused": 29.8,
+    "rerank": 183
    },
    "similarity": {
     "best": 0.719,
@@ -6939,10 +6923,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.7,
-    "meaning": 29.6,
-    "fused": 31,
-    "rerank": 238.9
+    "words": 6.3,
+    "meaning": 29.5,
+    "fused": 30.8,
+    "rerank": 237.5
    },
    "fileRank": {
     "words": 2,
@@ -6951,10 +6935,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5.3,
-    "meaning": 32.2,
-    "fused": 30.6,
-    "rerank": 240.5
+    "words": 5.7,
+    "meaning": 32.3,
+    "fused": 31.4,
+    "rerank": 236.5
    },
    "similarity": {
     "best": 0.733,
@@ -6974,10 +6958,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 8,
-    "meaning": 29.7,
-    "fused": 29.2,
-    "rerank": 227
+    "words": 6.7,
+    "meaning": 30,
+    "fused": 31.5,
+    "rerank": 226.6
    },
    "fileRank": {
     "words": 4,
@@ -6986,10 +6970,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.5,
-    "meaning": 30.3,
-    "fused": 29,
-    "rerank": 229.6
+    "words": 6.2,
+    "meaning": 32.5,
+    "fused": 31.1,
+    "rerank": 229.3
    },
    "similarity": {
     "best": 0.628,
@@ -7009,10 +6993,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 5.2,
-    "meaning": 27.7,
-    "fused": 29,
-    "rerank": 103.5
+    "words": 6.6,
+    "meaning": 27.9,
+    "fused": 29.2,
+    "rerank": 100.4
    },
    "fileRank": {
     "words": 15,
@@ -7021,10 +7005,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.7,
-    "meaning": 28.8,
-    "fused": 29.6,
-    "rerank": 187.9
+    "words": 5.9,
+    "meaning": 30.5,
+    "fused": 28.8,
+    "rerank": 188.9
    },
    "similarity": {
     "best": 0.744,
@@ -7044,10 +7028,10 @@
     "rerank": 3
    },
    "ms": {
-    "words": 5.5,
-    "meaning": 29.5,
-    "fused": 30,
-    "rerank": 82
+    "words": 6.3,
+    "meaning": 29,
+    "fused": 32.5,
+    "rerank": 85.1
    },
    "fileRank": {
     "words": 2,
@@ -7056,10 +7040,10 @@
     "rerank": 2
    },
    "fileMs": {
-    "words": 5.1,
-    "meaning": 31.9,
-    "fused": 30.2,
-    "rerank": 217.2
+    "words": 5.7,
+    "meaning": 32.6,
+    "fused": 32,
+    "rerank": 221.6
    },
    "similarity": {
     "best": 0.776,
@@ -7079,10 +7063,10 @@
     "rerank": 1
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 27.6,
-    "fused": 29.1,
-    "rerank": 204.7
+    "words": 6.5,
+    "meaning": 28.2,
+    "fused": 29.6,
+    "rerank": 206.8
    },
    "fileRank": {
     "words": 4,
@@ -7091,10 +7075,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 4.7,
-    "meaning": 31.1,
-    "fused": 28.1,
-    "rerank": 206
+    "words": 6,
+    "meaning": 30.3,
+    "fused": 31.2,
+    "rerank": 206.6
    },
    "similarity": {
     "best": 0.622,
@@ -7114,10 +7098,10 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 29.4,
-    "fused": 29.5,
-    "rerank": 229.3
+    "words": 6.5,
+    "meaning": 29.5,
+    "fused": 32,
+    "rerank": 228.6
    },
    "fileRank": {
     "words": 2,
@@ -7126,10 +7110,10 @@
     "rerank": 1
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 30.5,
-    "fused": 29.4,
-    "rerank": 252.1
+    "words": 5.8,
+    "meaning": 31.3,
+    "fused": 31,
+    "rerank": 253.9
    },
    "similarity": {
     "best": 0.659,
@@ -7149,10 +7133,10 @@
     "rerank": 0
    },
    "ms": {
-    "words": 5.4,
-    "meaning": 32.2,
-    "fused": 32.1,
-    "rerank": 151.4
+    "words": 6.4,
+    "meaning": 32,
+    "fused": 33.9,
+    "rerank": 150.3
    },
    "fileRank": {
     "words": 2,
@@ -7161,10 +7145,10 @@
     "rerank": 11
    },
    "fileMs": {
-    "words": 5,
-    "meaning": 34.4,
-    "fused": 32.4,
-    "rerank": 175.6
+    "words": 6.1,
+    "meaning": 35.6,
+    "fused": 33.4,
+    "rerank": 175.1
    },
    "similarity": {
     "best": 0.703,
@@ -7184,22 +7168,22 @@
     "rerank": 2
    },
    "ms": {
-    "words": 5.3,
-    "meaning": 27.4,
-    "fused": 28.3,
-    "rerank": 110.2
+    "words": 6.6,
+    "meaning": 28.7,
+    "fused": 28.7,
+    "rerank": 113.1
    },
    "fileRank": {
-    "words": 3,
+    "words": 2,
     "meaning": 2,
     "fused": 2,
     "rerank": 2
    },
    "fileMs": {
-    "words": 4.6,
-    "meaning": 29.3,
-    "fused": 27.9,
-    "rerank": 182.9
+    "words": 6.3,
+    "meaning": 31.1,
+    "fused": 29.1,
+    "rerank": 183.6
    },
    "similarity": {
     "best": 0.725,

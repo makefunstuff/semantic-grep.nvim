@@ -183,19 +183,22 @@ and reranked, scored by recall@1/5/10, MRR and latency, of the pieces and of the
 same bench, privately (`npm run bench:export`); `npm run bench:tune` tunes the fusion for a model. See
 [docs/benchmark.md](docs/benchmark.md) for how, and the results.
 
-Each profile as it ships, over all 372 questions (2026-11-04; the files view is answered by the labelled file):
+Each profile's models and settings, over all 372 questions (2026-11-04; the files view is answered by the labelled
+file):
 
 | profile | pieces R@1 / R@5 / MRR | files R@1 / R@5 / MRR | files view, p50 / p95 |
 | --- | --- | --- | --- |
-| `laptop` (EmbeddingGemma 2, fused) | 0.46 / 0.76 / 0.592 | 0.69 / 0.95 / 0.801 | 15 / 19 ms on 4 CPU threads¹ |
-| `beefy` (Qwen3-Embedding-8B, reranked by Qwen3-Reranker-0.6B) | 0.51 / 0.82 / 0.643 | 0.68 / 0.95 / 0.801 | 176 / 229 ms² |
+| `laptop` (EmbeddingGemma 2, fused) | 0.46 / 0.76 / 0.592 | 0.69 / 0.95 / 0.801 | 6 / 9 ms¹ |
+| `beefy` (Qwen3-Embedding-8B, reranked by Qwen3-Reranker-0.6B) | 0.51 / 0.82 / 0.643 | 0.68 / 0.95 / 0.801 | 175 / 229 ms² |
 | `cloud` (Voyage) | not measured yet (no key) | | |
 
-¹ The query's embedding on the CPU (docs/profiles.md); the rest of a search, 1 to 2 ms. ² On a GPU shared with other
-work. With notes on flask, cobra and fd, the laptop's pieces gain 0.027 MRR; beefy's reranked list, nothing measurable
-(docs/notes.md). The last change, context for small pieces and the fusion tuned per profile, took the laptop's files
+¹ The laptop's model on a GPU here; on 4 CPU threads the query's embedding takes 15 / 19 ms (measured 2026-11-03,
+docs/profiles.md), the rest of the search the same. ² On a GPU shared with other work, the reranker given 20 s where
+the profile gives it 1 s (its p95 is well under). With notes on flask, cobra and fd, the laptop's pieces gain 0.035
+MRR; beefy's reranked list, nothing measurable (docs/notes.md). The last change, context for small pieces and the fusion tuned per profile, took the laptop's files
 view from 0.765 to 0.801 and beefy's fused one from 0.781 to 0.800, and left the pieces' lists and beefy's reranked
-files view where they were (docs/benchmark.md, "Context and tuning").
+files view where they were by MRR (beefy's recall@5 a little lower, within the noise: docs/benchmark.md, "Context and
+tuning").
 
 ## License
 
