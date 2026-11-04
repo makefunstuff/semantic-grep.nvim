@@ -276,13 +276,22 @@ test('an outage keeps the pieces for later; a piece the writer fails on is given
   const meaning = new Meaning({dataDir: scratch('notes-data-'), embedder: fakeEmbedder(), notes: notesConfig({baseUrl: server.baseUrl, model: 'fake-writer', concurrency: 1, idleMs: 0}), now: () => now});
   try {
     await settled(meaning, root);
-    for (let i = 0; i < 5; i++) {
-      now += 6 * 60_000; // past each rest
+    now += 6 * 60_000;
+    await meaning.writeNotes();
+    assert.equal(server.requests.length, 2, 'down: asked, then resting five minutes');
+    now += 6 * 60_000;
+    await meaning.writeNotes();
+    assert.equal(server.requests.length, 4, 'asked again after it');
+    now += 6 * 60_000;
+    await meaning.writeNotes();
+    assert.equal(server.requests.length, 4, 'a second outage in a row: twice as long a rest');
+    for (let i = 0; i < 3; i++) {
+      now += 61 * 60_000; // past the longest rest
       await meaning.writeNotes();
     }
     assert.equal(server.requests.length, 10, 'down: both pieces asked again after each rest');
     server.set({mode: 'ok'});
-    now += 6 * 60_000;
+    now += 61 * 60_000;
     assert.equal(await meaning.writeNotes(), 2, 'and noted once it answers');
     writeFileSync(join(root, 'src', 'team.js'), 'export function dropMember(team) {\n  team.members = [];\n}\n');
     await meaning.saved(root, join(root, 'src', 'team.js'));
@@ -290,13 +299,13 @@ test('an outage keeps the pieces for later; a piece the writer fails on is given
     server.set({mode: 'down'});
     const before = server.requests.length;
     for (let i = 0; i < 5; i++) {
-      now += 6 * 60_000;
+      now += 61 * 60_000;
       await meaning.writeNotes();
     }
     assert.ok(server.requests.length - before >= 5, 'the last piece, the server down: asked again after each rest');
     server.set({mode: 'empty'});
     const tried = server.requests.length;
-    for (let i = 0; i < 5; i++) { now += 6 * 60_000; await meaning.writeNotes(); }
+    for (let i = 0; i < 5; i++) { now += 61 * 60_000; await meaning.writeNotes(); }
     assert.equal(server.requests.length - tried, 3, 'answered with no note: three tries, then left');
   } finally {
     await meaning.close();

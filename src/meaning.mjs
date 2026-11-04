@@ -26,7 +26,8 @@ const BOOKED_PIECES = 10; // a build this big is booked (`book`); a save's few p
 export const MAX_PIECES = 20_000; // per project, about 45 min of a first build on two cores; files past it are left out
 export const RESCAN_MS = 10 * 60_000;
 const NOTES_TICK_MS = 15_000; // how often the notes writer looks whether it may write
-const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests
+const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests; twice as long each time
+const NOTES_REST_MOST_MS = 60 * 60_000; // in a row, up to this: a writer nobody started (on by default) is seldom asked
 const NOTES_BATCH = 4; // pieces a writer's lane takes at a time: a search waits for one piece at most
 const NOTES_TRIES = 3; // a piece the writer fails on this often is left for the session
 const VISITS = 20; // the files someone was in last: the notes writer starts near them
@@ -259,8 +260,14 @@ export class ProjectIndex {
     return (this.byFile.get(row.file) ?? []).find(piece => piece.from <= row.line && row.line <= piece.to) ?? null;
   }
 
-  /** A learned row's vector, by what is embedded: a search's words, or a note with its piece. */
-  extraKey(row) { return createHash('sha1').update(row.kind === 'note' ? `note\n${row.hash}\n${row.text}` : `pick\n${row.text}`).digest('hex'); }
+  /**
+   * A learned row's vector, by what is embedded: a search's words, or a note with its piece's title (its context too,
+   * so a note is embedded again when what titles its piece changes, as the piece is).
+   */
+  extraKey(row) {
+    const context = row.kind === 'note' ? this.pieceOfExtra(row)?.context ?? '' : '';
+    return createHash('sha1').update(row.kind === 'note' ? `note\n${row.hash}\n${row.text}${context ? `\n${context}` : ''}` : `pick\n${row.text}`).digest('hex');
+  }
 
   /** The learned rows still without a vector of the embedder's model: a note only once its piece is in this worktree. */
   learnedPending() {
@@ -722,6 +729,7 @@ export class Meaning {
     this.activeAt = this.now();
     this.noting = null; // {abort} while the writer writes
     this.notesRestUntil = 0;
+    this.notesRestMs = NOTES_REST_MS;
     this.notesFailed = new Set(); // pieces the writer gave no note for, this session: not asked again until the next
     this.notesTries = new Map(); // a piece's failed tries this session: after NOTES_TRIES it joins notesFailed
     this.visits = []; // the files someone was in, absolute paths, the latest first (see visited)
@@ -1294,6 +1302,7 @@ export class Meaning {
           if (notes.length) { // those written before a search stopped it too
             await this.addNotes(index.root, notes, {source: this.writer.name, quiet: true});
             here += notes.length;
+            this.notesRestMs = NOTES_REST_MS; // it answers: a rest after its next outage is short again
           }
           if (controller.signal.aborted) break;
           const idOf = item => item.hash ?? `file:${item.file}`; // a piece's hash, or a file's (see pendingNotes)
@@ -1312,8 +1321,9 @@ export class Meaning {
             }
           }
           if (!notes.length && unanswered) {
-            this.notesRestUntil = this.now() + NOTES_REST_MS;
-            this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(NOTES_REST_MS)}`);
+            this.notesRestUntil = this.now() + this.notesRestMs;
+            this.log(`meaning: notes: ${this.writer.about} wrote none of ${pieces.length} (${errors[0]}); resting ${seconds(this.notesRestMs)}`);
+            this.notesRestMs = Math.min(this.notesRestMs * 2, NOTES_REST_MOST_MS);
             break;
           }
           if (pending <= pieces.length) break;

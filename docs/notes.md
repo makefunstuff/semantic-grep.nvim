@@ -31,7 +31,8 @@ gets one.
   what was written. A project new to you is noted where you are reading first.
 - **What.** Every piece without a note, then those files: one written by an agent is never written over. A piece whose code changed has
   a new hash, so it has no note until one is written again. A writer that does not answer at all rests five
-  minutes, and its pieces are asked again after; a piece it fails on three times (no usable note, too long a wait)
+  minutes, twice as long each time in a row up to an hour (a writer nobody started is seldom asked), and its pieces
+  are asked again after; a piece it fails on three times (no usable note, too long a wait)
   is left until the next session.
 - **Where the code goes.** To the writer's model, a piece at a time (its first `chars` characters). A writer on this
   machine (127.0.0.1, localhost, ::1) gets it; any other only with `sendCode = true` in its entry, else the config is
