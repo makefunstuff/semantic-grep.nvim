@@ -100,7 +100,7 @@ export class IndexStore {
         CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT) WITHOUT ROWID;
         CREATE TABLE vectors (model TEXT NOT NULL, hash TEXT NOT NULL, vector BLOB NOT NULL); -- rows of 1 KB and more: no WITHOUT ROWID
         CREATE UNIQUE INDEX vectors_key ON vectors (model, hash);
-        CREATE TABLE files (tree TEXT NOT NULL, file TEXT NOT NULL, size INTEGER, mtime REAL, skipped INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (tree, file)) WITHOUT ROWID;
+        CREATE TABLE files (tree TEXT NOT NULL, file TEXT NOT NULL, size INTEGER, mtime REAL, skipped INTEGER NOT NULL DEFAULT 0, note TEXT, PRIMARY KEY (tree, file)) WITHOUT ROWID;
         CREATE TABLE pieces (id INTEGER PRIMARY KEY, tree TEXT NOT NULL, file TEXT NOT NULL, line INTEGER NOT NULL, last INTEGER NOT NULL, hash TEXT NOT NULL, kind TEXT, name TEXT, key TEXT NOT NULL, context TEXT);
         CREATE INDEX pieces_file ON pieces (tree, file);
         CREATE INDEX pieces_hash ON pieces (hash);
@@ -110,13 +110,13 @@ export class IndexStore {
       `);
     }
     this.statements = {
-      files: this.db.prepare('SELECT file, size, mtime, skipped FROM files WHERE tree = ?'),
+      files: this.db.prepare('SELECT file, size, mtime, skipped, note FROM files WHERE tree = ?'),
       pieces: this.db.prepare('SELECT id, file, line, last, hash, kind, name, key, context FROM pieces WHERE tree = ? ORDER BY file, line'),
       piecesOf: this.db.prepare('SELECT id FROM pieces WHERE tree = ? AND file = ?'),
       deleteWords: this.db.prepare('DELETE FROM words WHERE rowid = ?'),
       deletePieces: this.db.prepare('DELETE FROM pieces WHERE tree = ? AND file = ?'),
       deleteFile: this.db.prepare('DELETE FROM files WHERE tree = ? AND file = ?'),
-      putFile: this.db.prepare('INSERT OR REPLACE INTO files (tree, file, size, mtime, skipped) VALUES (?, ?, ?, ?, ?)'),
+      putFile: this.db.prepare('INSERT OR REPLACE INTO files (tree, file, size, mtime, skipped, note) VALUES (?, ?, ?, ?, ?, ?)'),
       putPiece: this.db.prepare('INSERT INTO pieces (tree, file, line, last, hash, kind, name, key, context) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'),
       putWords: this.db.prepare('INSERT INTO words (rowid, body) VALUES (?, ?)'),
       vector: this.db.prepare('SELECT vector FROM vectors WHERE model = ? AND hash = ?'),
@@ -235,9 +235,9 @@ export class IndexStore {
     }
   }
 
-  /** The files of worktree `tree` as last read: file -> {size, mtimeMs, skipped}. */
+  /** The files of worktree `tree` as last read: file -> {size, mtimeMs, skipped, note} (`note`: the file's note it was read with). */
   files(tree) {
-    return new Map(this.statements.files.all(tree).map(row => [row.file, {size: row.size, mtimeMs: row.mtime, skipped: !!row.skipped}]));
+    return new Map(this.statements.files.all(tree).map(row => [row.file, {size: row.size, mtimeMs: row.mtime, skipped: !!row.skipped, note: row.note ?? null}]));
   }
 
   /** The pieces of worktree `tree`: `{id, file, from, to, hash, kind, name, key, context}`. */
@@ -247,12 +247,13 @@ export class IndexStore {
 
   /**
    * A file read again: its pieces (`{from, to, hash, kind, name, key, context, words}`) replace the ones it had, in one go; each comes
-   * back with its id. `skipped` keeps a file found not worth indexing (binary, minified) from being read again.
+   * back with its id. `skipped` keeps a file found not worth indexing (binary, minified) from being read again; `note`
+   * is the file's note its pieces were titled with, if any (a new one has them read again).
    */
-  putFile(tree, file, {size, mtimeMs, skipped = false}, pieces = []) {
+  putFile(tree, file, {size, mtimeMs, skipped = false, note = null}, pieces = []) {
     return this.transaction(() => {
       this.dropPieces(tree, file);
-      this.statements.putFile.run(tree, file, size, mtimeMs, skipped ? 1 : 0);
+      this.statements.putFile.run(tree, file, size, mtimeMs, skipped ? 1 : 0, note);
       this.touch();
       return pieces.map(piece => {
         const key = piece.key ?? piece.hash;

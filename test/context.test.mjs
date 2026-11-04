@@ -116,6 +116,48 @@ test('a file\'s note, written from its pieces\' notes, titles its small pieces; 
   }
 });
 
+test('a file\'s note written by another process (the notes command) titles its pieces at the next session', async () => {
+  const root = project();
+  const dataDir = scratch('context-data-');
+  const first = new Meaning({dataDir, embedder: recordingEmbedder()});
+  await settled(first, root);
+  await first.close();
+  const command = new Meaning({dataDir}); // as the notes command runs: no embedding model
+  const cart = (await command.pendingNotes(root, {quiet: true})).pieces.filter(item => item.file === 'src/billing/cart.js');
+  await command.addNotes(root, [...cart.map(piece => ({hash: piece.hash, note: 'A note.'})), {file: 'src/billing/cart.js', note: 'What a basket costs.'}], {quiet: true});
+  await command.close();
+  const embedder = recordingEmbedder();
+  const again = new Meaning({dataDir, embedder});
+  try {
+    const index = await settled(again, root);
+    assert.ok(embedder.texts.some(text => text.startsWith('title: src/billing/cart.js (What a basket costs.): total')), 'read again with it, and embedded');
+    assert.ok(index.byFile.get('src/billing/cart.js').every(piece => piece.context.startsWith('What a basket costs.')));
+    assert.equal(index.files.get('src/billing/cart.js').note, 'What a basket costs.');
+  } finally {
+    await again.close();
+  }
+});
+
+test('a file that needs no note of its own is not read again for one until it changes', async () => {
+  const root = project();
+  writeFileSync(join(root, 'docs', 'guide.js'), '// The guide\'s steps.\nexport function intro() {\n  return 1;\n}\n\nexport function outro() {\n  return 2;\n}\n');
+  const meaning = new Meaning({dataDir: scratch('context-data-'), embedder: recordingEmbedder()});
+  try {
+    const index = await settled(meaning, root);
+    const guide = index.byFile.get('docs/guide.js');
+    await meaning.addNotes(root, guide.map(piece => ({hash: piece.hash, note: 'A note.'})));
+    assert.ok(!(await meaning.pendingNotes(root)).pieces.some(item => item.file === 'docs/guide.js'), 'it says what it is for itself');
+    assert.equal(index.noFileNote.get('docs/guide.js'), index.files.get('docs/guide.js').mtimeMs, 'remembered');
+    let reads = 0;
+    const get = index.lines.get.bind(index.lines);
+    index.lines.get = file => { if (file === 'docs/guide.js') reads += 1; return get(file); };
+    await meaning.pendingNotes(root);
+    assert.equal(reads, 0, 'not read again');
+  } finally {
+    await meaning.close();
+  }
+});
+
 test('the notes writer starts near the file someone is in', async () => {
   const root = project();
   const meaning = new Meaning({dataDir: scratch('context-data-'), embedder: recordingEmbedder()});

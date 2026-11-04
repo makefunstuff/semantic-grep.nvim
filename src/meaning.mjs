@@ -199,8 +199,8 @@ export class ProjectIndex {
 
   get model() { return this.embedder?.id ?? 'none'; }
 
-  /** The embedder's band and pickNear: its own, or its model's (a host's embedder may not say). */
-  get tuning() { return this.embedder?.tuning ?? tuningOf({model: this.embedder?.id}); }
+  /** The embedder's band, pickNear, fusion and files: its own, over its model's (a host's embedder may say none, or some). */
+  get tuning() { return {...tuningOf({model: this.embedder?.id}), ...this.embedder?.tuning}; }
 
   /** What the store has of this worktree: its files, pieces and their vectors, made here or in another worktree. */
   load() {
@@ -228,15 +228,13 @@ export class ProjectIndex {
     const rows = this.store.extras();
     this.extrasById = new Map(rows.map(row => [row.id, row]));
     this.notesByHash = new Map(rows.filter(row => row.kind === 'note').map(row => [row.hash, row]));
-    // A file's note titles its small pieces where the file says nothing of itself: one new, changed or gone, and the
-    // file is read again (see step), its small pieces embedded again where their title changed.
-    const before = this.fileNotes;
+    // A file's note titles its small pieces where the file says nothing of itself: a file read with another note than
+    // its own now (one new, changed or gone, here or by another process: the notes command) is read again (see step),
+    // its small pieces embedded again where their title changed.
     this.fileNotes = new Map(rows.filter(row => row.kind === 'file').map(row => [row.file, row]));
     this.reread ??= new Set();
-    if (before) {
-      for (const file of new Set([...before.keys(), ...this.fileNotes.keys()])) {
-        if (before.get(file)?.text !== this.fileNotes.get(file)?.text && this.byFile.has(file)) this.reread.add(file);
-      }
+    for (const [file, info] of this.files) {
+      if (!info.skipped && this.byFile.has(file) && (info.note ?? null) !== (this.fileNotes.get(file)?.text ?? null)) this.reread.add(file);
     }
     this.picks = rows.filter(row => row.kind === 'pick');
     this.learnedVectors = this.store.learnedVectors(this.model);
@@ -376,8 +374,8 @@ export class ProjectIndex {
             return {...piece, hash, key: pieceKey(hash, context), context, words: words(`${file} ${piece.name ?? ''} ${piece.text}`).join(' ')};
           });
           for (const old of this.byFile.get(file) ?? []) this.documents.delete(old.key); // a text gone from the file
-          const stored = this.store.putFile(this.root, file, {size: info.size, mtimeMs: info.mtimeMs}, pieces);
-          this.files.set(file, {size: info.size, mtimeMs: info.mtimeMs, skipped: false});
+          const stored = this.store.putFile(this.root, file, {size: info.size, mtimeMs: info.mtimeMs, note: note ?? null}, pieces);
+          this.files.set(file, {size: info.size, mtimeMs: info.mtimeMs, skipped: false, note: note ?? null});
           this.byFile.set(file, stored);
           pieces.forEach(piece => {
             if (this.vectors.has(piece.key)) return;
@@ -1101,7 +1099,8 @@ export class Meaning {
         const rerank = mode === 'rerank' && this.reranker?.available;
         if (!rerank) answer.results = await index.fileSearch(query, {mode: mode === 'rerank' ? 'fused' : mode, limit});
         else {
-          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: index.tuning.files.depth, band: 2})).map(piece => index.result(piece)));
+          // As deep as the defaults the reranked list is ranked by as files (see fileSearch).
+          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: TUNING.files.depth, band: 2})).map(piece => index.result(piece)));
           const done = await this.reranked(index, query, pieces);
           answer.rerank = done.rerank;
           answer.results = await index.fileSearch(query, {limit, results: done.results});
@@ -1182,7 +1181,8 @@ export class Meaning {
   /**
    * The pieces of `root` without a note, for a coding agent to write one each (see `addNotes`): `{pieces: [{hash, file,
    * from, to, name, text}], pending, noted}`, at most `limit` of them, those near the files someone was in first
-   * (nearFirst); `pending` counts them all. Among them, once every piece of a file has a note, the file itself, `{kind:
+   * (nearFirst); `pending` counts them all (the files only as far as the list goes). Among them, once every piece of
+   * a file has a note, the file itself, `{kind:
    * 'file', file, notes}`, for a note on what it is for, written from its pieces' notes: only a file of several pieces
    * that says nothing of itself (fileSummary) and has small pieces for it to title (contextFor). `skip`: pieces (hashes) and files
    * (`file:<path>`) not to list.
@@ -1213,12 +1213,20 @@ export class Meaning {
         if (text === undefined || pieceHash(piece.file, text, piece.name) !== piece.hash) continue; // changed since: read again first
         pieces.push({hash: piece.hash, file: piece.file, from: piece.from, to: piece.to, name: piece.name, text});
       }
-      if (open || own.length < 2 || index.fileNotes.has(file) || skip?.has(`file:${file}`)) continue; // one piece: its note says it
+      // One piece: its note says it. The list full: the files are looked at again the next time.
+      if (open || own.length < 2 || pieces.length >= limit || index.fileNotes.has(file) || skip?.has(`file:${file}`)) continue;
+      // A file found to need none (it says what it is for itself, or has no small piece) is not read again until it changes.
+      const mtimeMs = index.files.get(file)?.mtimeMs;
+      if (index.noFileNote?.get(file) === mtimeMs) continue;
       const notes = own.map(piece => index.notesByHash.get(piece.hash)?.text).filter(Boolean);
       const lines = notes.length ? await index.lines.get(file) : null;
-      if (!lines || fileSummary(lines, file) || !own.some(piece => isSmall({text: lines.slice(piece.from - 1, piece.to).join('\n')}))) continue;
+      if (!lines) continue;
+      if (fileSummary(lines, file) || !own.some(piece => isSmall({text: lines.slice(piece.from - 1, piece.to).join('\n')}))) {
+        (index.noFileNote ??= new Map()).set(file, mtimeMs);
+        continue;
+      }
       pending += 1;
-      if (pieces.length < limit) pieces.push({kind: 'file', file, notes});
+      pieces.push({kind: 'file', file, notes});
     }
     return {pieces, pending, noted: index.notesByHash.size};
   }

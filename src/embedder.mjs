@@ -44,7 +44,7 @@ const MODELS = [
 // view's k and words' weight, whether its words are the pieces with any of them (else every one), how many of the
 // fused pieces it reads (depth), and how a file scores by them (each worth 1/(rank + r) at r, its best in full, each
 // next one `decay` of the one before). The profiles' models have theirs tuned on the bench (npm run bench:tune, docs/benchmark.md, "Tuning");
-// the defaults are the settings before, which no model measured did worse with.
+// the defaults are the settings before. (A search kept is fused as a list of its own for every model: docs/benchmark.md.)
 export const TUNING = {band: 0.1, pickNear: 0.75, fusion: {k: 60, list: 50, words: 1}, files: {k: 60, words: 1, any: false, depth: 60, rank: 5, decay: 0.5}};
 const HTTP_BATCH = 16;
 const HTTP_MS = 60_000;

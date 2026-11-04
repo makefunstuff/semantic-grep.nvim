@@ -316,11 +316,13 @@ With notes (flask, cobra and fd, 189 questions; each profile's writer, and its f
 - **The laptop's files view gains most**: the right file first for 69% of the questions (65% before), among the first
   five for 95% (92%); on the `test` questions alone, MRR 0.754 to 0.799. In the same time: 5.7 / 8.8 ms (p50 / p95)
   for the files view on the GPU, as before within a millisecond or two.
-- **Nothing gets worse on the whole for any profile**; the pieces' lists are where they were. By style: the vague
+- **Nothing gets worse on the whole for any profile**; the pieces' lists are where they were. By style, the vague
   questions gain in the pieces' list with notes (laptop +0.041 [0.003, 0.080]) and with beefy's reranker (+0.012
   [0.004, 0.027]); the multi-hop ones lose a little in the pieces' list with notes (laptop −0.029, beefy fused −0.053
-  [−0.107, −0.010]; reranked, −0.004).
-- `cloud` is not measured, for want of a key; its models get the defaults, the settings before.
+  [−0.107, −0.010]): the price of context the variants above showed. Beefy's reranked list, what it shows, keeps them
+  (−0.004).
+- `cloud` is not measured, for want of a key; its models get the default settings, and a search kept is fused as a
+  list of its own for them too.
 
 ## Results
 

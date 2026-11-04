@@ -14,7 +14,8 @@ The laptop profile has no reranker: a `rerank` there is a whole entry of your ow
 | `cloud` | Voyage `voyage-code-3` | Voyage `rerank-2.5`, top 30 | not measured yet | | |
 
 ⁰ laptop: the fused list over all 372 questions, nothing left out by the band (with its band, 0.005 less: see
-"Each model's thresholds"). ¹ On hono, cobra and fd (171 questions), with the model's band, where the fused list
+"Each model's thresholds"), as measured 2026-11-03; with the titles of small pieces since (docs/benchmark.md, "Context
+and tuning"), 0.592 with its band, and its files view 0.801. ¹ On hono, cobra and fd (171 questions), with the model's band, where the fused list
 alone has 0.610; over all 372 questions the 8B's fused list has 0.628 against EmbeddingGemma 2's 0.600 and the old
 beefy (Qwen3-Embedding-4B) 0.615.
 

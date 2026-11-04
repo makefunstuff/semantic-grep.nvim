@@ -121,13 +121,15 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   ```sh
   # the plugin's bin/semantic-grep-server.mjs, e.g. with lazy.nvim:
   alias semantic-grep-server='node ~/.local/share/nvim/lazy/semantic-grep.nvim/bin/semantic-grep-server.mjs'
-  semantic-grep-server notes pending --root . --limit 200 > pending.jsonl   # {hash, file, from, to, name, text}
-  semantic-grep-server notes put --root . < notes.jsonl                     # {hash, note}, one a line
+  semantic-grep-server notes pending --root . --limit 200 > pending.jsonl   # {hash, file, from, to, name, text}, or a
+                                                                            # file: {kind: "file", file, notes}
+  semantic-grep-server notes put --root . < notes.jsonl                     # {hash, note} or {file, note}, one a line
   ```
 
   For example, in Claude Code: "Run `semantic-grep-server notes pending --root . --limit 200`, write a one or two
   sentence note for each piece (what it does, what someone would be trying to do when they need it, in plain words,
-  keeping its identifiers), and pipe `{hash, note}` lines into `semantic-grep-server notes put --root .`; repeat until
+  keeping its identifiers), and for each `{kind: "file"}` line one sentence on what the file is for from its pieces'
+  notes; pipe `{hash, note}` and `{file, note}` lines into `semantic-grep-server notes put --root .`; repeat until
   none is pending." A note holds while its piece's code does not change; `pending` then lists it again. Both
   commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
   to the agent's model.
@@ -167,8 +169,8 @@ characters: a short method, a getter) also with what its file is for (its docstr
 on the file) and the head and doc of the class or function around it (`app.py (The app.): class Flask(App): The WSGI
 application. > get`), so it keeps what it is part of; imports alone are no piece. Worktrees of a repository share it, and a save embeds only what changed.
 Meaning is a brute-force cosine over every vector (the pieces within the model's band of the best); a single list
-fuses words, meaning and the searches kept by reciprocal rank, with settings tuned on the bench for each profile's
-model (`src/embedder.mjs`). The same code is a library (`import {Meaning} from 'semantic-grep'`), and another
+fuses words, meaning and the searches kept by reciprocal rank; the files view ranks files by it with settings tuned on
+the bench for each profile's model (`src/embedder.mjs`). The same code is a library (`import {Meaning} from 'semantic-grep'`), and another
 program can be the picker's source instead of the server: see `lua/semantic-grep/init.lua`.
 
 Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm run test:e2e` (live models).
@@ -192,7 +194,8 @@ Each profile as it ships, over all 372 questions (2026-11-04; the files view is 
 ¹ The query's embedding on the CPU (docs/profiles.md); the rest of a search, 1 to 2 ms. ² On a GPU shared with other
 work. With notes on flask, cobra and fd, the laptop's pieces gain 0.027 MRR; beefy's reranked list, nothing measurable
 (docs/notes.md). The last change, context for small pieces and the fusion tuned per profile, took the laptop's files
-view from 0.765 to 0.801 and left every other number where it was (docs/benchmark.md, "Context and tuning").
+view from 0.765 to 0.801 and beefy's fused one from 0.781 to 0.800, and left the pieces' lists and beefy's reranked
+files view where they were (docs/benchmark.md, "Context and tuning").
 
 ## License
 

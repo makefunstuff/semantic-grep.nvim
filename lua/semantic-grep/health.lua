@@ -105,13 +105,14 @@ function M.check()
     end
     local n = checked.notes
     if not n or n == vim.NIL then
-      health.info('notes: off (notes = true in setup() writes them while nothing is searched, see docs/notes.md)')
+      health.info('notes: off (on with the laptop and beefy profiles; notes = true in setup() writes them while nothing is searched, see docs/notes.md)')
     else
       local where = n.sendCode and ', the code goes to it (sendCode)' or ', on this machine'
       if n.ok then
         health.ok(('notes: %s writes one in %d ms%s, after %d s without a search'):format(n.model, n.ms or 0, where, math.floor((n.idleMs or 0) / 1000)))
       elseif n.unreachable then
-        health.error(('notes: %s is unreachable: %s'):format(n.model, n.error or '?'), {'Start its server: docs/notes.md, or set notes = {baseUrl = ...}'})
+        -- On by default with a local profile: no writer running is no fault, searches lose nothing.
+        health.warn(('notes: %s is unreachable: %s'):format(n.model, n.error or '?'), {'Start its server: docs/notes.md; set notes = {baseUrl = ...}, or notes = false for none'})
       else
         health.error(('notes: %s fails: %s'):format(n.model, n.error or '?'))
       end

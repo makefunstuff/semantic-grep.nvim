@@ -12,8 +12,9 @@
 -- plugin starts on a free port and stops (`local_model = {gguf = path, llama_server = path, threads = n}` changes
 -- what it runs, `false` or `embedding = false` keeps to the words alone). Without `rerank` nothing is reranked. A profile's models are those of src/profiles.mjs; what `embedding` and `rerank` set goes over them.
 -- `notes = true` (or an entry over the profile's writer, the laptop's without a profile) writes a note on each piece of
--- code while nothing is searched, with a language model (src/notes.mjs, docs/notes.md); off by default. A writer not on
--- this machine gets the code only with `sendCode = true`.
+-- code while nothing is searched, with a language model (src/notes.mjs, docs/notes.md); on with the laptop and beefy
+-- profiles (`notes = false` for none), off otherwise. A writer not on this machine gets the code only with `sendCode =
+-- true`.
 -- Other fields: `data_dir` (where the index files go, default stdpath('data')/semantic-grep), `index` ('data', or
 -- 'project' for .semantic-grep/ in the repository), `node` (the Node 22.16+ to run the server with), `debounce_ms` (the
 -- pause before meaning is asked, 150), `rerank_delay_ms` (how long meaning's list must stay before it is reranked, 0),
@@ -31,7 +32,8 @@
 -- with the server's methods (src/server.mjs): 'words', 'meaning', 'rerank', 'search' (`{root, query}` each, answering
 -- `{state, results = {{file, path, line, from, to, head, meaning, words, rerank}}, chunks, embedded, problem, ms,
 -- reranker, rerank}`), 'saved' `{path}`, 'rebuild' `{root}`, 'chosen' `{root, query, results}`, 'status' `{}`,
--- 'check' `{}`, and the notification 'cancel' (a picker's rerank is no longer wanted). A source may tell how far a
+-- 'check' `{}`, and the notifications 'cancel' (a picker's rerank is no longer wanted) and 'visited' `{path}` (the file
+-- someone is in, which the notes written in the background start near; a source may ignore it). A source may tell how far a
 -- build is by calling `require('semantic-grep').on_progress({root, phase, done, total, text})`, phase being
 -- 'reading', 'embedding', 'done' or 'failed'. It may also define `source.name` (for :checkhealth) and
 -- `source.health()` (lines of its own to report).
