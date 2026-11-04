@@ -31,6 +31,7 @@
     "bench": "node bench/run.mjs",
     "bench:fetch": "node bench/fetch.mjs",
     "bench:export": "node bench/export-picks.mjs",
-    "bench:calibrate": "node bench/calibrate.mjs"
+    "bench:calibrate": "node bench/calibrate.mjs",
+    "bench:tune": "node bench/tune.mjs"
   }
 }

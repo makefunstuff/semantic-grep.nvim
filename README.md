@@ -16,7 +16,7 @@ data folder) and searches by words meanwhile. It runs the model with llama.cpp's
 PATH (`brew install llama.cpp`, `winget install llama.cpp`, `nix profile install nixpkgs#llama-cpp`, or a release from
 [llama.cpp](https://github.com/ggml-org/llama.cpp/releases)); it starts it on a free local port and stops it after 15 minutes unused or when
 Neovim goes. Without it, the search works by words alone and `:checkhealth semantic-grep` says what is missing.
-On the [benchmark](docs/benchmark.md)'s questions, the right file is among the first five 91% of the time, in about
+On the [benchmark](docs/benchmark.md)'s questions, the right file is among the first five 95% of the time, in about
 20 ms a search on 4 CPU threads.
 
 ## Pieces of code
@@ -90,8 +90,9 @@ require('semantic-grep').setup({
   -- Notes on the pieces of code, written by a language model while nothing is searched (docs/notes.md): true for the
   -- profile's writer (the laptop's without a profile), or an entry over it, e.g. {model = 'qwen3.5-9b'}. api: 'openai'
   -- (/chat/completions: llama-server, Ollama, ...) or 'anthropic'; concurrency: pieces asked at once; chars: how much
-  -- of each piece it reads; idleMs: how long without a search before it writes. Off (nil) by default. The code goes
-  -- to a writer elsewhere than this machine only with sendCode = true.
+  -- of each piece it reads; idleMs: how long without a search before it writes. On with the laptop and beefy profiles
+  -- (their writers run on this machine), off without a profile and with the cloud's (it costs money); false turns it
+  -- off. The code goes to a writer elsewhere than this machine only with sendCode = true.
   notes = nil,
   picker = 'auto',          -- 'telescope', 'snacks', 'fzf-lua' or 'select'
   debounce_ms = 150,        -- the pause before meaning is asked
@@ -130,10 +131,12 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   none is pending." A note holds while its piece's code does not change; `pending` then lists it again. Both
   commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
   to the agent's model.
-- **Notes written in the background.** With `notes = true` in `setup()`, a language model writes those notes itself,
-  while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
-  profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
-  cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
+- **Notes written in the background.** With the `laptop` or `beefy` profile (or `notes = true` in `setup()`), a
+  language model writes those notes itself, while nothing is searched (for 30 s, or 2 minutes on the laptop), a few
+  pieces at a time, starting near the file you are in, and stops at the next search: the profile's writer, a small
+  model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the cloud (only with
+  `notes = true`: it costs money). Once a file's pieces have theirs, it writes one on the file, from them: what the
+  file is for, which titles its small pieces. `notes = false` turns them off. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
   that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud profile's does). How to
   run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku 5.5's notes
   (measured through OpenRouter, with the laptop's embedding model) take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760,
@@ -158,10 +161,14 @@ Each Neovim spawns one small Node server (`bin/semantic-grep-server.mjs`, JSON-R
 Neovim). It lists the files git lists (tracked and untracked, `.gitignore` respected), cuts them into functions,
 classes and methods with their doc comments using Neovim's tree-sitter in a headless `nvim -u NONE`, else into
 blocks cut where the indentation starts a statement or an object's key, and keeps one SQLite file per repository:
-the words in FTS5 and a vector per piece's hash and model, no copy of the code. Each piece is embedded with a title,
-its file and the name of what encloses it (`config-users.ts: _users: anna`); imports alone are no piece. Worktrees of a repository share it, and a save embeds only what changed.
-Meaning is a brute-force cosine over every vector (the pieces within 0.1 of the best); a single list fuses words and
-meaning by reciprocal rank. The same code is a library (`import {Meaning} from 'semantic-grep'`), and another
+the words in FTS5 and a vector per piece's text, title and model, no copy of the code. Each piece is embedded with a
+title, its file and the name of what encloses it (`config-users.ts: _users: anna`); a small one (under 400
+characters: a short method, a getter) also with what its file is for (its docstring or header comment, else a note
+on the file) and the head and doc of the class or function around it (`app.py (The app.): class Flask(App): The WSGI
+application. > get`), so it keeps what it is part of; imports alone are no piece. Worktrees of a repository share it, and a save embeds only what changed.
+Meaning is a brute-force cosine over every vector (the pieces within the model's band of the best); a single list
+fuses words, meaning and the searches kept by reciprocal rank, with settings tuned on the bench for each profile's
+model (`src/embedder.mjs`). The same code is a library (`import {Meaning} from 'semantic-grep'`), and another
 program can be the picker's source instead of the server: see `lua/semantic-grep/init.lua`.
 
 Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm run test:e2e` (live models).
@@ -171,7 +178,21 @@ Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm
 `npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`): six public
 repositories pinned by commit, 372 questions written the way people search, each asked by words, by meaning, fused
 and reranked, scored by recall@1/5/10, MRR and latency, of the pieces and of the files view. Your own searches and the pieces you opened run through the
-same bench, privately (`npm run bench:export`). See [docs/benchmark.md](docs/benchmark.md) for how, and the results.
+same bench, privately (`npm run bench:export`); `npm run bench:tune` tunes the fusion for a model. See
+[docs/benchmark.md](docs/benchmark.md) for how, and the results.
+
+Each profile as it ships, over all 372 questions (2026-11-04; the files view is answered by the labelled file):
+
+| profile | pieces R@1 / R@5 / MRR | files R@1 / R@5 / MRR | files view, p50 / p95 |
+| --- | --- | --- | --- |
+| `laptop` (EmbeddingGemma 2, fused) | 0.46 / 0.76 / 0.592 | 0.69 / 0.95 / 0.801 | 15 / 19 ms on 4 CPU threads¹ |
+| `beefy` (Qwen3-Embedding-8B, reranked by Qwen3-Reranker-0.6B) | 0.51 / 0.82 / 0.643 | 0.68 / 0.95 / 0.801 | 176 / 229 ms² |
+| `cloud` (Voyage) | not measured yet (no key) | | |
+
+¹ The query's embedding on the CPU (docs/profiles.md); the rest of a search, 1 to 2 ms. ² On a GPU shared with other
+work. With notes on flask, cobra and fd, the laptop's pieces gain 0.027 MRR; beefy's reranked list, nothing measurable
+(docs/notes.md). The last change, context for small pieces and the fusion tuned per profile, took the laptop's files
+view from 0.765 to 0.801 and left every other number where it was (docs/benchmark.md, "Context and tuning").
 
 ## License
 

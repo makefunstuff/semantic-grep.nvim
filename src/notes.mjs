@@ -30,6 +30,13 @@ export const SYSTEM = 'You write notes on pieces of code for a code search index
   + 'plain sentences: what it does, and what someone would be trying to do when they need it. Keep its identifiers '
   + '(function, type and option names) exactly as written. No preamble, no lists, no markdown, no quotes around the note.';
 
+// A file's note is written from its pieces' notes, not its code: what the file is for, for the titles of its small
+// pieces (see contextFor in meaning.mjs) where the file says nothing of itself.
+export const FILE_SYSTEM = 'You summarise source files for a code search index. Given a file\'s path and notes on its '
+  + 'pieces, write one plain sentence: what this file is for, in the words someone would search with when they need it. '
+  + 'Keep its key identifiers as written. No preamble, no lists, no markdown.';
+const FILE_NOTES_CHARS = 4000; // of a file's pieces' notes, what the model reads
+
 /** Whether `baseUrl` is this machine: a model there may read the code. */
 export function isLocal(baseUrl) {
   try { return LOCAL_HOSTS.has(new URL(baseUrl).hostname); } catch { return false; }
@@ -78,6 +85,16 @@ export function notePrompt(piece, chars = NOTE_CHARS) {
   return `File: ${piece.file}${piece.name ? `\nName: ${piece.name}` : ''}\n\n${code}`;
 }
 
+/** What the model reads of a file `{file, notes}`: its path and its pieces' notes in order, cut to FILE_NOTES_CHARS. */
+export function fileNotePrompt({file, notes = []}) {
+  let prompt = `File: ${file}\n\nNotes on its pieces, in order:\n`;
+  for (const note of notes) {
+    if (prompt.length + note.length > FILE_NOTES_CHARS) { prompt += '…\n'; break; }
+    prompt += `- ${note}\n`;
+  }
+  return prompt;
+}
+
 /**
  * The model's answer as a note: its thinking and any markdown or quotes dropped, on one line, at most two sentences
  * (and 400 characters); null when nothing is left.
@@ -94,7 +111,8 @@ export function cleanNote(text) {
 
 /**
  * A notes writer: `write(pieces)` resolves `[{hash, note, ms, input, output}]`, one for each piece it could write a
- * note for (asked `concurrency` at a time); a piece it got no note for is left out, and its failure is `errors`'.
+ * note for (asked `concurrency` at a time); a piece it got no note for is left out, and its failure is `errors`'. An
+ * item `{kind: 'file', file, notes}` is a file, written from its pieces' notes (fileNotePrompt): `{file, note, ...}`.
  * `name` is the source the notes are kept under ("writer:<model>").
  */
 export class NotesWriter {
@@ -126,11 +144,11 @@ export class NotesWriter {
           this.tokens.input += input ?? 0;
           this.tokens.output += output ?? 0;
           this.cost += cost ?? 0;
-          if (!note) { errors.push(`${piece.file}:${piece.from}: ${NO_NOTE}`); continue; }
+          if (!note) { errors.push(`${piece.file}:${piece.from ?? 1}: ${NO_NOTE}`); continue; }
           this.written += 1;
-          out.push({hash: piece.hash, note, ms, input, output, ...(cost === undefined ? {} : {cost})});
+          out.push({...(piece.kind === 'file' ? {file: piece.file} : {hash: piece.hash}), note, ms, input, output, ...(cost === undefined ? {} : {cost})});
         } catch (error) {
-          errors.push(`${piece.file}:${piece.from}: ${error.message}`);
+          errors.push(`${piece.file}:${piece.from ?? 1}: ${error.message}`);
           if (STOPS.test(error.message)) break; // the same for every piece
         }
       }
@@ -144,7 +162,8 @@ export class NotesWriter {
     // A key named but not there: no piece goes out to be refused.
     if (!key && (this.entry.apiKeyEnv || this.entry.apiKeyFile)) throw new Error(`${this.about}: no key in ${this.entry.apiKeyEnv ? `$${this.entry.apiKeyEnv}` : 'its apiKeyFile'}`);
     const base = this.entry.baseUrl.replace(/\/+$/, '');
-    const prompt = notePrompt(piece, this.entry.chars);
+    const prompt = piece.kind === 'file' ? fileNotePrompt(piece) : notePrompt(piece, this.entry.chars);
+    const system = piece.kind === 'file' ? FILE_SYSTEM : SYSTEM;
     const anthropic = this.entry.api === 'anthropic';
     const url = anthropic ? `${base}/messages` : `${base}/chat/completions`;
     const headers = {'content-type': 'application/json', ...(anthropic
@@ -152,8 +171,8 @@ export class NotesWriter {
       : key ? {authorization: `Bearer ${key}`} : {})};
     // Haiku 5.5 thinks by default: off, at low effort, for a sentence. A Qwen3.5 on llama-server thinks unless told not to.
     const body = anthropic
-      ? {model: this.entry.model, max_tokens: MAX_TOKENS, system: SYSTEM, messages: [{role: 'user', content: prompt}], thinking: {type: 'disabled'}, output_config: {effort: 'low'}}
-      : {model: this.entry.model, max_tokens: MAX_TOKENS, temperature: 0.2, messages: [{role: 'system', content: SYSTEM}, {role: 'user', content: prompt}], ...(isLocal(base) ? {chat_template_kwargs: {enable_thinking: false}} : {})};
+      ? {model: this.entry.model, max_tokens: MAX_TOKENS, system, messages: [{role: 'user', content: prompt}], thinking: {type: 'disabled'}, output_config: {effort: 'low'}}
+      : {model: this.entry.model, max_tokens: MAX_TOKENS, temperature: 0.2, messages: [{role: 'system', content: system}, {role: 'user', content: prompt}], ...(isLocal(base) ? {chat_template_kwargs: {enable_thinking: false}} : {})};
     Object.assign(body, this.entry.request ?? {});
     const timeout = AbortSignal.timeout(this.entry.timeoutMs);
     let response;

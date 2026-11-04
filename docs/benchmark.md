@@ -66,7 +66,8 @@ band from the model's to none:
 
 For the words alone, any word rather than every word took file recall@5 from 0.18 to 0.86 on `dev`; fusing meaning
 with the any-word list instead of the every-word one was a little worse (0.934 against 0.942), so the fused list keeps
-the picker's.
+the picker's. Since 2026-11-04 each profile's model has its own files settings, tuned again (the laptop's now fuses
+the any-word list, 30 deep): see "Context and tuning".
 
 Results on the `test` split (not tuned on), 2026-11-03: [`words`](../bench/results/words-2026-11-03-test.json) and
 [`laptop`](../bench/results/laptop-2026-11-03-test.json) over all six repositories (251 questions), `beefy` over hono,
@@ -213,6 +214,113 @@ files, 2026-11-03 ([runs](../bench/results/notes-2026-11-03/); docs/notes.md has
 
 ¹ Measured with the laptop's embedding model only, as every row here; with the beefy profile's own models
 (Qwen3-Embedding-8B, Qwen3-Reranker-0.6B) the notes' gain is not measured (notes.md).
+
+## Context and tuning
+
+2026-11-04: what a small piece's title says of where it is, and the fusion tuned again for each profile. Runs in
+[`bench/results/context-2026-11-04/`](../bench/results/context-2026-11-04/), each against the same questions asked
+of the code before (`*-before.json`: the titles and fusion of 2026-11-03, the laptop's and beefy's without notes run
+on this change's code with its context switched off, those with notes on the code before it); the profiles they ran with are in its
+`profiles.json` (the laptop's model on a GPU, the same vectors as on the CPU; beefy's on servers already running).
+Each difference has a 95% interval from a paired bootstrap over the questions.
+
+### Context for small pieces
+
+A short method (`get`, `close`, a two-line handler) says little of what it is for: its class and its file do. Its
+title can say so: what encloses it (the head and the first sentence of the doc of the class or function it was cut
+out of, from tree-sitter, or of the object or block it is inside) and what its file is for (the file's own docstring,
+package comment or header comment; else a note written from its pieces' notes, see notes.md). Variants, with the
+laptop's model over all 372 questions, fused MRR of the pieces / of the files view, with the fusion as before
+([variants](../bench/results/context-2026-11-04/variants/); made with switches in the code then, not kept, and with
+the files' notes written by Qwen3-4B as the plugin writes them):
+
+| title | all | vague | plain | multi-hop |
+| --- | --- | --- | --- | --- |
+| file and name (before) | 0.595 / 0.765 | 0.637 / 0.789 | 0.665 / 0.827 | 0.471 / 0.666 |
+| + what encloses it | 0.599 / 0.767 | 0.652 / 0.769 | 0.670 / 0.857 | 0.461 / 0.660 |
+| + the file's summary | 0.599 / 0.768 | 0.645 / 0.797 | 0.682 / 0.833 | 0.454 / 0.660 |
+| + both, on every piece | 0.592 / 0.774 | 0.648 / 0.785 | 0.670 / 0.849 | 0.443 / 0.674 |
+| + both, heads without their doc | 0.585 / 0.769 | 0.637 / 0.788 | 0.668 / 0.846 | 0.433 / 0.657 |
+| **+ both, on pieces under 400 characters (kept)** | 0.592 / 0.776 | 0.636 / 0.793 | 0.662 / 0.843 | 0.464 / 0.681 |
+
+And with notes (Qwen3-4B's, flask, cobra and fd, 189 questions):
+
+| title | all | vague | multi-hop |
+| --- | --- | --- | --- |
+| file and name, notes on the pieces | 0.599 / 0.785 | 0.560 / 0.769 | 0.519 / 0.721 |
+| + both, on every piece | 0.589 / 0.795 | 0.594 / 0.803 | 0.453 / 0.711 |
+| + both, the file's summary else its note | 0.586 / 0.791 | 0.596 / 0.804 | 0.451 / 0.724 |
+| + its note as the file's summary, no heads | 0.601 / 0.793 | 0.613 / 0.818 | 0.459 / 0.700 |
+| **+ both, on small pieces, the file's summary else its note (kept)** | 0.594 / 0.797 | 0.587 / 0.789 | 0.483 / 0.744 |
+
+- **Context helps the vague questions and the files view, and costs the multi-hop pieces.** Given to every piece, it
+  makes the pieces of one file alike: a question about one of them finds its neighbour first as often (most changes
+  are a right piece moving from first to second, or back). A big piece says what it is for itself; a small one gains
+  most. On small pieces only, the files view gains everywhere and the pieces' list stays where it was.
+- **A note on the file, written from its pieces' notes, is the summary where a file has none.** It adds a little over
+  the pieces' notes alone (files 0.785 to 0.797); a file's own doc is used first, and a file of one piece gets none.
+
+### The fusion, per profile
+
+`npm run bench:tune -- --profile NAME` makes each question's lists once (meaning's, the pieces with every word, those
+with any) and scores every setting of a grid on them without the model: reciprocal rank fusion's k and the words'
+weight, how many of each list are fused, meaning's band, the files view's depth, the worth of a piece at rank *r*
+(1/(*k* + *r*)) and how much a file's next piece adds, and what a search kept does. Tuned on `dev`, checked on the rest;
+`--weigh vague=2,plain=1.5` scores the vague and plain questions above the multi-hop ones (the laptop's run; beefy's
+weighed them alike). The settings are the model's, in `src/embedder.mjs` beside its band
+([laptop](../bench/results/context-2026-11-04/tune-laptop.json), [beefy](../bench/results/context-2026-11-04/tune-beefy.json)):
+
+- **The pieces: as they were** (RRF k 60, 50 of each list, the words weighed as meaning). The best of the grid gained
+  0.004 on the questions not tuned on, with the laptop only by widening its model's band; not worth the change.
+- **The files view, laptop: the pieces with any of the words, 30 deep, k 10, a piece at rank *r* worth 1/(2 + *r*),
+  each next piece of a file 0.7 of the one before.** Fusing meaning with the any-word list was a little worse before
+  (above); with a shallower list and more weight to a file's several pieces it is better: on the `test` questions,
+  files MRR 0.754 to 0.799 with the context above (Before and after).
+- **The files view, beefy: the pieces with every word, 60 deep, a piece worth 1/(2 + *r*), each next 0.3.** On its
+  fused list, 0.779 to 0.792 on the rest. Its files view reranks when the reranker answers, and on the reranker's order
+  these settings did a little worse (0.796 to 0.790): a reranked list is ranked as files as before, the defaults.
+- **A search kept is fused as a list of its own**, not put first in meaning's list: the same gain for a search worded
+  close to one whose piece was opened, and fewer searches with a wrong piece first because of one. With every other
+  question of a repository kept with its answer opened (its rewordings among them), at each model's `pickNear`, the
+  pieces' MRR (the laptop's weighed by style; both on the grid's best pieces settings):
+
+  | the piece opened for a search worded close | laptop (`dev` / the rest) | a wrong piece first | beefy | a wrong piece first |
+  | --- | --- | --- | --- | --- |
+  | none | 0.616 / 0.617 | | 0.624 / 0.625 | |
+  | first in meaning's list (before) | 0.653 / 0.650 | 2.7% | 0.682 / 0.669 | 3.5% |
+  | first in the list shown | 0.653 / 0.652 | 3.5% | 0.682 / 0.676 | 4.8% |
+  | **a list of its own, fused (now)** | 0.654 / 0.659 | 1.9% | 0.683 / 0.684 | 3.0% |
+
+  A lower `pickNear` gains much more on these questions (laptop 0.831 at 0.75) but puts a wrong piece first for 5 to
+  19% of searches; the `pickNear` each model has was measured to keep that rare, and stays. (A kept search's words,
+  which find its piece by the word search too, are not part of this.)
+
+### Before and after
+
+All 372 questions; MRR, with recall@1 in brackets, and the difference's 95% interval:
+
+| profile | mode | pieces before | after | difference | files before | after | difference |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| laptop | fused | 0.595 (0.47) | 0.592 (0.46) | −0.004 [−0.013, 0.010] | 0.765 (0.65) | **0.801** (0.69) | **+0.036** [0.016, 0.059] |
+| beefy | fused | 0.622 (0.50) | 0.620 (0.50) | −0.002 [−0.014, 0.008] | 0.781 (0.65) | **0.800** (0.68) | +0.018 [−0.004, 0.035] |
+| beefy | rerank | 0.641 (0.51) | 0.643 (0.51) | +0.003 [−0.007, 0.009] | 0.796 (0.67) | 0.801 (0.68) | +0.004 [−0.003, 0.010] |
+
+With notes (flask, cobra and fd, 189 questions; each profile's writer, and its file notes):
+
+| profile | mode | pieces before | after | difference | files before | after | difference |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| laptop, Qwen3.5-2B's notes | fused | 0.594 | 0.600 | +0.006 [−0.010, 0.025] | 0.766 | **0.799** | **+0.033** [0.009, 0.066] |
+| beefy, Qwen3-4B's notes | fused | 0.623 | 0.620 | −0.003 [−0.031, 0.021] | 0.825 | 0.823 | −0.002 [−0.021, 0.025] |
+| beefy, Qwen3-4B's notes | rerank | 0.643 | 0.646 | +0.003 [−0.007, 0.010] | 0.810 | 0.813 | +0.002 [−0.011, 0.016] |
+
+- **The laptop's files view gains most**: the right file first for 69% of the questions (65% before), among the first
+  five for 95% (92%); on the `test` questions alone, MRR 0.754 to 0.799. In the same time: 5.7 / 8.8 ms (p50 / p95)
+  for the files view on the GPU, as before within a millisecond or two.
+- **Nothing gets worse on the whole for any profile**; the pieces' lists are where they were. By style: the vague
+  questions gain in the pieces' list with notes (laptop +0.041 [0.003, 0.080]) and with beefy's reranker (+0.012
+  [0.004, 0.027]); the multi-hop ones lose a little in the pieces' list with notes (laptop −0.029, beefy fused −0.053
+  [−0.107, −0.010]; reranked, −0.004).
+- `cloud` is not measured, for want of a key; its models get the defaults, the settings before.
 
 ## Results
 

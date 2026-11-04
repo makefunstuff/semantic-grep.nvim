@@ -6,8 +6,16 @@ import {PIECE} from './pieces.mjs';
 
 // The prompts EmbeddingGemma was trained with: a piece of the project (titled by its file, or none), and a search.
 export const documentText = (title, text) => `title: ${title || 'none'} | text: ${text}`;
-/** A piece's title: its file and what names it (its definition, or what encloses it): "src/users.ts: _users: anna". */
-export const pieceTitle = (file, name) => [file, name].filter(Boolean).join(': ');
+/**
+ * A piece's title: its file, with the file's own summary, then the heads of what encloses it, and what names it (its
+ * definition, or what encloses it): "src/app.py (The app.): class Flask(App): The WSGI application. > route". `context`
+ * is the summary and the heads on two lines (see contextFor in meaning.mjs).
+ */
+export function pieceTitle(file, name, context = '') {
+  const [summary = '', within = ''] = String(context ?? '').split('\n');
+  const where = file && summary ? `${file} (${summary})` : file;
+  return [where, [within, name].filter(Boolean).join(' > ')].filter(Boolean).join(': ');
+}
 export const queryText = query => `task: search result | query: ${query}`;
 
 // What some embedding models want, by their name: the prompts they were trained with (a search, and a piece of code;
@@ -19,11 +27,11 @@ const QWEN3 = {query: 'Instruct: Given a question, find the code that answers it
 const MODELS = [
   [/nomic-embed-code/i, {query: 'Represent this query for searching relevant code: ', document: ''}],
   [/nomic-embed-text/i, {query: 'search_query: ', document: 'search_document: '}],
-  [/embedding-?gemma-?2(?!\d)/i, {...GEMMA, band: 0.06, pickNear: 0.85}],
+  [/embedding-?gemma-?2(?!\d)/i, {...GEMMA, band: 0.06, pickNear: 0.85, files: {k: 10, words: 1, any: true, depth: 30, rank: 2, decay: 0.7}}],
   [/embedding-?gemma/i, {...GEMMA, band: 0.12, pickNear: 0.71}],
   [/qwen3-embedding-0\.6b/i, {...QWEN3, band: 0.14, pickNear: 0.79}],
   [/qwen3-embedding-4b/i, {...QWEN3, band: 0.12, pickNear: 0.78}],
-  [/qwen3-embedding/i, {...QWEN3, band: 0.12, pickNear: 0.79}], // 8B
+  [/qwen3-embedding/i, {...QWEN3, band: 0.12, pickNear: 0.79, files: {k: 60, words: 1, any: false, depth: 60, rank: 2, decay: 0.3}}], // 8B
   [/jina-code-embeddings-1\.5b/i, {...JINA_CODE, band: 0.15, pickNear: 0.71}],
   [/jina-code-embeddings/i, {...JINA_CODE, band: 0.16, pickNear: 0.74}], // 0.5b
   [/jina-embeddings-v2-base-code/i, {band: 0.15, pickNear: 0.79}],
@@ -31,8 +39,13 @@ const MODELS = [
 ];
 // A model's similarities, unknown models' first: `band`, how far below the best a piece may mean and still be listed
 // (unrelated code scores close, too); `pickNear`, how close a kept search's words must mean to a new one's for the
-// piece opened for it to go first (rewordings of one question against unrelated ones).
-export const TUNING = {band: 0.1, pickNear: 0.75};
+// piece opened for it to rise (rewordings of one question against unrelated ones). And how its lists fuse (meaning.mjs):
+// `fusion`, the pieces' RRF k, how many of each list go in and the words' weight against meaning's; `files`, the files
+// view's k and words' weight, whether its words are the pieces with any of them (else every one), how many of the
+// fused pieces it reads (depth), and how a file scores by them (each worth 1/(rank + r) at r, its best in full, each
+// next one `decay` of the one before). The profiles' models have theirs tuned on the bench (npm run bench:tune, docs/benchmark.md, "Tuning");
+// the defaults are the settings before, which no model measured did worse with.
+export const TUNING = {band: 0.1, pickNear: 0.75, fusion: {k: 60, list: 50, words: 1}, files: {k: 60, words: 1, any: false, depth: 60, rank: 5, decay: 0.5}};
 const HTTP_BATCH = 16;
 const HTTP_MS = 60_000;
 
@@ -44,10 +57,13 @@ export function promptsOf(entry) {
   return {query: entry.queryPrefix ?? known.query ?? '', document: entry.documentPrefix ?? known.document ?? ''};
 }
 
-/** `{band, pickNear}` for `entry.model`: the config's, else the model's measured ones, else TUNING's. */
+/** `{band, pickNear, fusion, files}` for `entry.model`: the config's, else the model's measured ones, else TUNING's. */
 export function tuningOf(entry) {
   const known = knownOf(entry.model);
-  return {band: entry.band ?? known.band ?? TUNING.band, pickNear: entry.pickNear ?? known.pickNear ?? TUNING.pickNear};
+  return {
+    band: entry.band ?? known.band ?? TUNING.band, pickNear: entry.pickNear ?? known.pickNear ?? TUNING.pickNear,
+    fusion: known.fusion ?? TUNING.fusion, files: known.files ?? TUNING.files,
+  };
 }
 
 /** `vector` at unit length. */
@@ -83,8 +99,8 @@ export class HttpEmbedder {
   // A piece is at most PIECE.chars, but a single longer line (minified code, a lockfile) is a piece of its own: its
   // head is what the model reads, so a server's batch or the model's context is never overrun. Its title (its file,
   // and the name of its definition or of what encloses it) goes where the model's prompt has room for one, else first.
-  document(file, text, name = null) {
-    const title = pieceTitle(file, name);
+  document(file, text, name = null, context = '') {
+    const title = pieceTitle(file, name, context);
     const prompt = this.prompts.document;
     return prompt.includes('{title}')
       ? `${prompt.replaceAll('{title}', title || 'none')}${text.slice(0, PIECE.chars)}`

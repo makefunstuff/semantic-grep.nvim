@@ -22,7 +22,8 @@
 //   addNotes {root, notes: [{hash, note}]}        -> {added, unknown}
 //   status {}                                     -> the Meaning's snapshot
 //   check {}                                      -> {profile, embedding, rerank, notes} the models asked once each, for :checkhealth
-// Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); progress {root, phase, done,
+// Notifications: cancel {} (to the server: a picker's rerank is no longer wanted); visited {path} (to the server: the
+// file someone is in, which the notes written in the background start near); progress {root, phase, done,
 // total, text}, log {text} and booked {root, kind, text} (to Neovim). `found` is `{phase, query, state, results:
 // [{file, path, line, from, to, head, kind, name, meaning, words, rerank?}], chunks, embedded, problem?, ms?, ...}`;
 // `files` is the same with a result per file, its best piece's, with `score` and `hits` (its pieces in the ranking).
@@ -195,6 +196,7 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
 
   const lines = readLines(input, async message => {
     if (message?.method === 'cancel') return meaning?.dropRerank(WHO);
+    if (message?.method === 'visited') return meaning?.visited(message.params?.path);
     const {id, method, params} = message ?? {};
     if (id === undefined || id === null) return;
     const handler = Object.hasOwn(methods, method) ? methods[method] : null;

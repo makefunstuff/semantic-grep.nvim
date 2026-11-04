@@ -6,10 +6,13 @@
 // - beefy: a workstation's GPU: Qwen3-Embedding-8B and the Qwen3-Reranker-0.6B cross-encoder, top 20 (about 10 GB);
 // - cloud: hosted APIs, Voyage's voyage-code-3 and rerank-2.5, the key in $VOYAGE_API_KEY (not measured yet).
 //
-// Each also names a notes writer (notes.mjs), used only when the config turns notes on (`notes = true`, or an entry
-// over the profile's; without a profile, the laptop's): Qwen3.5-2B on the CPU, Qwen3-4B-Instruct-2507 on a GPU, both
-// behind a llama-server at port 18122, or Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY (docs/notes.md: what each gains) (the cloud profile sends the code to
-// hosted models already: its writer says sendCode; a writer moved elsewhere has to say so itself).
+// Each also names a notes writer (notes.mjs): Qwen3.5-2B on the CPU, Qwen3-4B-Instruct-2507 on a GPU, both behind a
+// llama-server at port 18122, or Claude Haiku 5.5, the key in $ANTHROPIC_API_KEY (docs/notes.md: what each gains). The
+// laptop's and beefy's write on this machine for nothing, so a project new to someone gains them without asking: they
+// are on with their profile unless the config says `notes = false`. The cloud's costs money and sends the code to a
+// second company: on only when the config asks (`notes = true`, or an entry over the profile's; without a profile,
+// the laptop's). The cloud profile sends the code to hosted models already: its writer says sendCode; a writer moved
+// elsewhere has to say so itself.
 //
 // The local ones expect llama.cpp's llama-server on this machine: the embedding model at port 18120, the reranker at
 // 18121. Whatever the config says itself goes over its profile's (a baseUrl, a timeoutMs; another model or API, and the
@@ -24,11 +27,13 @@ const LOCAL_NOTES = 'http://127.0.0.1:18122/v1';
 
 export const PROFILES = {
   laptop: {
+    notesByDefault: true,
     embedding: {api: 'openai', baseUrl: LOCAL_EMBEDDING, model: 'embeddinggemma-2'},
     rerank: null,
     notes: {api: 'openai', baseUrl: LOCAL_NOTES, model: 'qwen3.5-2b', concurrency: 1, chars: 1500, idleMs: 120_000},
   },
   beefy: {
+    notesByDefault: true,
     embedding: {api: 'openai', baseUrl: LOCAL_EMBEDDING, model: 'qwen3-embedding-8b'},
     rerank: {api: 'rerank', baseUrl: LOCAL_RERANK, model: 'qwen3-reranker-0.6b', top: 20, timeoutMs: 1000},
     notes: {api: 'openai', baseUrl: LOCAL_NOTES, model: 'qwen3-4b-instruct-2507', concurrency: 4, chars: 1500, idleMs: 30_000},
@@ -71,13 +76,15 @@ function over(base, own, name, profile) {
 /**
  * The `embedding`, `rerank` and `notes` entries of a config `{profile?, embedding?, rerank?, notes?}`, checked
  * (config.mjs, notes.mjs): the profile's, with what the config sets itself over them. Without a profile, the config's
- * own; notes only when the config asks for them (true, or an entry over the profile's writer, the laptop's without one).
+ * own. Notes when the config asks for them (true, or an entry over the profile's writer, the laptop's without one), or
+ * with a local profile's writer unless the config says false.
  */
 export function profileConfig({profile, embedding, rerank, notes} = {}) {
   if (profile !== undefined && profile !== null && !Object.hasOwn(PROFILES, profile)) {
     throw new Error(`profile must be one of ${Object.keys(PROFILES).map(name => `"${name}"`).join(', ')}`);
   }
   const base = profile ? PROFILES[profile] : {};
+  if ((notes === undefined || notes === null) && base.notesByDefault) notes = true;
   return {
     embedding: embeddingConfig(over(base.embedding, embedding, 'embedding', profile)),
     rerank: rerankConfig(over(base.rerank, rerank, 'rerank', profile)),

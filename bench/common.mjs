@@ -39,7 +39,7 @@ export async function settled(meaning, root, tick = () => {}) {
   for (;;) {
     if (index.failure) throw index.failure;
     if (meaning.problem) throw new Error(meaning.problem);
-    const waiting = index.pending().length + index.learnedPending().length;
+    const waiting = index.pending().length + index.learnedPending().length + (index.reread?.size ?? 0);
     if (!meaning.working && (!waiting || meaning.state !== 'on')) return index;
     if (!meaning.working) meaning.work();
     if (Date.now() - last > 5000) { last = Date.now(); tick(index.progress()); }

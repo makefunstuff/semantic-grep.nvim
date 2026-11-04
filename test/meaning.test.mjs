@@ -457,7 +457,7 @@ test('turned off with an embedding model, it stays off until turned on', async (
 });
 
 test('the brute-force search over every vector stays quick for many pieces', () => {
-  const pieces = Array.from({length: 20_000}, (_, i) => ({id: i, file: 'f.js', from: i + 1, to: i + 1, hash: `h${i}`}));
+  const pieces = Array.from({length: 20_000}, (_, i) => ({id: i, file: 'f.js', from: i + 1, to: i + 1, hash: `h${i}`, key: `h${i}`}));
   const index = new ProjectIndex({root: '/project', store: null, embedder: {id: 'fake'}});
   index.byFile = new Map([['f.js', pieces]]);
   index.vectors = new Map(pieces.map(piece => [piece.hash, fakeVector(`piece ${piece.id} retry ${piece.id % 7}`)]));

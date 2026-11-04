@@ -25,9 +25,9 @@ unused and when Neovim goes (`local_model` in `setup()` points at a GGUF or a ll
 profile is the same model on a server you run.
 
 The local profiles expect llama.cpp's `llama-server` on this machine: the embedding model at
-`http://127.0.0.1:18120/v1`, the reranker at `http://127.0.0.1:18121/v1`. With `notes = true` (off by default), each profile's notes writer is used too
-(Qwen3.5-2B on the laptop's CPU, Qwen3-4B-Instruct-2507 on beefy's GPU, both at `http://127.0.0.1:18122/v1`; Claude
-Haiku 5.5 in the cloud): [notes.md](notes.md). `:checkhealth semantic-grep` names the
+`http://127.0.0.1:18120/v1`, the reranker at `http://127.0.0.1:18121/v1`. Each profile's notes writer writes in the background
+(Qwen3.5-2B on the laptop's CPU, Qwen3-4B-Instruct-2507 on beefy's GPU, both at `http://127.0.0.1:18122/v1`, on unless
+`notes = false`; Claude Haiku 5.5 in the cloud, only with `notes = true`): [notes.md](notes.md). `:checkhealth semantic-grep` names the
 profile and each model nothing answers for ("unreachable"), with where it looked.
 
 ## Running the models

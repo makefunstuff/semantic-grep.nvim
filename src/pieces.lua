@@ -3,8 +3,9 @@
 -- it as `nvim --headless -u NONE -i NONE -n -l pieces.lua` (see pieces.mjs): no plugins and no config, only the
 -- parsers on Neovim's own runtimepath and those the user's Neovim told the backend of. Each line on stdin is
 -- {"id": n, "path": "/abs/file"} or {"parsers": ["/…/parser/lua.so", …]}; each answer on stdout is
--- {"id": n, "lang": "lua", "pieces": [{"from": 1, "to": 9, "kind": "function_declaration", "name": "M.find", "whole": true}]}
--- (lines from 1), or {"id": n} when no parser reads the file. A piece longer than `MAX_LINES` with definitions
+-- {"id": n, "lang": "lua", "pieces": [{"from": 1, "to": 9, "kind": "function_declaration", "name": "M.find", "whole": true, "within": [1]}]}
+-- (lines from 1; `within`, for a definition inside another cut apart, the first line of each that encloses it,
+-- outermost first), or {"id": n} when no parser reads the file. A piece longer than `MAX_LINES` with definitions
 -- inside is cut into its head (the lines above its first one) and those definitions; one without is `whole: false`,
 -- for the backend to cut at its blank lines.
 local MAX_LINES = 60
@@ -120,7 +121,11 @@ local function piece(node, outer, source, out)
   if inside[1].from > first + 1 then
     out[#out + 1] = {from = first + 1, to = inside[1].from - 1, kind = node:type(), name = name, whole = inside[1].from - 1 - first <= MAX_LINES}
   end
-  for _, each in ipairs(inside) do out[#out + 1] = each end
+  for _, each in ipairs(inside) do
+    -- What encloses it, outermost first: the first line of each (its comments' first), for its title.
+    each.within = {first + 1, unpack(each.within or {})}
+    out[#out + 1] = each
+  end
 end
 
 --- The definitions under `node`, in order: those at its level, and those inside what is not one (a block, a body).

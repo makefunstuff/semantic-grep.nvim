@@ -1,0 +1,471 @@
+{
+ "profile": "lap",
+ "model": "embeddinggemma-2",
+ "tunedOn": "dev",
+ "weigh": {
+  "vague": 2,
+  "plain": 1.5
+ },
+ "questions": {
+  "dev": 121,
+  "other": 251
+ },
+ "band": 0.06,
+ "pickNear": 0.85,
+ "pieces": {
+  "now": {
+   "settings": {
+    "k": 60,
+    "list": 50,
+    "band": 0.06,
+    "words": 1
+   },
+   "dev": 0.603,
+   "other": 0.613,
+   "styles": {
+    "vague": 0.636,
+    "plain": 0.662,
+    "multi-hop": 0.464
+   }
+  },
+  "best": {
+   "settings": {
+    "k": 20,
+    "list": 30,
+    "band": 0.1,
+    "words": 0.5
+   },
+   "dev": 0.616,
+   "other": 0.617,
+   "styles": {
+    "vague": 0.64,
+    "plain": 0.672,
+    "multi-hop": 0.469
+   }
+  },
+  "top": [
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 0.1,
+     "words": 0.5
+    },
+    "dev": 0.616,
+    "other": 0.617
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 0.1,
+     "words": 0.75
+    },
+    "dev": 0.616,
+    "other": 0.619
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 0.15,
+     "words": 0.5
+    },
+    "dev": 0.616,
+    "other": 0.614
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 0.15,
+     "words": 0.75
+    },
+    "dev": 0.616,
+    "other": 0.615
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 2,
+     "words": 0.5
+    },
+    "dev": 0.616,
+    "other": 0.614
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 30,
+     "band": 2,
+     "words": 0.75
+    },
+    "dev": 0.616,
+    "other": 0.615
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 50,
+     "band": 0.1,
+     "words": 0.5
+    },
+    "dev": 0.616,
+    "other": 0.617
+   },
+   {
+    "settings": {
+     "k": 20,
+     "list": 50,
+     "band": 0.15,
+     "words": 0.5
+    },
+    "dev": 0.616,
+    "other": 0.614
+   }
+  ]
+ },
+ "files": {
+  "now": {
+   "settings": {
+    "k": 10,
+    "band": 2,
+    "words": 1,
+    "depth": 30,
+    "fileK": 2,
+    "decay": 0.7,
+    "anyWords": true
+   },
+   "dev": 0.814,
+   "other": 0.803,
+   "styles": {
+    "vague": 0.786,
+    "plain": 0.87,
+    "multi-hop": 0.735
+   }
+  },
+  "best": {
+   "settings": {
+    "k": 10,
+    "band": 2,
+    "words": 1,
+    "depth": 30,
+    "fileK": 2,
+    "decay": 0.7,
+    "anyWords": true
+   },
+   "dev": 0.814,
+   "other": 0.803,
+   "styles": {
+    "vague": 0.786,
+    "plain": 0.87,
+    "multi-hop": 0.735
+   }
+  },
+  "top": [
+   {
+    "settings": {
+     "k": 10,
+     "words": 1,
+     "depth": 30,
+     "fileK": 2,
+     "decay": 0.7,
+     "anyWords": true
+    },
+    "dev": 0.814,
+    "other": 0.803
+   },
+   {
+    "settings": {
+     "k": 10,
+     "words": 1,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.776
+   },
+   {
+    "settings": {
+     "k": 10,
+     "words": 1.5,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.777
+   },
+   {
+    "settings": {
+     "k": 30,
+     "words": 0.5,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.778
+   },
+   {
+    "settings": {
+     "k": 30,
+     "words": 1,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.776
+   },
+   {
+    "settings": {
+     "k": 30,
+     "words": 1.5,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.78
+   },
+   {
+    "settings": {
+     "k": 60,
+     "words": 0.5,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.778
+   },
+   {
+    "settings": {
+     "k": 60,
+     "words": 1,
+     "depth": 30,
+     "fileK": 5,
+     "decay": 0.5,
+     "anyWords": false
+    },
+    "dev": 0.811,
+    "other": 0.776
+   }
+  ]
+ },
+ "picks": {
+  "now": {
+   "settings": {
+    "k": 20,
+    "list": 30,
+    "band": 0.1,
+    "words": 0.5,
+    "pick": "fused",
+    "near": 0.85,
+    "pickWeight": 1
+   },
+   "dev": 0.654,
+   "other": 0.659,
+   "styles": {
+    "vague": 0.684,
+    "plain": 0.718,
+    "multi-hop": 0.493
+   }
+  },
+  "best": {
+   "settings": {
+    "k": 20,
+    "list": 30,
+    "band": 0.1,
+    "words": 0.5,
+    "pick": "fused",
+    "near": 0.75,
+    "pickWeight": 1
+   },
+   "dev": 0.831,
+   "other": 0.845,
+   "styles": {
+    "vague": 0.882,
+    "plain": 0.851,
+    "multi-hop": 0.736
+   }
+  },
+  "top": [
+   {
+    "settings": {
+     "pick": "fused",
+     "near": 0.75,
+     "pickWeight": 1
+    },
+    "dev": 0.831,
+    "other": 0.845
+   },
+   {
+    "settings": {
+     "pick": "fused",
+     "near": 0.75,
+     "pickWeight": 2
+    },
+    "dev": 0.823,
+    "other": 0.857
+   },
+   {
+    "settings": {
+     "pick": "fused",
+     "near": 0.75,
+     "pickWeight": 4
+    },
+    "dev": 0.823,
+    "other": 0.852
+   },
+   {
+    "settings": {
+     "pick": "meaning",
+     "near": 0.75,
+     "pickWeight": 1
+    },
+    "dev": 0.804,
+    "other": 0.81
+   },
+   {
+    "settings": {
+     "pick": "meaning",
+     "near": 0.75,
+     "pickWeight": 2
+    },
+    "dev": 0.804,
+    "other": 0.81
+   },
+   {
+    "settings": {
+     "pick": "meaning",
+     "near": 0.75,
+     "pickWeight": 4
+    },
+    "dev": 0.804,
+    "other": 0.81
+   },
+   {
+    "settings": {
+     "pick": "first",
+     "near": 0.75,
+     "pickWeight": 1
+    },
+    "dev": 0.795,
+    "other": 0.824
+   },
+   {
+    "settings": {
+     "pick": "first",
+     "near": 0.75,
+     "pickWeight": 2
+    },
+    "dev": 0.795,
+    "other": 0.824
+   }
+  ],
+  "none": {
+   "dev": 0.616,
+   "other": 0.617
+  },
+  "wrongFirst": {
+   "now": 0.019,
+   "best": 0.073
+  },
+  "table": [
+   {
+    "pick": "meaning",
+    "near": 0.75,
+    "dev": 0.804,
+    "other": 0.81,
+    "wrongFirst": 0.161
+   },
+   {
+    "pick": "meaning",
+    "near": 0.8,
+    "dev": 0.711,
+    "other": 0.739,
+    "wrongFirst": 0.089
+   },
+   {
+    "pick": "meaning",
+    "near": 0.85,
+    "dev": 0.653,
+    "other": 0.65,
+    "wrongFirst": 0.027
+   },
+   {
+    "pick": "meaning",
+    "near": 0.9,
+    "dev": 0.647,
+    "other": 0.626,
+    "wrongFirst": 0
+   },
+   {
+    "pick": "first",
+    "near": 0.75,
+    "dev": 0.795,
+    "other": 0.824,
+    "wrongFirst": 0.194
+   },
+   {
+    "pick": "first",
+    "near": 0.8,
+    "dev": 0.716,
+    "other": 0.755,
+    "wrongFirst": 0.105
+   },
+   {
+    "pick": "first",
+    "near": 0.85,
+    "dev": 0.653,
+    "other": 0.652,
+    "wrongFirst": 0.035
+   },
+   {
+    "pick": "first",
+    "near": 0.9,
+    "dev": 0.647,
+    "other": 0.626,
+    "wrongFirst": 0
+   },
+   {
+    "pick": "fused",
+    "near": 0.75,
+    "dev": 0.831,
+    "other": 0.845,
+    "wrongFirst": 0.073
+   },
+   {
+    "pick": "fused",
+    "near": 0.8,
+    "dev": 0.745,
+    "other": 0.763,
+    "wrongFirst": 0.051
+   },
+   {
+    "pick": "fused",
+    "near": 0.85,
+    "dev": 0.654,
+    "other": 0.659,
+    "wrongFirst": 0.019
+   },
+   {
+    "pick": "fused",
+    "near": 0.9,
+    "dev": 0.647,
+    "other": 0.626,
+    "wrongFirst": 0
+   }
+  ]
+ }
+}

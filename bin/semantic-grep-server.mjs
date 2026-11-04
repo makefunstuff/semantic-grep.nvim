@@ -2,8 +2,10 @@
 // The stdio JSON-RPC server one Neovim spawns (see src/server.mjs), and the notes a coding agent writes:
 //
 //   semantic-grep-server notes pending [--root DIR] [--limit N]   pieces without a note, one JSON line each:
-//                                                                {hash, file, from, to, name, text}
-//   semantic-grep-server notes put [--root DIR] [--source NAME]   notes from stdin, one JSON line each: {hash, note}
+//                                                                {hash, file, from, to, name, text}; or, once a file's
+//                                                                pieces have theirs, {kind: "file", file, notes}
+//   semantic-grep-server notes put [--root DIR] [--source NAME]   notes from stdin, one JSON line each: {hash, note},
+//                                                                or {file, note} (what the file is for)
 //   semantic-grep-server notes write [--root DIR] [--profile laptop|beefy|cloud] [--model NAME] [--base-url URL]
 //                       [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N] [--limit N]
 //                                                                a note for each piece without one, by a language model
@@ -98,8 +100,9 @@ async function notes(action, args) {
         const {notes, errors} = await writer.write(answer.pieces);
         for (const error of errors) process.stderr.write(`  ${error}\n`);
         if (!notes.length && errors.some(error => !error.endsWith('no note in the answer'))) throw new Error(`${writer.about} wrote no note: ${errors[0]}`);
-        const noted = new Set(notes.map(note => note.hash));
-        for (const piece of answer.pieces) if (!noted.has(piece.hash)) failed.add(piece.hash);
+        const idOf = item => item.hash ?? `file:${item.file}`; // a piece, or a file written from its pieces' notes
+        const noted = new Set(notes.map(idOf));
+        for (const id of answer.pieces.map(idOf)) if (!noted.has(id)) failed.add(id);
         await meaning.addNotes(root, notes, {source: writer.name});
         written += notes.length;
         const s = (Date.now() - started) / 1000;

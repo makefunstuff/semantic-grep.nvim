@@ -56,9 +56,10 @@ test('each profile is a valid config, its cloud keys named by environment variab
   }
 });
 
-test('a model\'s band and pickNear: the config\'s, else the model\'s measured ones, else the defaults', () => {
+test('a model\'s band, pickNear and fusion: the config\'s, else the model\'s measured ones, else the defaults', () => {
   assert.deepEqual(tuningOf({model: 'some-new-model'}), TUNING);
-  assert.deepEqual(tuningOf({model: 'some-new-model', band: 0.3, pickNear: 0.9}), {band: 0.3, pickNear: 0.9});
+  assert.deepEqual(tuningOf({model: 'some-new-model', band: 0.3, pickNear: 0.9}), {...TUNING, band: 0.3, pickNear: 0.9});
+  assert.deepEqual(tuningOf({model: 'embeddinggemma-2'}).files, {k: 10, words: 1, any: true, depth: 30, rank: 2, decay: 0.7}, 'tuned on the bench');
   for (const model of ['embeddinggemma-300M', 'qwen3-embedding-4b']) {
     const {band, pickNear} = tuningOf({model});
     assert.ok(band > 0 && band < 1 && pickNear > 0 && pickNear < 1, model);

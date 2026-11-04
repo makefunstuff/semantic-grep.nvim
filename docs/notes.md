@@ -3,24 +3,33 @@
 A note is a sentence or two on what a piece of code does and what someone would be trying to do when they need it,
 in plain words, keeping its identifiers. It is searched with its piece, by its words and by its meaning, and read by
 the reranker before the code (README, "It learns"). A coding agent can write them (`notes pending` / `notes put`);
-with `notes` in `setup()`, a language model writes them in the background instead, so search by meaning gains them
-without anyone asking for them.
+a language model writes them in the background instead, so search by meaning gains them without anyone asking for
+them: with the `laptop` or `beefy` profile, its writer on this machine does unless `notes = false`; the cloud's writer
+costs money and sends the code to a second company, so it writes only with `notes = true`; without a profile, `notes`
+turns the laptop's writer on.
 
 ```lua
 require('semantic-grep').setup({
-  profile = 'beefy',
-  notes = true, -- the profile's writer; or {model = 'qwen3.5-2b', concurrency = 1, idleMs = 300000, ...} over it
+  profile = 'beefy', -- notes on: the profile's writer
+  notes = {idleMs = 300000}, -- or over it (another model, concurrency, ...); false: no notes
 })
 ```
+
+Once every piece of a file has its note, the writer writes one more, on the file: what it is for, from its pieces'
+notes (not its code). It goes in the title of the file's small pieces (README, "How it works"), so a short method
+in a file whose name says little is found by what its file is for. Only a file of several pieces that has small ones
+and says nothing of itself (no module docstring, package comment or header comment: those are its summary already)
+gets one.
 
 - **When.** Only while nothing is searched: once no search came for the writer's `idleMs` (2 minutes on the laptop,
   30 s on beefy and in the cloud) and no project is being indexed. Idle means no search, not no typing: on a laptop,
   its model works on the CPU while you edit (at the nice its server runs at, below), so set `idleMs` higher, or
   write the notes at once with the command below, if that is in the way. Then it takes the pieces with no note, the
-  project
-  searched last first, a few at a time, and stops at the next search (the piece it was writing is dropped and written
-  later). Each note is kept as it comes, so a Neovim closed half way keeps what was written.
-- **What.** Every piece without a note: one written by an agent is never written over. A piece whose code changed has
+  project searched last first, and in it those nearest the file you are in (the same file, its folder, the folder
+  above; a file you were in before counts as two folders further), a few at a time, and stops at the next search (the
+  piece it was writing is dropped and written later). Each note is kept as it comes, so a Neovim closed half way keeps
+  what was written. A project new to you is noted where you are reading first.
+- **What.** Every piece without a note, then those files: one written by an agent is never written over. A piece whose code changed has
   a new hash, so it has no note until one is written again. A writer that does not answer at all rests five
   minutes, and its pieces are asked again after; a piece it fails on three times (no usable note, too long a wait)
   is left until the next session.
@@ -62,14 +71,16 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   `notes = {model = 'claude-sonnet-5-5', chars = 3000, concurrency = 4, request = {thinking = {type = 'between_tools'}}}`
   with the cloud profile (Sonnet 5.5 takes no other way to turn its thinking off; measured through OpenRouter at low
   reasoning effort, not this way), for a project worth $2 a thousand pieces.
-- **Measured with the laptop's embedding model only.** Every run above is EmbeddingGemma 2 with no reranker. With
-  the beefy profile's own models (Qwen3-Embedding-8B, and the Qwen3-Reranker-0.6B, which reads a note before its
-  code) the notes' gain is not measured: that run was stopped before its questions were asked. Its baseline with no
-  notes, on the same 137 questions, is pieces MRR 0.603 fused and 0.643 reranked, files 0.780 and 0.808
-  ([run](../bench/results/notes-2026-11-03/test-none-beefy.json)): a stronger embedder and a reranker may leave
-  notes less to add. The cloud profile's models (Voyage's embedder and reranker) are not measured with notes either,
-  for want of a key. Notes stay off by default in every profile; with beefy's or the cloud's models, `notes = true`
-  is a choice to check on your own searches (`npm run bench:export`).
+- **With each profile's own models** (2026-11-04, on this change's titles and fusion: docs/benchmark.md, "Context and
+  tuning"; the same 189 questions, each profile's writer, with its notes on the files): the laptop's Qwen3.5-2B takes
+  the pieces' MRR from 0.573 to 0.600 (plain questions +0.063 [0.010, 0.128]) and leaves the files view where it is
+  (0.800 to 0.799), its tuned fusion having taken the files most of the way already. Beefy's Qwen3-4B, with its
+  Qwen3-Embedding-8B, adds to the fused list (pieces 0.597 to 0.620, files 0.799 to 0.823) and nothing to what its
+  reranker gives (pieces 0.645 to 0.646, files 0.828 to 0.813, within the noise): a strong embedder and a reranker
+  that reads the code leave notes little to add. They are on with both local profiles all the same: they cost
+  nothing but idle time, help the pieces' list wherever it is not reranked (on the laptop always, on beefy when its
+  reranker fails or is too slow); `notes = false` if the idle time is in the way. The cloud profile's models (Voyage's embedder and reranker) are not measured
+  with notes, for want of a key; its writer costs money, so it writes only when asked.
 - **Dropped:** Qwen3-30B-A3B (no better than no notes, a little worse), and Qwen3.5-9B, whose run was stopped before
   it was measured: on this machine it would not fit whole in the GPU memory free beside other work, and wrote about
   45 pieces a minute half on the CPU.

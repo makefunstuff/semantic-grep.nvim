@@ -1,0 +1,6 @@
+{
+  "lap": {"about": "laptop model on GPU0, as the plugin runs it (its band)", "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:28192/v1", "model": "embeddinggemma-2"},
+    "serve": {"env": {"CUDA_VISIBLE_DEVICES": "0"}, "embedding": {"gguf": "embeddinggemma-2-Q8_0.gguf", "args": ["--embedding", "--pooling", "mean", "--ctx-size", "8192", "--batch-size", "2048", "--ubatch-size", "2048", "--parallel", "1", "--gpu-layers", "99"]}}},
+  "beefy": {"about": "the owner's beefy servers, used as they are", "embedding": {"api": "openai", "baseUrl": "http://127.0.0.1:18120/v1", "model": "qwen3-embedding-8b"},
+    "rerank": {"api": "rerank", "baseUrl": "http://127.0.0.1:18121/v1", "model": "qwen3-reranker-0.6b", "top": 20, "timeoutMs": 20000}}
+}

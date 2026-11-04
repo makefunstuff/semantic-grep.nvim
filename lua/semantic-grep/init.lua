@@ -86,6 +86,15 @@ function M.setup(opts)
       source.notify('saved', {path = path})
     end,
   })
+  -- The file one is in: the notes written in the background start near it.
+  vim.api.nvim_create_autocmd('BufEnter', {
+    group = group,
+    callback = function(args)
+      if not source or (source.running and not source.running()) or vim.bo[args.buf].buftype ~= '' or args.file == '' then return end
+      local path = vim.uv.fs_realpath(args.file)
+      if path then source.notify('visited', {path = path}) end
+    end,
+  })
   vim.api.nvim_create_autocmd('VimLeavePre', {group = group, callback = function() if source and source.stop then source.stop() end end})
   if M.config.index_on_start then
     vim.api.nvim_create_autocmd('VimEnter', {group = group, once = true, callback = function()

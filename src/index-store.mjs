@@ -1,20 +1,22 @@
 // The search index on disk: one SQLite file per repository, shared by its worktrees. It holds where each piece
-// of code is (its file and lines, the hash of its text, its kind and name), the words of each piece for the word search
-// (an FTS5 index without the text it was made from), and a vector per piece's hash and embedding model: worktrees of
+// of code is (its file and lines, the hash of its text, its kind and name, and what encloses it), the words of each piece
+// for the word search (an FTS5 index without the text it was made from), and a vector per piece's key (its hash, with
+// what encloses it: see pieceKey in meaning.mjs) and embedding model: worktrees of
 // one repository embed a piece of code they share once. No copy of the code is kept; its lines are read from the files.
 // The file is in Neovim's data folder (semantic-grep/index/<repository>-<hash>.sqlite), or with index = "project" in the
 // repository as .semantic-grep/index.sqlite, listed in .git/info/exclude rather than .gitignore.
 //
 // What was learned about the repository's code lives beside it, in <index>.learned.sqlite, attached to the same
-// connection: the searches people made and the piece they opened ("pick"), and notes on pieces (a sentence a coding agent
-// wrote on what a piece does: "note"), with their words and vectors. A rebuild, or a new SCHEMA, keeps it.
+// connection: the searches people made and the piece they opened ("pick"), notes on pieces (a sentence a coding agent
+// or a model wrote on what a piece does: "note"), with their words and vectors, and notes on files, written from their
+// pieces' notes ("file"). A rebuild, or a new SCHEMA, keeps it.
 import {execFile} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {appendFileSync, mkdirSync, readFileSync, rmSync, statSync} from 'node:fs';
 import {basename, dirname, join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 
-const SCHEMA = 4; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors
+const SCHEMA = 5; // pairing-buddy's too, once on this library: 4 cuts pieces by indentation and titles their vectors, 5 adds what encloses a piece to its title
 export const PROJECT_DIR = '.semantic-grep';
 const MAX_PICKS = 5000; // the searches kept, newest first
 const NOTE_CHARS = 1000;
@@ -99,25 +101,26 @@ export class IndexStore {
         CREATE TABLE vectors (model TEXT NOT NULL, hash TEXT NOT NULL, vector BLOB NOT NULL); -- rows of 1 KB and more: no WITHOUT ROWID
         CREATE UNIQUE INDEX vectors_key ON vectors (model, hash);
         CREATE TABLE files (tree TEXT NOT NULL, file TEXT NOT NULL, size INTEGER, mtime REAL, skipped INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (tree, file)) WITHOUT ROWID;
-        CREATE TABLE pieces (id INTEGER PRIMARY KEY, tree TEXT NOT NULL, file TEXT NOT NULL, line INTEGER NOT NULL, last INTEGER NOT NULL, hash TEXT NOT NULL, kind TEXT, name TEXT);
+        CREATE TABLE pieces (id INTEGER PRIMARY KEY, tree TEXT NOT NULL, file TEXT NOT NULL, line INTEGER NOT NULL, last INTEGER NOT NULL, hash TEXT NOT NULL, kind TEXT, name TEXT, key TEXT NOT NULL, context TEXT);
         CREATE INDEX pieces_file ON pieces (tree, file);
         CREATE INDEX pieces_hash ON pieces (hash);
+        CREATE INDEX pieces_key ON pieces (key);
         CREATE VIRTUAL TABLE words USING fts5 (body, content = '', contentless_delete = 1, tokenize = 'porter unicode61');
         PRAGMA user_version = ${SCHEMA};
       `);
     }
     this.statements = {
       files: this.db.prepare('SELECT file, size, mtime, skipped FROM files WHERE tree = ?'),
-      pieces: this.db.prepare('SELECT id, file, line, last, hash, kind, name FROM pieces WHERE tree = ? ORDER BY file, line'),
+      pieces: this.db.prepare('SELECT id, file, line, last, hash, kind, name, key, context FROM pieces WHERE tree = ? ORDER BY file, line'),
       piecesOf: this.db.prepare('SELECT id FROM pieces WHERE tree = ? AND file = ?'),
       deleteWords: this.db.prepare('DELETE FROM words WHERE rowid = ?'),
       deletePieces: this.db.prepare('DELETE FROM pieces WHERE tree = ? AND file = ?'),
       deleteFile: this.db.prepare('DELETE FROM files WHERE tree = ? AND file = ?'),
       putFile: this.db.prepare('INSERT OR REPLACE INTO files (tree, file, size, mtime, skipped) VALUES (?, ?, ?, ?, ?)'),
-      putPiece: this.db.prepare('INSERT INTO pieces (tree, file, line, last, hash, kind, name) VALUES (?, ?, ?, ?, ?, ?, ?)'),
+      putPiece: this.db.prepare('INSERT INTO pieces (tree, file, line, last, hash, kind, name, key, context) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'),
       putWords: this.db.prepare('INSERT INTO words (rowid, body) VALUES (?, ?)'),
       vector: this.db.prepare('SELECT vector FROM vectors WHERE model = ? AND hash = ?'),
-      vectors: this.db.prepare('SELECT v.hash, v.vector FROM vectors v WHERE v.model = ? AND v.hash IN (SELECT hash FROM pieces WHERE tree = ?)'),
+      vectors: this.db.prepare('SELECT v.hash, v.vector FROM vectors v WHERE v.model = ? AND v.hash IN (SELECT key FROM pieces WHERE tree = ?)'),
       putVector: this.db.prepare('INSERT OR REPLACE INTO vectors (model, hash, vector) VALUES (?, ?, ?)'),
       search: this.db.prepare('SELECT p.id AS id FROM words JOIN pieces p ON p.id = words.rowid WHERE words MATCH ? AND p.tree = ? ORDER BY bm25(words) LIMIT ?'),
       getMeta: this.db.prepare('SELECT value FROM meta WHERE key = ?'),
@@ -139,6 +142,7 @@ export class IndexStore {
       extras: this.db.prepare('SELECT id, kind, hash, file, line, text, source, at FROM learned.extras ORDER BY id'),
       extraSearch: this.db.prepare('SELECT rowid AS id FROM learned.extras_words WHERE extras_words MATCH ? ORDER BY bm25(extras_words) LIMIT ?'),
       noteOf: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'note' AND hash = ?"),
+      fileNoteOf: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'file' AND file = ?"),
       pickOf: this.db.prepare("SELECT id FROM learned.extras WHERE kind = 'pick' AND file = ? AND line = ? AND text = ?"),
       putExtra: this.db.prepare('INSERT INTO learned.extras (kind, hash, file, line, text, source, at) VALUES (?, ?, ?, ?, ?, ?, ?)'),
       touchExtra: this.db.prepare('UPDATE learned.extras SET at = ?, hash = coalesce(?, hash) WHERE id = ?'),
@@ -151,7 +155,7 @@ export class IndexStore {
     });
   }
 
-  /** What was learned: `{id, kind: "pick" | "note", hash, file, line, text, source, at}`, oldest first. */
+  /** What was learned: `{id, kind: "pick" | "note" | "file", hash, file, line, text, source, at}`, oldest first. */
   extras() { return this.statements.extras.all(); }
 
   /** Changes whenever anything learned changes, by this connection or another (another Neovim, the notes command). */
@@ -185,6 +189,19 @@ export class IndexStore {
         const {lastInsertRowid} = this.statements.putExtra.run('note', hash, file, line, text, source, at);
         this.statements.putExtraWords.run(lastInsertRowid, body);
       }
+      this.writes += 1;
+    });
+  }
+
+  /**
+   * A note on what the file `file` is for, written from its pieces' notes (one each: a new one replaces it; an empty one
+   * removes it). It is no piece's: its words are not searched, it titles the file's small pieces (contextFor).
+   */
+  putFileNote({file, note, source = null, at = Date.now()}) {
+    this.transaction(() => {
+      for (const {id} of this.statements.fileNoteOf.all(file)) this.dropExtra(id);
+      const text = String(note ?? '').trim().slice(0, NOTE_CHARS);
+      if (text) this.statements.putExtra.run('file', null, file, 0, text, source, at);
       this.writes += 1;
     });
   }
@@ -223,13 +240,13 @@ export class IndexStore {
     return new Map(this.statements.files.all(tree).map(row => [row.file, {size: row.size, mtimeMs: row.mtime, skipped: !!row.skipped}]));
   }
 
-  /** The pieces of worktree `tree`: `{id, file, from, to, hash, kind, name}`. */
+  /** The pieces of worktree `tree`: `{id, file, from, to, hash, kind, name, key, context}`. */
   pieces(tree) {
-    return this.statements.pieces.all(tree).map(row => ({id: row.id, file: row.file, from: row.line, to: row.last, hash: row.hash, kind: row.kind, name: row.name}));
+    return this.statements.pieces.all(tree).map(row => ({id: row.id, file: row.file, from: row.line, to: row.last, hash: row.hash, kind: row.kind, name: row.name, key: row.key, context: row.context ?? ''}));
   }
 
   /**
-   * A file read again: its pieces (`{from, to, hash, kind, name, words}`) replace the ones it had, in one go; each comes
+   * A file read again: its pieces (`{from, to, hash, kind, name, key, context, words}`) replace the ones it had, in one go; each comes
    * back with its id. `skipped` keeps a file found not worth indexing (binary, minified) from being read again.
    */
   putFile(tree, file, {size, mtimeMs, skipped = false}, pieces = []) {
@@ -238,9 +255,10 @@ export class IndexStore {
       this.statements.putFile.run(tree, file, size, mtimeMs, skipped ? 1 : 0);
       this.touch();
       return pieces.map(piece => {
-        const {lastInsertRowid} = this.statements.putPiece.run(tree, file, piece.from, piece.to, piece.hash, piece.kind ?? null, piece.name ?? null);
+        const key = piece.key ?? piece.hash;
+        const {lastInsertRowid} = this.statements.putPiece.run(tree, file, piece.from, piece.to, piece.hash, piece.kind ?? null, piece.name ?? null, key, piece.context || null);
         this.statements.putWords.run(lastInsertRowid, piece.words);
-        return {id: Number(lastInsertRowid), file, from: piece.from, to: piece.to, hash: piece.hash, kind: piece.kind ?? null, name: piece.name ?? null};
+        return {id: Number(lastInsertRowid), file, from: piece.from, to: piece.to, hash: piece.hash, kind: piece.kind ?? null, name: piece.name ?? null, key, context: piece.context ?? ''};
       });
     });
   }
@@ -258,14 +276,14 @@ export class IndexStore {
     });
   }
 
-  /** The vectors of `model` for the pieces of worktree `tree`: hash -> Float32Array. */
+  /** The vectors of `model` for the pieces of worktree `tree`: key (see pieceKey) -> Float32Array. */
   vectors(model, tree) {
     return new Map(this.statements.vectors.all(model, tree).map(row => [row.hash, vectorOf(row.vector)]));
   }
 
-  /** The vector of `model` for one hash, made in any worktree; or null. */
-  vector(model, hash) {
-    const row = this.statements.vector.get(model, hash);
+  /** The vector of `model` for one key, made in any worktree; or null. */
+  vector(model, key) {
+    const row = this.statements.vector.get(model, key);
     return row ? vectorOf(row.vector) : null;
   }
 
@@ -287,8 +305,8 @@ export class IndexStore {
    * only: the notes command, a Neovim without an embedding model) the other models' vectors stay: they are not its to drop.
    */
   prune(model = null) {
-    if (model) this.db.prepare('DELETE FROM vectors WHERE model != ? OR hash NOT IN (SELECT hash FROM pieces)').run(model);
-    else this.db.prepare('DELETE FROM vectors WHERE hash NOT IN (SELECT hash FROM pieces)').run();
+    if (model) this.db.prepare('DELETE FROM vectors WHERE model != ? OR hash NOT IN (SELECT key FROM pieces)').run(model);
+    else this.db.prepare('DELETE FROM vectors WHERE hash NOT IN (SELECT key FROM pieces)').run();
   }
 
   /** Worktrees whose folders are gone leave the index, with their pieces. */

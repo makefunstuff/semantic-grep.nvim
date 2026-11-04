@@ -10,7 +10,9 @@
 // With --notes, every piece first gets a note from that writer of writers.json (src/notes.mjs; its llama-server started
 // like a profile's), as the plugin's notes = {...} writes them, and the questions are asked with them. The notes are
 // cached by piece (<cache>/notes/<writer>/<repo>.jsonl): a run again asks the writer only for pieces it has none for,
-// and the run saves what the writing took (time and tokens a thousand pieces, and with a price, the cost).
+// and the run saves what the writing took (time and tokens a thousand pieces, and with a price, the cost). Then each file
+// that says nothing of itself gets a note written from its pieces' notes, as the plugin writes them (cached the same way,
+// <repo>.files.jsonl), and its small pieces are embedded again with it in their titles.
 //
 // A question is a JSON line, {id, repo, query, file, from, to, style?, split?, also?: [{file, from, to}]}: `repo` a
 // name in corpus.json (fetched by `npm run bench:fetch`) or a folder's absolute path (a private questions file, see
@@ -195,7 +197,8 @@ async function noted(repo) {
   const tookFile = file.replace(/\.jsonl$/, '.took.json'); // what writing them took, the first time
   mkdirSync(dirname(file), {recursive: true});
   const cached = new Map((existsSync(file) ? readFileSync(file, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []).map(row => [row.hash, row]));
-  const {pieces, noted: had} = await meaning.pendingNotes(repo.root, {limit: Infinity});
+  const {pieces: listed, noted: had} = await meaning.pendingNotes(repo.root, {limit: Infinity});
+  const pieces = listed.filter(piece => piece.hash); // the files come once their pieces are noted, below
   const put = pieces.filter(piece => cached.has(piece.hash)).map(piece => cached.get(piece.hash));
   if (put.length) await meaning.addNotes(repo.root, put, {source: `writer:${notesEntry.model}`});
   const todo = pieces.filter(piece => !cached.has(piece.hash));
@@ -215,11 +218,40 @@ async function noted(repo) {
     }
     Object.assign(took, {ms: Date.now() - started, ...writer.tokens, cost: writer.cost});
   }
+  took.files = await notedFiles(repo, file.replace(/\.jsonl$/, '.files.jsonl'));
   // What writing every cached note took, over the runs that wrote them: what the cost a thousand pieces is of.
   const before = existsSync(tookFile) ? JSON.parse(readFileSync(tookFile, 'utf8')) : {};
   took.total = Object.fromEntries(['written', 'ms', 'input', 'output', 'cost'].map(key => [key, (before.total?.[key] ?? before[key] ?? 0) + took[key]]));
   if (took.written) writeFileSync(tookFile, `${JSON.stringify(took)}\n`);
   await settled(meaning, repo.root, ({chunks}) => log(`${repo.name}: the notes of ${chunks} pieces embedded`));
+  return took;
+}
+
+/**
+ * The notes on `repo`'s files that say nothing of themselves, written from their pieces' notes (Meaning.pendingNotes),
+ * cached by file and those notes in `cacheFile`: how many, and what writing them took.
+ */
+async function notedFiles(repo, cacheFile) {
+  const keyOf = item => `${item.file}\n${createHash('sha1').update(item.notes.join('\n')).digest('hex')}`;
+  const cached = new Map((existsSync(cacheFile) ? readFileSync(cacheFile, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : []).map(row => [row.key, row]));
+  const files = (await meaning.pendingNotes(repo.root, {limit: Infinity})).pieces.filter(item => item.kind === 'file');
+  const put = files.filter(item => cached.has(keyOf(item))).map(item => ({file: item.file, note: cached.get(keyOf(item)).note}));
+  const todo = files.filter(item => !cached.has(keyOf(item)));
+  const took = {files: files.length, cached: put.length, written: 0, ms: 0};
+  if (todo.length) {
+    writerServed ??= await serveProfile({notes: notesEntry, serve: writerSpec.serve}, {models: flags.models ?? process.env.SEMANTIC_GREP_BENCH_MODELS, llamaServer: flags['llama-server'] ?? process.env.LLAMA_SERVER ?? 'llama-server', log});
+    const writer = new NotesWriter({entry: notesEntry, log});
+    const started = Date.now();
+    const {notes, errors} = await writer.write(todo);
+    if (!notes.length && errors.length) throw new Error(`file notes: ${errors[0]}`);
+    const byFile = new Map(todo.map(item => [item.file, item]));
+    for (const note of notes) appendFileSync(cacheFile, `${JSON.stringify({key: keyOf(byFile.get(note.file)), file: note.file, note: note.note})}\n`);
+    put.push(...notes.map(note => ({file: note.file, note: note.note})));
+    Object.assign(took, {written: notes.length, ms: Date.now() - started});
+  }
+  if (put.length) await meaning.addNotes(repo.root, put, {source: `writer:${notesEntry.model}`});
+  await settled(meaning, repo.root, ({chunks}) => log(`${repo.name}: ${chunks} pieces, read again with their files' notes`));
+  log(`${repo.name}: ${put.length} of ${files.length} files noted`);
   return took;
 }
 

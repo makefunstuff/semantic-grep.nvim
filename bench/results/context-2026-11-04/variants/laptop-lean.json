@@ -1,0 +1,11779 @@
+{
+ "bench": 1,
+ "profile": "lap",
+ "models": {
+  "embedding": {
+   "api": "openai",
+   "baseUrl": "http://127.0.0.1:28192/v1",
+   "model": "embeddinggemma-2"
+  },
+  "rerank": null
+ },
+ "servers": {
+  "embedding": {
+   "started": true,
+   "gguf": "embeddinggemma-2-Q8_0.gguf",
+   "args": [
+    "--embedding",
+    "--pooling",
+    "mean",
+    "--ctx-size",
+    "8192",
+    "--batch-size",
+    "2048",
+    "--ubatch-size",
+    "2048",
+    "--parallel",
+    "1",
+    "--gpu-layers",
+    "99"
+   ],
+   "env": {
+    "CUDA_VISIBLE_DEVICES": "0"
+   },
+   "rssMB": 1180,
+   "vramMB": 624
+  }
+ },
+ "when": "2026-11-03T23:09:40.942Z",
+ "node": "v25.2.1",
+ "semanticGrep": "be91cd2",
+ "changed": [
+  "lua/semantic-grep/init.lua",
+  "package.json",
+  "src/embedder.mjs",
+  "src/index-store.mjs",
+  "src/meaning.mjs",
+  "src/pieces.lua",
+  "src/pieces.mjs",
+  "test/meaning.test.mjs"
+ ],
+ "questions": {
+  "file": "bench/questions.jsonl",
+  "sha1": "165477f54fea",
+  "count": 372,
+  "split": "all"
+ },
+ "parsers": 50,
+ "limit": 30,
+ "overall": {
+  "words": {
+   "n": 372,
+   "recall1": 0.097,
+   "recall5": 0.14,
+   "recall10": 0.142,
+   "mrr": 0.115,
+   "p50": 0.8,
+   "p95": 1.4
+  },
+  "meaning": {
+   "n": 372,
+   "recall1": 0.422,
+   "recall5": 0.737,
+   "recall10": 0.815,
+   "mrr": 0.562,
+   "p50": 23.9,
+   "p95": 26.1
+  },
+  "fused": {
+   "n": 372,
+   "recall1": 0.454,
+   "recall5": 0.75,
+   "recall10": 0.817,
+   "mrr": 0.585,
+   "p50": 24.6,
+   "p95": 27
+  }
+ },
+ "files": {
+  "words": {
+   "n": 372,
+   "recall1": 0.554,
+   "recall5": 0.882,
+   "recall10": 0.952,
+   "mrr": 0.695,
+   "p50": 1.4,
+   "p95": 3.2
+  },
+  "meaning": {
+   "n": 372,
+   "recall1": 0.634,
+   "recall5": 0.914,
+   "recall10": 0.965,
+   "mrr": 0.756,
+   "p50": 24.5,
+   "p95": 27.3
+  },
+  "fused": {
+   "n": 372,
+   "recall1": 0.656,
+   "recall5": 0.914,
+   "recall10": 0.962,
+   "mrr": 0.769,
+   "p50": 24.9,
+   "p95": 27.6
+  }
+ },
+ "repos": {
+  "hono": {
+   "commit": "c91b60a251186fb024557c6d55a11d8e388f179c",
+   "files": 572,
+   "pieces": 4186,
+   "embedded": 4186,
+   "indexMs": 95186,
+   "msPer1k": 22739,
+   "questions": 48,
+   "modes": {
+    "words": {
+     "n": 48,
+     "recall1": 0.104,
+     "recall5": 0.125,
+     "recall10": 0.125,
+     "mrr": 0.111,
+     "p50": 0.9,
+     "p95": 1.3
+    },
+    "meaning": {
+     "n": 48,
+     "recall1": 0.375,
+     "recall5": 0.729,
+     "recall10": 0.771,
+     "mrr": 0.522,
+     "p50": 25.1,
+     "p95": 27.9
+    },
+    "fused": {
+     "n": 48,
+     "recall1": 0.417,
+     "recall5": 0.729,
+     "recall10": 0.792,
+     "mrr": 0.556,
+     "p50": 25.8,
+     "p95": 27.8
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 48,
+     "recall1": 0.458,
+     "recall5": 0.854,
+     "recall10": 0.917,
+     "mrr": 0.642,
+     "p50": 2.8,
+     "p95": 4.2
+    },
+    "meaning": {
+     "n": 48,
+     "recall1": 0.667,
+     "recall5": 0.875,
+     "recall10": 0.979,
+     "mrr": 0.754,
+     "p50": 25.9,
+     "p95": 28.8
+    },
+    "fused": {
+     "n": 48,
+     "recall1": 0.688,
+     "recall5": 0.875,
+     "recall10": 0.979,
+     "mrr": 0.771,
+     "p50": 25.9,
+     "p95": 28.3
+    }
+   }
+  },
+  "telescope": {
+   "commit": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
+   "files": 103,
+   "pieces": 1575,
+   "embedded": 1575,
+   "indexMs": 33607,
+   "msPer1k": 21338,
+   "questions": 71,
+   "modes": {
+    "words": {
+     "n": 71,
+     "recall1": 0.07,
+     "recall5": 0.099,
+     "recall10": 0.113,
+     "mrr": 0.079,
+     "p50": 0.6,
+     "p95": 1.1
+    },
+    "meaning": {
+     "n": 71,
+     "recall1": 0.394,
+     "recall5": 0.676,
+     "recall10": 0.775,
+     "mrr": 0.521,
+     "p50": 24.3,
+     "p95": 26
+    },
+    "fused": {
+     "n": 71,
+     "recall1": 0.423,
+     "recall5": 0.676,
+     "recall10": 0.761,
+     "mrr": 0.532,
+     "p50": 24.3,
+     "p95": 25.7
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 71,
+     "recall1": 0.423,
+     "recall5": 0.789,
+     "recall10": 0.887,
+     "mrr": 0.577,
+     "p50": 1.4,
+     "p95": 2.2
+    },
+    "meaning": {
+     "n": 71,
+     "recall1": 0.563,
+     "recall5": 0.845,
+     "recall10": 0.901,
+     "mrr": 0.691,
+     "p50": 23.5,
+     "p95": 27.5
+    },
+    "fused": {
+     "n": 71,
+     "recall1": 0.606,
+     "recall5": 0.845,
+     "recall10": 0.901,
+     "mrr": 0.712,
+     "p50": 24.9,
+     "p95": 26.7
+    }
+   }
+  },
+  "flask": {
+   "commit": "49943b5a94413a530761350f04e896f76e8d620e",
+   "files": 227,
+   "pieces": 1589,
+   "embedded": 1589,
+   "indexMs": 34830,
+   "msPer1k": 21919,
+   "questions": 66,
+   "modes": {
+    "words": {
+     "n": 66,
+     "recall1": 0.076,
+     "recall5": 0.197,
+     "recall10": 0.197,
+     "mrr": 0.134,
+     "p50": 0.7,
+     "p95": 1.2
+    },
+    "meaning": {
+     "n": 66,
+     "recall1": 0.333,
+     "recall5": 0.636,
+     "recall10": 0.773,
+     "mrr": 0.481,
+     "p50": 23.8,
+     "p95": 25.2
+    },
+    "fused": {
+     "n": 66,
+     "recall1": 0.379,
+     "recall5": 0.682,
+     "recall10": 0.788,
+     "mrr": 0.523,
+     "p50": 24.6,
+     "p95": 26.2
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 66,
+     "recall1": 0.5,
+     "recall5": 0.879,
+     "recall10": 0.985,
+     "mrr": 0.658,
+     "p50": 1.4,
+     "p95": 2.1
+    },
+    "meaning": {
+     "n": 66,
+     "recall1": 0.545,
+     "recall5": 0.879,
+     "recall10": 0.97,
+     "mrr": 0.677,
+     "p50": 23.7,
+     "p95": 26.4
+    },
+    "fused": {
+     "n": 66,
+     "recall1": 0.606,
+     "recall5": 0.879,
+     "recall10": 0.955,
+     "mrr": 0.714,
+     "p50": 25,
+     "p95": 25.7
+    }
+   }
+  },
+  "cobra": {
+   "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+   "files": 64,
+   "pieces": 1021,
+   "embedded": 1021,
+   "indexMs": 21911,
+   "msPer1k": 21460,
+   "questions": 59,
+   "modes": {
+    "words": {
+     "n": 59,
+     "recall1": 0.153,
+     "recall5": 0.169,
+     "recall10": 0.169,
+     "mrr": 0.158,
+     "p50": 0.9,
+     "p95": 1.4
+    },
+    "meaning": {
+     "n": 59,
+     "recall1": 0.458,
+     "recall5": 0.814,
+     "recall10": 0.864,
+     "mrr": 0.603,
+     "p50": 23,
+     "p95": 24.6
+    },
+    "fused": {
+     "n": 59,
+     "recall1": 0.475,
+     "recall5": 0.814,
+     "recall10": 0.864,
+     "mrr": 0.615,
+     "p50": 24.8,
+     "p95": 25.7
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 59,
+     "recall1": 0.61,
+     "recall5": 0.915,
+     "recall10": 0.983,
+     "mrr": 0.738,
+     "p50": 1.2,
+     "p95": 1.8
+    },
+    "meaning": {
+     "n": 59,
+     "recall1": 0.678,
+     "recall5": 0.966,
+     "recall10": 0.983,
+     "mrr": 0.808,
+     "p50": 23.1,
+     "p95": 25.5
+    },
+    "fused": {
+     "n": 59,
+     "recall1": 0.695,
+     "recall5": 0.966,
+     "recall10": 0.983,
+     "mrr": 0.817,
+     "p50": 24.7,
+     "p95": 25.7
+    }
+   }
+  },
+  "fd": {
+   "commit": "cc4e40fa4e32d61733cd72926e233a3fb6c8d56d",
+   "files": 57,
+   "pieces": 871,
+   "embedded": 871,
+   "indexMs": 18254,
+   "msPer1k": 20958,
+   "questions": 64,
+   "modes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.047,
+     "recall5": 0.047,
+     "recall10": 0.047,
+     "mrr": 0.047,
+     "p50": 0.7,
+     "p95": 1.2
+    },
+    "meaning": {
+     "n": 64,
+     "recall1": 0.438,
+     "recall5": 0.734,
+     "recall10": 0.797,
+     "mrr": 0.561,
+     "p50": 23.1,
+     "p95": 25.2
+    },
+    "fused": {
+     "n": 64,
+     "recall1": 0.438,
+     "recall5": 0.734,
+     "recall10": 0.797,
+     "mrr": 0.559,
+     "p50": 23.6,
+     "p95": 25.5
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.516,
+     "recall5": 0.891,
+     "recall10": 0.969,
+     "mrr": 0.675,
+     "p50": 1.1,
+     "p95": 1.5
+    },
+    "meaning": {
+     "n": 64,
+     "recall1": 0.625,
+     "recall5": 0.969,
+     "recall10": 1,
+     "mrr": 0.778,
+     "p50": 23,
+     "p95": 25.3
+    },
+    "fused": {
+     "n": 64,
+     "recall1": 0.625,
+     "recall5": 0.969,
+     "recall10": 1,
+     "mrr": 0.778,
+     "p50": 24.6,
+     "p95": 25.6
+    }
+   }
+  },
+  "vue-docs": {
+   "commit": "40aa88af0094f7bab4aaf786e55c748a6a251d88",
+   "files": 437,
+   "pieces": 1902,
+   "embedded": 1902,
+   "indexMs": 44875,
+   "msPer1k": 23594,
+   "questions": 64,
+   "modes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.141,
+     "recall5": 0.203,
+     "recall10": 0.203,
+     "mrr": 0.168,
+     "p50": 1.2,
+     "p95": 1.8
+    },
+    "meaning": {
+     "n": 64,
+     "recall1": 0.531,
+     "recall5": 0.844,
+     "recall10": 0.906,
+     "mrr": 0.684,
+     "p50": 24.4,
+     "p95": 25.9
+    },
+    "fused": {
+     "n": 64,
+     "recall1": 0.594,
+     "recall5": 0.875,
+     "recall10": 0.906,
+     "mrr": 0.727,
+     "p50": 24.7,
+     "p95": 26.8
+    }
+   },
+   "fileModes": {
+    "words": {
+     "n": 64,
+     "recall1": 0.813,
+     "recall5": 0.969,
+     "recall10": 0.969,
+     "mrr": 0.882,
+     "p50": 1.9,
+     "p95": 3
+    },
+    "meaning": {
+     "n": 64,
+     "recall1": 0.75,
+     "recall5": 0.953,
+     "recall10": 0.969,
+     "mrr": 0.84,
+     "p50": 25.2,
+     "p95": 26.7
+    },
+    "fused": {
+     "n": 64,
+     "recall1": 0.734,
+     "recall5": 0.953,
+     "recall10": 0.969,
+     "mrr": 0.832,
+     "p50": 25.3,
+     "p95": 27.8
+    }
+   }
+  }
+ },
+ "styles": {
+  "vague": {
+   "words": {
+    "n": 119,
+    "recall1": 0.16,
+    "recall5": 0.269,
+    "recall10": 0.277,
+    "mrr": 0.206,
+    "p50": 0.8,
+    "p95": 1.5
+   },
+   "meaning": {
+    "n": 119,
+    "recall1": 0.42,
+    "recall5": 0.782,
+    "recall10": 0.84,
+    "mrr": 0.575,
+    "p50": 23.6,
+    "p95": 27
+   },
+   "fused": {
+    "n": 119,
+    "recall1": 0.504,
+    "recall5": 0.832,
+    "recall10": 0.849,
+    "mrr": 0.637,
+    "p50": 24.6,
+    "p95": 28.7
+   }
+  },
+  "plain": {
+   "words": {
+    "n": 137,
+    "recall1": 0.109,
+    "recall5": 0.131,
+    "recall10": 0.131,
+    "mrr": 0.119,
+    "p50": 0.8,
+    "p95": 1.4
+   },
+   "meaning": {
+    "n": 137,
+    "recall1": 0.511,
+    "recall5": 0.854,
+    "recall10": 0.912,
+    "mrr": 0.66,
+    "p50": 24.3,
+    "p95": 26
+   },
+   "fused": {
+    "n": 137,
+    "recall1": 0.526,
+    "recall5": 0.847,
+    "recall10": 0.912,
+    "mrr": 0.668,
+    "p50": 24.7,
+    "p95": 26.6
+   }
+  },
+  "multi-hop": {
+   "words": {
+    "n": 116,
+    "recall1": 0.017,
+    "recall5": 0.017,
+    "recall10": 0.017,
+    "mrr": 0.017,
+    "p50": 0.8,
+    "p95": 1.5
+   },
+   "meaning": {
+    "n": 116,
+    "recall1": 0.319,
+    "recall5": 0.552,
+    "recall10": 0.672,
+    "mrr": 0.433,
+    "p50": 24,
+    "p95": 26.1
+   },
+   "fused": {
+    "n": 116,
+    "recall1": 0.319,
+    "recall5": 0.552,
+    "recall10": 0.672,
+    "mrr": 0.433,
+    "p50": 24.7,
+    "p95": 27
+   }
+  }
+ },
+ "reranked": null,
+ "build": {
+  "pieces": 11144,
+  "ms": 248663,
+  "msPer1k": 22314
+ },
+ "notes": null,
+ "perQuestion": [
+  {
+   "id": "hono-001",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 25.8,
+    "fused": 6.7
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 25.9,
+    "fused": 7.1
+   },
+   "similarity": {
+    "best": 0.772,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "hono-002",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.5,
+    "fused": 10.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.8,
+    "meaning": 25.9,
+    "fused": 25.8
+   },
+   "similarity": {
+    "best": 0.838,
+    "answer": 0.838
+   }
+  },
+  {
+   "id": "hono-003",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 26,
+    "fused": 12.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.4,
+    "meaning": 27.2,
+    "fused": 20.4
+   },
+   "similarity": {
+    "best": 0.757,
+    "answer": 0.757
+   }
+  },
+  {
+   "id": "hono-004",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.5,
+    "fused": 28.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 17.3,
+    "fused": 28.8
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "hono-005",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 26,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.5,
+    "meaning": 25.6,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.825,
+    "answer": 0.825
+   }
+  },
+  {
+   "id": "hono-006",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 11.7,
+    "fused": 27.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.2,
+    "meaning": 26,
+    "fused": 27.5
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "hono-007",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 5,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 7.4,
+    "fused": 25.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 27.3,
+    "fused": 13.5
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "hono-008",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 26.3,
+    "fused": 26.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.3,
+    "meaning": 28,
+    "fused": 20.5
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "hono-009",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 27,
+    "fused": 12.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.9,
+    "meaning": 28.9,
+    "fused": 28.2
+   },
+   "similarity": {
+    "best": 0.81,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "hono-010",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 30.9,
+    "fused": 27
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 14,
+    "fused": 26.9
+   },
+   "similarity": {
+    "best": 0.769,
+    "answer": 0.755
+   }
+  },
+  {
+   "id": "hono-011",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 27.9,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.8,
+    "meaning": 25.9,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.856,
+    "answer": 0.856
+   }
+  },
+  {
+   "id": "hono-012",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 12.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.7,
+    "meaning": 25.3,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.81,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "hono-013",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 26.1,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 28.8,
+    "fused": 16.1
+   },
+   "similarity": {
+    "best": 0.815,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "hono-014",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 5.9,
+    "fused": 9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 9.6,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.801,
+    "answer": 0.785
+   }
+  },
+  {
+   "id": "hono-015",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24,
+    "fused": 27.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 24.9,
+    "fused": 27.7
+   },
+   "similarity": {
+    "best": 0.844,
+    "answer": 0.844
+   }
+  },
+  {
+   "id": "hono-016",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 14,
+    "fused": 27.5
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.9,
+    "meaning": 29.5,
+    "fused": 27.8
+   },
+   "similarity": {
+    "best": 0.842,
+    "answer": 0.842
+   }
+  },
+  {
+   "id": "hono-017",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 8
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 17,
+    "fused": 26.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 28.1,
+    "fused": 28.1
+   },
+   "similarity": {
+    "best": 0.799,
+    "answer": 0.754
+   }
+  },
+  {
+   "id": "hono-018",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 26.4,
+    "fused": 26.4
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 27.1,
+    "fused": 27.8
+   },
+   "similarity": {
+    "best": 0.805,
+    "answer": 0.794
+   }
+  },
+  {
+   "id": "hono-019",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.2,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 27.3,
+    "fused": 27.8
+   },
+   "similarity": {
+    "best": 0.815,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "hono-020",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 27.4,
+    "fused": 26.8
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 4.3,
+    "meaning": 27.4,
+    "fused": 27.9
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": 0.77
+   }
+  },
+  {
+   "id": "hono-021",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 14.4,
+    "fused": 26.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 4,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 26.1,
+    "fused": 27.4
+   },
+   "similarity": {
+    "best": 0.803,
+    "answer": 0.801
+   }
+  },
+  {
+   "id": "hono-022",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 11.4,
+    "fused": 27.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 27.5,
+    "fused": 14.1
+   },
+   "similarity": {
+    "best": 0.816,
+    "answer": 0.816
+   }
+  },
+  {
+   "id": "hono-023",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 28.1,
+    "fused": 13.4
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 27.2,
+    "fused": 26.2
+   },
+   "similarity": {
+    "best": 0.803,
+    "answer": 0.803
+   }
+  },
+  {
+   "id": "hono-024",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 27,
+    "fused": 10.7
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.9,
+    "meaning": 27.2,
+    "fused": 28.2
+   },
+   "similarity": {
+    "best": 0.789,
+    "answer": 0.771
+   }
+  },
+  {
+   "id": "hono-025",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 26.1,
+    "fused": 27.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.8,
+    "meaning": 25.3,
+    "fused": 26.9
+   },
+   "similarity": {
+    "best": 0.774,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "hono-026",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.4,
+    "fused": 26.8
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.6,
+    "meaning": 26,
+    "fused": 14.4
+   },
+   "similarity": {
+    "best": 0.764,
+    "answer": 0.746
+   }
+  },
+  {
+   "id": "hono-027",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 25.7,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 25.5,
+    "fused": 26.4
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": null
+   }
+  },
+  {
+   "id": "hono-028",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 20.7,
+    "fused": 26.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.4,
+    "meaning": 25.9,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.842,
+    "answer": 0.817
+   }
+  },
+  {
+   "id": "hono-029",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 12,
+    "fused": 12
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 25.8,
+    "fused": 22.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.5,
+    "meaning": 25.7,
+    "fused": 27.3
+   },
+   "similarity": {
+    "best": 0.746,
+    "answer": 0.717
+   }
+  },
+  {
+   "id": "hono-030",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 3,
+    "meaning": 0,
+    "fused": 5
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 25.2,
+    "fused": 26.4
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 4,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 2.6,
+    "meaning": 25.1,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.825,
+    "answer": null
+   }
+  },
+  {
+   "id": "hono-031",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 6.8,
+    "fused": 7.5
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 3.5,
+    "meaning": 9,
+    "fused": 8
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "hono-032",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 11,
+    "fused": 11
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.1,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 5,
+    "fused": 5
+   },
+   "fileMs": {
+    "words": 2.7,
+    "meaning": 26.2,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.77,
+    "answer": 0.743
+   }
+  },
+  {
+   "id": "hono-033",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 25.1,
+    "fused": 24.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 9.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.823,
+    "answer": 0.823
+   }
+  },
+  {
+   "id": "hono-034",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.4,
+    "fused": 13.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.7,
+    "meaning": 25.7,
+    "fused": 26.3
+   },
+   "similarity": {
+    "best": 0.802,
+    "answer": 0.802
+   }
+  },
+  {
+   "id": "hono-035",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 8
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.8,
+    "fused": 27.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 26,
+    "fused": 27.2
+   },
+   "similarity": {
+    "best": 0.765,
+    "answer": 0.729
+   }
+  },
+  {
+   "id": "hono-036",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 11.3,
+    "fused": 23.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.6,
+    "fused": 13.9
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.826
+   }
+  },
+  {
+   "id": "hono-037",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 26,
+    "fused": 27.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 4.2,
+    "meaning": 25.6,
+    "fused": 22.7
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.78
+   }
+  },
+  {
+   "id": "hono-038",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 15,
+    "fused": 15
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 27.3,
+    "fused": 26.7
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 3.7,
+    "meaning": 26.4,
+    "fused": 27.6
+   },
+   "similarity": {
+    "best": 0.732,
+    "answer": 0.702
+   }
+  },
+  {
+   "id": "hono-039",
+   "repo": "hono",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 22,
+    "fused": 26
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 26.3,
+    "fused": 26.8
+   },
+   "similarity": {
+    "best": 0.779,
+    "answer": 0.774
+   }
+  },
+  {
+   "id": "hono-040",
+   "repo": "hono",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.4,
+    "fused": 7.8
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 2.5,
+    "meaning": 27.4,
+    "fused": 30.6
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": null
+   }
+  },
+  {
+   "id": "hono-041",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 25.7,
+    "fused": 27.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 9,
+    "fused": 9
+   },
+   "fileMs": {
+    "words": 4.4,
+    "meaning": 27.7,
+    "fused": 24.2
+   },
+   "similarity": {
+    "best": 0.754,
+    "answer": null
+   }
+  },
+  {
+   "id": "hono-042",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 13,
+    "fused": 13
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 25.9,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 10.3,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.753
+   }
+  },
+  {
+   "id": "hono-043",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 7
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 25.6,
+    "fused": 27
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 22.9,
+    "fused": 27.4
+   },
+   "similarity": {
+    "best": 0.834,
+    "answer": 0.825
+   }
+  },
+  {
+   "id": "hono-044",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3.3,
+    "meaning": 21.7,
+    "fused": 25.9
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.754
+   }
+  },
+  {
+   "id": "hono-045",
+   "repo": "hono",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 13,
+    "fused": 13
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 8,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 2.8,
+    "meaning": 25.9,
+    "fused": 28.3
+   },
+   "similarity": {
+    "best": 0.805,
+    "answer": 0.748
+   }
+  },
+  {
+   "id": "hono-046",
+   "repo": "hono",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 26.4,
+    "fused": 11.4
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 3.2,
+    "meaning": 25.9,
+    "fused": 21
+   },
+   "similarity": {
+    "best": 0.798,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "hono-047",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 12,
+    "fused": 12
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 7.4,
+    "fused": 17.1
+   },
+   "fileRank": {
+    "words": 9,
+    "meaning": 9,
+    "fused": 9
+   },
+   "fileMs": {
+    "words": 4,
+    "meaning": 12,
+    "fused": 28.3
+   },
+   "similarity": {
+    "best": 0.764,
+    "answer": 0.733
+   }
+  },
+  {
+   "id": "hono-048",
+   "repo": "hono",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 21,
+    "fused": 21
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 9.3,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 12,
+    "meaning": 13,
+    "fused": 13
+   },
+   "fileMs": {
+    "words": 3.5,
+    "meaning": 24.5,
+    "fused": 24.5
+   },
+   "similarity": {
+    "best": 0.793,
+    "answer": 0.738
+   }
+  },
+  {
+   "id": "telescope-001",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 25.5,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 14,
+    "fused": 14
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 24.4,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.764,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-002",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.3,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 8,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.5,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.768
+   }
+  },
+  {
+   "id": "telescope-003",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 8.8,
+    "fused": 7.1
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 19,
+    "fused": 19
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 8.7,
+    "fused": 6.7
+   },
+   "similarity": {
+    "best": 0.751,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-004",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 26.3,
+    "fused": 24.1
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.1,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.759,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-005",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 10.8,
+    "fused": 25.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 27.5,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.802,
+    "answer": 0.802
+   }
+  },
+  {
+   "id": "telescope-006",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 20.2,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.4,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.846,
+    "answer": 0.846
+   }
+  },
+  {
+   "id": "telescope-007",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 9,
+    "fused": 9
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 25.6
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 15.3,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.742,
+    "answer": 0.727
+   }
+  },
+  {
+   "id": "telescope-008",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.6,
+    "fused": 18.8
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25.1,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.742,
+    "answer": 0.722
+   }
+  },
+  {
+   "id": "telescope-009",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.3,
+    "fused": 18.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 12.6,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.776
+   }
+  },
+  {
+   "id": "telescope-010",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.3,
+    "fused": 9.2
+   },
+   "fileRank": {
+    "words": 20,
+    "meaning": 16,
+    "fused": 16
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 27.1,
+    "fused": 26.5
+   },
+   "similarity": {
+    "best": 0.728,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-011",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.8,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 25.2,
+    "fused": 10.9
+   },
+   "similarity": {
+    "best": 0.71,
+    "answer": 0.704
+   }
+  },
+  {
+   "id": "telescope-012",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.6,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23,
+    "fused": 23.4
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "telescope-013",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.7,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.4,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.775
+   }
+  },
+  {
+   "id": "telescope-014",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.2,
+    "fused": 21.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 21.6,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.833,
+    "answer": 0.813
+   }
+  },
+  {
+   "id": "telescope-015",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 24.4,
+    "fused": 25.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23,
+    "fused": 8.2
+   },
+   "similarity": {
+    "best": 0.809,
+    "answer": 0.809
+   }
+  },
+  {
+   "id": "telescope-016",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.2,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 24.8,
+    "fused": 6.2
+   },
+   "similarity": {
+    "best": 0.812,
+    "answer": 0.812
+   }
+  },
+  {
+   "id": "telescope-017",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.5,
+    "fused": 25.5
+   },
+   "fileRank": {
+    "words": 11,
+    "meaning": 0,
+    "fused": 0
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 17.6,
+    "fused": 21.7
+   },
+   "similarity": {
+    "best": 0.755,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-018",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 4.7,
+    "fused": 5.6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 6.7,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "telescope-019",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.5,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.1,
+    "fused": 19.8
+   },
+   "similarity": {
+    "best": 0.84,
+    "answer": 0.84
+   }
+  },
+  {
+   "id": "telescope-020",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.2,
+    "fused": 15.3
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.2,
+    "fused": 22
+   },
+   "similarity": {
+    "best": 0.751,
+    "answer": 0.751
+   }
+  },
+  {
+   "id": "telescope-021",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.6,
+    "fused": 10.4
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.2,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "telescope-022",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 19.5,
+    "fused": 24.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.9,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.77,
+    "answer": 0.77
+   }
+  },
+  {
+   "id": "telescope-023",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 8
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.4,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 17,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.798,
+    "answer": 0.747
+   }
+  },
+  {
+   "id": "telescope-024",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.4,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.6,
+    "fused": 16.8
+   },
+   "similarity": {
+    "best": 0.724,
+    "answer": 0.711
+   }
+  },
+  {
+   "id": "telescope-025",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.4,
+    "fused": 6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25.2,
+    "fused": 21.8
+   },
+   "similarity": {
+    "best": 0.738,
+    "answer": 0.719
+   }
+  },
+  {
+   "id": "telescope-026",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.7,
+    "fused": 24.3
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 24.2,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": 0.786
+   }
+  },
+  {
+   "id": "telescope-027",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 23.3,
+    "fused": 18.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.1,
+    "fused": 21.4
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-028",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 8,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.6,
+    "fused": 21.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 24.8,
+    "fused": 5.2
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.804
+   }
+  },
+  {
+   "id": "telescope-029",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 5.4,
+    "fused": 20.5
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 6.9,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.753
+   }
+  },
+  {
+   "id": "telescope-030",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 21.1,
+    "fused": 9.1
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 23.4,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-031",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.7,
+    "fused": 23.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23.1,
+    "fused": 23.8
+   },
+   "similarity": {
+    "best": 0.831,
+    "answer": 0.831
+   }
+  },
+  {
+   "id": "telescope-032",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 21.5,
+    "fused": 12.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 23,
+    "fused": 23.5
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.777
+   }
+  },
+  {
+   "id": "telescope-033",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 25.7
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "telescope-034",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.6,
+    "fused": 19.3
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.2,
+    "fused": 20.7
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.768
+   }
+  },
+  {
+   "id": "telescope-035",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 12,
+    "fused": 12
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 16.2,
+    "fused": 26.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.5,
+    "fused": 26
+   },
+   "similarity": {
+    "best": 0.747,
+    "answer": 0.703
+   }
+  },
+  {
+   "id": "telescope-036",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 35.9,
+    "fused": 31.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 17.2,
+    "fused": 32
+   },
+   "similarity": {
+    "best": 0.769,
+    "answer": 0.769
+   }
+  },
+  {
+   "id": "telescope-037",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.6,
+    "fused": 6.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 8.2,
+    "fused": 6.9
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "telescope-038",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.2,
+    "fused": 17.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.4,
+    "fused": 25.9
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": 0.781
+   }
+  },
+  {
+   "id": "telescope-039",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 11.1,
+    "fused": 25.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25.5,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.822,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "telescope-040",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 26,
+    "fused": 26
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.8,
+    "fused": 17.1
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.1,
+    "fused": 26.7
+   },
+   "similarity": {
+    "best": 0.744,
+    "answer": 0.703
+   }
+  },
+  {
+   "id": "telescope-041",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 25.6,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 14.5,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.792,
+    "answer": 0.774
+   }
+  },
+  {
+   "id": "telescope-042",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 22,
+    "fused": 22
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 12.5,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.8,
+    "fused": 17.3
+   },
+   "similarity": {
+    "best": 0.716,
+    "answer": 0.674
+   }
+  },
+  {
+   "id": "telescope-043",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.5,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 24.3,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.795
+   }
+  },
+  {
+   "id": "telescope-044",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25.8,
+    "fused": 19.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 17.3,
+    "fused": 19.2
+   },
+   "similarity": {
+    "best": 0.835,
+    "answer": 0.835
+   }
+  },
+  {
+   "id": "telescope-045",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 18.9,
+    "fused": 18.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.5,
+    "fused": 20.5
+   },
+   "similarity": {
+    "best": 0.74,
+    "answer": 0.722
+   }
+  },
+  {
+   "id": "telescope-046",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 4,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 21.9,
+    "fused": 23.3
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 32.1,
+    "fused": 6.4
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.805
+   }
+  },
+  {
+   "id": "telescope-047",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 5.7,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 8,
+    "fused": 18.4
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.826
+   }
+  },
+  {
+   "id": "telescope-048",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.9,
+    "fused": 27.3
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 12.5,
+    "fused": 26.7
+   },
+   "similarity": {
+    "best": 0.799,
+    "answer": 0.799
+   }
+  },
+  {
+   "id": "telescope-049",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 14,
+    "fused": 14
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.9,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 27.6,
+    "fused": 20.1
+   },
+   "similarity": {
+    "best": 0.755,
+    "answer": 0.696
+   }
+  },
+  {
+   "id": "telescope-050",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.9,
+    "fused": 17.1
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.2,
+    "fused": 26.1
+   },
+   "similarity": {
+    "best": 0.77,
+    "answer": 0.77
+   }
+  },
+  {
+   "id": "telescope-051",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.4,
+    "fused": 6.7
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 6,
+    "fused": 6
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 23.2,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.732,
+    "answer": 0.685
+   }
+  },
+  {
+   "id": "telescope-052",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 16,
+    "fused": 16
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.9,
+    "fused": 5.9
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 12,
+    "fused": 12
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.2,
+    "fused": 20.2
+   },
+   "similarity": {
+    "best": 0.729,
+    "answer": 0.682
+   }
+  },
+  {
+   "id": "telescope-053",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 19.2,
+    "fused": 23.8
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 23.1,
+    "fused": 26.8
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.741
+   }
+  },
+  {
+   "id": "telescope-054",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24.4,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 9,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 7.7,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.752,
+    "answer": 0.741
+   }
+  },
+  {
+   "id": "telescope-055",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.8,
+    "fused": 24.2
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25.7,
+    "fused": 16.8
+   },
+   "similarity": {
+    "best": 0.798,
+    "answer": 0.798
+   }
+  },
+  {
+   "id": "telescope-056",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 23.2,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.777,
+    "answer": 0.767
+   }
+  },
+  {
+   "id": "telescope-057",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.3,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 20.6,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "telescope-058",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.1,
+    "fused": 16.3
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.741
+   }
+  },
+  {
+   "id": "telescope-059",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 25.5,
+    "fused": 24.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-060",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.9,
+    "fused": 5.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 15.8,
+    "fused": 5.8
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "telescope-061",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 5.6,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 15,
+    "meaning": 9,
+    "fused": 9
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 24.1,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-062",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 4,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 31.7,
+    "fused": 10.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 30.9,
+    "fused": 31.5
+   },
+   "similarity": {
+    "best": 0.736,
+    "answer": 0.736
+   }
+  },
+  {
+   "id": "telescope-063",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 5.2,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.5,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.849,
+    "answer": 0.849
+   }
+  },
+  {
+   "id": "telescope-064",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.1,
+    "fused": 18.8
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.6,
+    "fused": 26
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-065",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 26,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 8,
+    "meaning": 12,
+    "fused": 12
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 19.2,
+    "fused": 6.5
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": null
+   }
+  },
+  {
+   "id": "telescope-066",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.3,
+    "fused": 9.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.3,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.803,
+    "answer": 0.803
+   }
+  },
+  {
+   "id": "telescope-067",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 25.1,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 17.7,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.861,
+    "answer": 0.861
+   }
+  },
+  {
+   "id": "telescope-068",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.6,
+    "fused": 18.4
+   },
+   "similarity": {
+    "best": 0.744,
+    "answer": 0.744
+   }
+  },
+  {
+   "id": "telescope-069",
+   "repo": "telescope",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 12
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.9,
+    "fused": 9.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.1,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.857,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "telescope-070",
+   "repo": "telescope",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.7,
+    "fused": 19.1
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.9,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.789,
+    "answer": 0.789
+   }
+  },
+  {
+   "id": "telescope-071",
+   "repo": "telescope",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.3,
+    "fused": 16.7
+   },
+   "similarity": {
+    "best": 0.779,
+    "answer": 0.749
+   }
+  },
+  {
+   "id": "flask-001",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.3,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 7,
+    "fused": 7
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 9.5,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.767,
+    "answer": 0.725
+   }
+  },
+  {
+   "id": "flask-002",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24,
+    "fused": 15.6
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 9,
+    "fused": 11
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.8,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.767,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-003",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 8
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 23.6,
+    "fused": 6.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 6,
+    "fused": 6
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 25.8,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.738,
+    "answer": 0.718
+   }
+  },
+  {
+   "id": "flask-004",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.1,
+    "fused": 26.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 26.5,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.856,
+    "answer": 0.856
+   }
+  },
+  {
+   "id": "flask-005",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 11.2,
+    "fused": 11.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 23,
+    "fused": 23.1
+   },
+   "similarity": {
+    "best": 0.825,
+    "answer": 0.825
+   }
+  },
+  {
+   "id": "flask-006",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 21.5,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.4,
+    "fused": 24.6
+   },
+   "similarity": {
+    "best": 0.729,
+    "answer": 0.704
+   }
+  },
+  {
+   "id": "flask-007",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.7,
+    "fused": 5.2
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 19.1,
+    "fused": 5.8
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.817
+   }
+  },
+  {
+   "id": "flask-008",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 5.6,
+    "fused": 24.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25.4,
+    "fused": 24.6
+   },
+   "similarity": {
+    "best": 0.763,
+    "answer": 0.761
+   }
+  },
+  {
+   "id": "flask-009",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 11,
+    "fused": 11
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.4,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 9,
+    "meaning": 5,
+    "fused": 5
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 11.1,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": 0.743
+   }
+  },
+  {
+   "id": "flask-010",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.4,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 0,
+    "fused": 0
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 21.5,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.821,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-011",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 19,
+    "fused": 19
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 14.6,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 25.5,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.755,
+    "answer": 0.718
+   }
+  },
+  {
+   "id": "flask-012",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.7,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 8,
+    "fused": 8
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 8.6,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.706,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-013",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 26,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 20.8,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.714
+   }
+  },
+  {
+   "id": "flask-014",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 17.9,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.3,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.739,
+    "answer": 0.739
+   }
+  },
+  {
+   "id": "flask-015",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 6.4,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 23.4,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.783,
+    "answer": 0.783
+   }
+  },
+  {
+   "id": "flask-016",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 19.9,
+    "fused": 25.9
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 6,
+    "fused": 6
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 26.4,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.771,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-017",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.8,
+    "fused": 24.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 25.3,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.815,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "flask-018",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.7,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 10,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 19.1,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "flask-019",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 23.8,
+    "fused": 8.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 23.2,
+    "fused": 23.6
+   },
+   "similarity": {
+    "best": 0.861,
+    "answer": 0.861
+   }
+  },
+  {
+   "id": "flask-020",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 25.1,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 24.7,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.773,
+    "answer": 0.773
+   }
+  },
+  {
+   "id": "flask-021",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 15.2,
+    "fused": 10.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.7,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.81,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "flask-022",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 25.7,
+    "fused": 16.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.4,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.806,
+    "answer": 0.806
+   }
+  },
+  {
+   "id": "flask-023",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 25.7,
+    "fused": 25.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 21.7,
+    "fused": 27
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.78
+   }
+  },
+  {
+   "id": "flask-024",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.2,
+    "fused": 6.8
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.4,
+    "fused": 6.9
+   },
+   "similarity": {
+    "best": 0.706,
+    "answer": 0.706
+   }
+  },
+  {
+   "id": "flask-025",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 6.4,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 9.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.783,
+    "answer": 0.78
+   }
+  },
+  {
+   "id": "flask-026",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 25,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 10,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.1,
+    "fused": 11.1
+   },
+   "similarity": {
+    "best": 0.808,
+    "answer": 0.792
+   }
+  },
+  {
+   "id": "flask-027",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.6,
+    "fused": 25.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 14.1,
+    "fused": 26.5
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.768
+   }
+  },
+  {
+   "id": "flask-028",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 16.2,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 4.2,
+    "meaning": 25,
+    "fused": 24.5
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-029",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 3,
+    "meaning": 6,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.1,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 4,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25.5,
+    "fused": 21.9
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.79
+   }
+  },
+  {
+   "id": "flask-030",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 25.2,
+    "fused": 19.5
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 25.1,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.814,
+    "answer": 0.808
+   }
+  },
+  {
+   "id": "flask-031",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 10,
+    "fused": 10
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.2,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 5,
+    "fused": 5
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.2,
+    "fused": 15.9
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": 0.75
+   }
+  },
+  {
+   "id": "flask-032",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.6,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 12.7,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.733,
+    "answer": 0.733
+   }
+  },
+  {
+   "id": "flask-033",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 6,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 12.7,
+    "fused": 30.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 32,
+    "fused": 17.4
+   },
+   "similarity": {
+    "best": 0.746,
+    "answer": 0.721
+   }
+  },
+  {
+   "id": "flask-034",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.2,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.3,
+    "fused": 8.6
+   },
+   "similarity": {
+    "best": 0.743,
+    "answer": 0.738
+   }
+  },
+  {
+   "id": "flask-035",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 23.4,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 25.1,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.774
+   }
+  },
+  {
+   "id": "flask-036",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 4.9,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23.1,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.734,
+    "answer": 0.734
+   }
+  },
+  {
+   "id": "flask-037",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 7.2,
+    "fused": 24.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 26.4,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.758,
+    "answer": 0.758
+   }
+  },
+  {
+   "id": "flask-038",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 5.2,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23.7,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.829,
+    "answer": 0.815
+   }
+  },
+  {
+   "id": "flask-039",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 7,
+    "fused": 7
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 20.4,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23.5,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.772,
+    "answer": 0.732
+   }
+  },
+  {
+   "id": "flask-040",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 16,
+    "fused": 16
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.9,
+    "fused": 23
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23.1,
+    "fused": 5.5
+   },
+   "similarity": {
+    "best": 0.743,
+    "answer": 0.705
+   }
+  },
+  {
+   "id": "flask-041",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 4.9,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 6.7,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.794,
+    "answer": 0.78
+   }
+  },
+  {
+   "id": "flask-042",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 5,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.3,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 9.2,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "flask-043",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.4,
+    "fused": 6.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 25.3,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.769,
+    "answer": 0.769
+   }
+  },
+  {
+   "id": "flask-044",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.7,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 9,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 23.7,
+    "fused": 24.3
+   },
+   "similarity": {
+    "best": 0.81,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-045",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.8,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 20.9,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.818
+   }
+  },
+  {
+   "id": "flask-046",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 7.5,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.809,
+    "answer": 0.809
+   }
+  },
+  {
+   "id": "flask-047",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.4,
+    "fused": 18.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 23.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": 0.759
+   }
+  },
+  {
+   "id": "flask-048",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.1,
+    "fused": 19
+   },
+   "fileRank": {
+    "words": 9,
+    "meaning": 16,
+    "fused": 16
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.1,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.746,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-049",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.9,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.1,
+    "fused": 16.6
+   },
+   "similarity": {
+    "best": 0.85,
+    "answer": 0.85
+   }
+  },
+  {
+   "id": "flask-050",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.6,
+    "meaning": 25.2,
+    "fused": 12.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.1,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.832,
+    "answer": 0.832
+   }
+  },
+  {
+   "id": "flask-051",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.3,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.3,
+    "fused": 15.8
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "flask-052",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 26,
+    "fused": 26
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.3,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 8,
+    "fused": 8
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.1,
+    "fused": 19
+   },
+   "similarity": {
+    "best": 0.736,
+    "answer": 0.696
+   }
+  },
+  {
+   "id": "flask-053",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.5,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 4,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 22.9,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.766,
+    "answer": 0.761
+   }
+  },
+  {
+   "id": "flask-054",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 18,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.1,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.722,
+    "answer": 0.716
+   }
+  },
+  {
+   "id": "flask-055",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.4,
+    "fused": 17.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 26.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.744,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-056",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 2.2,
+    "meaning": 24.6,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 4,
+    "fused": 5
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.3,
+    "fused": 14
+   },
+   "similarity": {
+    "best": 0.756,
+    "answer": null
+   }
+  },
+  {
+   "id": "flask-057",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 22.5,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 19.5,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.738,
+    "answer": 0.73
+   }
+  },
+  {
+   "id": "flask-058",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.3,
+    "fused": 15
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25,
+    "fused": 6
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.734
+   }
+  },
+  {
+   "id": "flask-059",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 5.4,
+    "fused": 25.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 7.6,
+    "fused": 21.2
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "flask-060",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24,
+    "fused": 6.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 5,
+    "fused": 5
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.733,
+    "answer": 0.675
+   }
+  },
+  {
+   "id": "flask-061",
+   "repo": "flask",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 21,
+    "fused": 21
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.3,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 22.4,
+    "fused": 24.5
+   },
+   "similarity": {
+    "best": 0.745,
+    "answer": 0.696
+   }
+  },
+  {
+   "id": "flask-062",
+   "repo": "flask",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 9
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.3,
+    "fused": 15.3
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25,
+    "fused": 21.6
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": 0.757
+   }
+  },
+  {
+   "id": "flask-063",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 10
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23,
+    "fused": 23
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "flask-064",
+   "repo": "flask",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 18,
+    "fused": 16.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.1,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "flask-065",
+   "repo": "flask",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 24.4,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 17.9,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.769,
+    "answer": 0.769
+   }
+  },
+  {
+   "id": "flask-066",
+   "repo": "flask",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 11.5,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 21.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.796,
+    "answer": 0.754
+   }
+  },
+  {
+   "id": "cobra-001",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 10,
+    "fused": 10
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.4,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 10.9,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.79,
+    "answer": 0.764
+   }
+  },
+  {
+   "id": "cobra-002",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 16.8,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.5,
+    "fused": 17.1
+   },
+   "similarity": {
+    "best": 0.776,
+    "answer": 0.737
+   }
+  },
+  {
+   "id": "cobra-003",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 23.8,
+    "fused": 21.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.2,
+    "fused": 26.5
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": 0.774
+   }
+  },
+  {
+   "id": "cobra-004",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.8,
+    "meaning": 24.5,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 24.7,
+    "fused": 13.4
+   },
+   "similarity": {
+    "best": 0.824,
+    "answer": 0.807
+   }
+  },
+  {
+   "id": "cobra-005",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.1,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 23.1,
+    "fused": 8
+   },
+   "similarity": {
+    "best": 0.829,
+    "answer": 0.829
+   }
+  },
+  {
+   "id": "cobra-006",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.9,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 22.9,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.805,
+    "answer": 0.789
+   }
+  },
+  {
+   "id": "cobra-007",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 9.1,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "cobra-008",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 5.3,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 23.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "cobra-009",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.6,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.2,
+    "fused": 21.1
+   },
+   "similarity": {
+    "best": 0.833,
+    "answer": 0.833
+   }
+  },
+  {
+   "id": "cobra-010",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 17.8,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.3,
+    "fused": 19.5
+   },
+   "similarity": {
+    "best": 0.765,
+    "answer": 0.765
+   }
+  },
+  {
+   "id": "cobra-011",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 22.5,
+    "fused": 12.6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23.3,
+    "fused": 23.2
+   },
+   "similarity": {
+    "best": 0.833,
+    "answer": 0.833
+   }
+  },
+  {
+   "id": "cobra-012",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 15,
+    "fused": 15
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 18.6,
+    "fused": 5.6
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 11,
+    "fused": 11
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 6,
+    "fused": 5.8
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": 0.751
+   }
+  },
+  {
+   "id": "cobra-013",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.9,
+    "fused": 22.4
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 14,
+    "fused": 8.4
+   },
+   "similarity": {
+    "best": 0.857,
+    "answer": 0.857
+   }
+  },
+  {
+   "id": "cobra-014",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 17.3,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.832,
+    "answer": 0.827
+   }
+  },
+  {
+   "id": "cobra-015",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.7,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 9.9,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.835,
+    "answer": 0.835
+   }
+  },
+  {
+   "id": "cobra-016",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.8,
+    "fused": 11
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23.4,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.844,
+    "answer": 0.844
+   }
+  },
+  {
+   "id": "cobra-017",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.6,
+    "fused": 8.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 22.9,
+    "fused": 24
+   },
+   "similarity": {
+    "best": 0.79,
+    "answer": 0.79
+   }
+  },
+  {
+   "id": "cobra-018",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 4,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 23.5,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.9,
+    "fused": 17.8
+   },
+   "similarity": {
+    "best": 0.823,
+    "answer": 0.813
+   }
+  },
+  {
+   "id": "cobra-019",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23,
+    "fused": 25.9
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.8,
+    "fused": 26.8
+   },
+   "similarity": {
+    "best": 0.827,
+    "answer": 0.814
+   }
+  },
+  {
+   "id": "cobra-020",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 12.8,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.9,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.798,
+    "answer": 0.775
+   }
+  },
+  {
+   "id": "cobra-021",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.8,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 8.8,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.83,
+    "answer": 0.812
+   }
+  },
+  {
+   "id": "cobra-022",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.3,
+    "fused": 16.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 24.7,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.72,
+    "answer": 0.707
+   }
+  },
+  {
+   "id": "cobra-023",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.3,
+    "fused": 22.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 22.7,
+    "fused": 4.8
+   },
+   "similarity": {
+    "best": 0.854,
+    "answer": 0.854
+   }
+  },
+  {
+   "id": "cobra-024",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 16,
+    "fused": 17
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 22.7,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 22.7,
+    "fused": 22.7
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.776
+   }
+  },
+  {
+   "id": "cobra-025",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 13.5,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.7,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.804,
+    "answer": 0.786
+   }
+  },
+  {
+   "id": "cobra-026",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.8,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 10.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.865,
+    "answer": 0.86
+   }
+  },
+  {
+   "id": "cobra-027",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.5,
+    "fused": 7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.2,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.809,
+    "answer": 0.809
+   }
+  },
+  {
+   "id": "cobra-028",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.1,
+    "fused": 23.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 15.9,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.801,
+    "answer": 0.794
+   }
+  },
+  {
+   "id": "cobra-029",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.8,
+    "fused": 20.1
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 22.8,
+    "fused": 6
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-030",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 5.5,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 7.7,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-031",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.7,
+    "fused": 18.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.6,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.766,
+    "answer": 0.748
+   }
+  },
+  {
+   "id": "cobra-032",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.7,
+    "fused": 18.9
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.9,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-033",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.2,
+    "fused": 21.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 23.4,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.813,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-034",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.8,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.1,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": 0.786
+   }
+  },
+  {
+   "id": "cobra-035",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 13.9,
+    "fused": 22.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 22.9,
+    "fused": 15
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.811
+   }
+  },
+  {
+   "id": "cobra-036",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.765,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-037",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 3,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 17.8,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.6,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.837,
+    "answer": 0.824
+   }
+  },
+  {
+   "id": "cobra-038",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.8,
+    "fused": 18.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 19.4,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.829,
+    "answer": 0.82
+   }
+  },
+  {
+   "id": "cobra-039",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 9,
+    "fused": 9
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.5,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 6,
+    "fused": 6
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 12.2,
+    "fused": 22.8
+   },
+   "similarity": {
+    "best": 0.807,
+    "answer": 0.767
+   }
+  },
+  {
+   "id": "cobra-040",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 22.5,
+    "fused": 13.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 23,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.85,
+    "answer": 0.849
+   }
+  },
+  {
+   "id": "cobra-041",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 22.7,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23,
+    "fused": 11.6
+   },
+   "similarity": {
+    "best": 0.757,
+    "answer": 0.737
+   }
+  },
+  {
+   "id": "cobra-042",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.5,
+    "fused": 23.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 7.8,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.855,
+    "answer": 0.855
+   }
+  },
+  {
+   "id": "cobra-043",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 21.8,
+    "fused": 21.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.778,
+    "answer": 0.778
+   }
+  },
+  {
+   "id": "cobra-044",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 19.2,
+    "fused": 5.2
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.7,
+    "meaning": 6.3,
+    "fused": 5.5
+   },
+   "similarity": {
+    "best": 0.82,
+    "answer": 0.82
+   }
+  },
+  {
+   "id": "cobra-045",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 5.6,
+    "fused": 17.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.5,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.788,
+    "answer": 0.788
+   }
+  },
+  {
+   "id": "cobra-046",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 19.3,
+    "fused": 16.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.7,
+    "meaning": 23,
+    "fused": 22.7
+   },
+   "similarity": {
+    "best": 0.748,
+    "answer": 0.748
+   }
+  },
+  {
+   "id": "cobra-047",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 10.2,
+    "fused": 19.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.1,
+    "fused": 23.4
+   },
+   "similarity": {
+    "best": 0.749,
+    "answer": 0.749
+   }
+  },
+  {
+   "id": "cobra-048",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 17.8,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.2,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": null
+   }
+  },
+  {
+   "id": "cobra-049",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24.8,
+    "fused": 25.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 21.7,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.845,
+    "answer": 0.845
+   }
+  },
+  {
+   "id": "cobra-050",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 25.8,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 25,
+    "fused": 13.5
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.793
+   }
+  },
+  {
+   "id": "cobra-051",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24.6,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25.3,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.849,
+    "answer": 0.849
+   }
+  },
+  {
+   "id": "cobra-052",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24.3,
+    "fused": 25.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 14,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.827,
+    "answer": 0.827
+   }
+  },
+  {
+   "id": "cobra-053",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.9,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.1,
+    "fused": 16.5
+   },
+   "similarity": {
+    "best": 0.803,
+    "answer": 0.787
+   }
+  },
+  {
+   "id": "cobra-054",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.5,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.6,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.831,
+    "answer": 0.831
+   }
+  },
+  {
+   "id": "cobra-055",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 14.1,
+    "fused": 17.9
+   },
+   "similarity": {
+    "best": 0.822,
+    "answer": 0.822
+   }
+  },
+  {
+   "id": "cobra-056",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 23.6,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.5,
+    "meaning": 25.1,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.826,
+    "answer": 0.826
+   }
+  },
+  {
+   "id": "cobra-057",
+   "repo": "cobra",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.5,
+    "fused": 5.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.5,
+    "meaning": 15.1,
+    "fused": 5.7
+   },
+   "similarity": {
+    "best": 0.822,
+    "answer": 0.822
+   }
+  },
+  {
+   "id": "cobra-058",
+   "repo": "cobra",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 5.1,
+    "fused": 15.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 10.5,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.779,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "cobra-059",
+   "repo": "cobra",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.4,
+    "fused": 25.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 25.2,
+    "fused": 14.4
+   },
+   "similarity": {
+    "best": 0.75,
+    "answer": 0.75
+   }
+  },
+  {
+   "id": "fd-001",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 26.2,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 10,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 11.6,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.792,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "fd-002",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.5,
+    "fused": 18.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.8,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.82,
+    "answer": 0.813
+   }
+  },
+  {
+   "id": "fd-003",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.9,
+    "fused": 5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 21.7,
+    "fused": 5.6
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-004",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 5.4,
+    "fused": 23.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 6.8,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.825,
+    "answer": 0.825
+   }
+  },
+  {
+   "id": "fd-005",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.4,
+    "fused": 22.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.1,
+    "fused": 23.1
+   },
+   "similarity": {
+    "best": 0.838,
+    "answer": 0.838
+   }
+  },
+  {
+   "id": "fd-006",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.7,
+    "fused": 23.4
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 12.5,
+    "fused": 25.6
+   },
+   "similarity": {
+    "best": 0.841,
+    "answer": 0.841
+   }
+  },
+  {
+   "id": "fd-007",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.1,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 24.7,
+    "fused": 24.3
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-008",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 7.1,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "fd-009",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 10,
+    "fused": 10
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 24.1,
+    "fused": 18.2
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 24.8,
+    "fused": 26.2
+   },
+   "similarity": {
+    "best": 0.776,
+    "answer": 0.749
+   }
+  },
+  {
+   "id": "fd-010",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 23.8,
+    "fused": 25.4
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.1,
+    "fused": 27.3
+   },
+   "similarity": {
+    "best": 0.815,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-011",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 25.2,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 24.9,
+    "fused": 15.3
+   },
+   "similarity": {
+    "best": 0.838,
+    "answer": 0.838
+   }
+  },
+  {
+   "id": "fd-012",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 24.1,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25,
+    "fused": 24.6
+   },
+   "similarity": {
+    "best": 0.832,
+    "answer": 0.832
+   }
+  },
+  {
+   "id": "fd-013",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.1,
+    "fused": 23.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 15.1,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.799,
+    "answer": 0.799
+   }
+  },
+  {
+   "id": "fd-014",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.9,
+    "fused": 22.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 22.6,
+    "fused": 22.6
+   },
+   "similarity": {
+    "best": 0.792,
+    "answer": 0.738
+   }
+  },
+  {
+   "id": "fd-015",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.2,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 17.1,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.765,
+    "answer": 0.763
+   }
+  },
+  {
+   "id": "fd-016",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.8,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.9,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-017",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 6.1,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 23.2,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "fd-018",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.6,
+    "fused": 23.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 11,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.771,
+    "answer": 0.771
+   }
+  },
+  {
+   "id": "fd-019",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.6,
+    "fused": 10.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23.1,
+    "fused": 23.4
+   },
+   "similarity": {
+    "best": 0.763,
+    "answer": 0.763
+   }
+  },
+  {
+   "id": "fd-020",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.4,
+    "meaning": 29.8,
+    "fused": 29.1
+   },
+   "fileRank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.6,
+    "meaning": 29.4,
+    "fused": 4.8
+   },
+   "similarity": {
+    "best": 0.734,
+    "answer": 0.678
+   }
+  },
+  {
+   "id": "fd-021",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.2,
+    "fused": 22.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 22.9,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.791
+   }
+  },
+  {
+   "id": "fd-022",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 12.1,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 23.5,
+    "fused": 20.2
+   },
+   "similarity": {
+    "best": 0.713,
+    "answer": 0.698
+   }
+  },
+  {
+   "id": "fd-023",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.4,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25.3,
+    "fused": 24.6
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "fd-024",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 9.9,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 22.7,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": 0.775
+   }
+  },
+  {
+   "id": "fd-025",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 5,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.1,
+    "fused": 23
+   },
+   "similarity": {
+    "best": 0.773,
+    "answer": 0.748
+   }
+  },
+  {
+   "id": "fd-026",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.7,
+    "fused": 5.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 18.1,
+    "fused": 4.8
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-027",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 4.8,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 11.2,
+    "fused": 9.7
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.79
+   }
+  },
+  {
+   "id": "fd-028",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 16,
+    "fused": 16
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.9,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 23,
+    "fused": 23.1
+   },
+   "similarity": {
+    "best": 0.735,
+    "answer": 0.684
+   }
+  },
+  {
+   "id": "fd-029",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 21.9,
+    "fused": 22.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 9.9,
+    "fused": 24.2
+   },
+   "similarity": {
+    "best": 0.855,
+    "answer": 0.855
+   }
+  },
+  {
+   "id": "fd-030",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 25.1,
+    "fused": 14.6
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.7,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.811
+   }
+  },
+  {
+   "id": "fd-031",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 24.1,
+    "fused": 6.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.2,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "fd-032",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.7,
+    "fused": 22.7
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 22.7,
+    "fused": 13.2
+   },
+   "similarity": {
+    "best": 0.751,
+    "answer": 0.735
+   }
+  },
+  {
+   "id": "fd-033",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.3,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 6,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 22.8,
+    "fused": 12.6
+   },
+   "similarity": {
+    "best": 0.758,
+    "answer": 0.758
+   }
+  },
+  {
+   "id": "fd-034",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 25,
+    "fused": 25
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.1,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25.3,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.742
+   }
+  },
+  {
+   "id": "fd-035",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 16.2,
+    "fused": 31.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.5,
+    "meaning": 29.8,
+    "fused": 12
+   },
+   "similarity": {
+    "best": 0.779,
+    "answer": 0.779
+   }
+  },
+  {
+   "id": "fd-036",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.6,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 22.9,
+    "fused": 20.9
+   },
+   "similarity": {
+    "best": 0.721,
+    "answer": 0.719
+   }
+  },
+  {
+   "id": "fd-037",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.5,
+    "fused": 22
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 24.9,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "fd-038",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.3,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 22.8,
+    "fused": 22.3
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "fd-039",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 24,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.828,
+    "answer": 0.828
+   }
+  },
+  {
+   "id": "fd-040",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 4.8,
+    "fused": 12.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.5,
+    "fused": 23.2
+   },
+   "similarity": {
+    "best": 0.835,
+    "answer": 0.835
+   }
+  },
+  {
+   "id": "fd-041",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 25.4,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 24.2,
+    "fused": 9
+   },
+   "similarity": {
+    "best": 0.829,
+    "answer": 0.829
+   }
+  },
+  {
+   "id": "fd-042",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.9,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 11.8,
+    "fused": 23.3
+   },
+   "similarity": {
+    "best": 0.855,
+    "answer": 0.855
+   }
+  },
+  {
+   "id": "fd-043",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 10,
+    "fused": 10
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.8,
+    "fused": 6.3
+   },
+   "fileRank": {
+    "words": 5,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 11,
+    "fused": 6.2
+   },
+   "similarity": {
+    "best": 0.754,
+    "answer": 0.725
+   }
+  },
+  {
+   "id": "fd-044",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 5.1,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 23,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.758,
+    "answer": 0.758
+   }
+  },
+  {
+   "id": "fd-045",
+   "repo": "fd",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 22.9,
+    "fused": 23.3
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 13.9,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.791
+   }
+  },
+  {
+   "id": "fd-046",
+   "repo": "fd",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.6,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 10,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 12.3,
+    "fused": 22.6
+   },
+   "similarity": {
+    "best": 0.847,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-047",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 23.1,
+    "fused": 27
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 0.8,
+    "meaning": 19.8,
+    "fused": 23.6
+   },
+   "similarity": {
+    "best": 0.758,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-048",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 21.9,
+    "fused": 5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 22.7,
+    "fused": 22.6
+   },
+   "similarity": {
+    "best": 0.786,
+    "answer": 0.786
+   }
+  },
+  {
+   "id": "fd-049",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 10.5,
+    "fused": 16.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 22.6,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.817,
+    "answer": 0.817
+   }
+  },
+  {
+   "id": "fd-050",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.6,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 7,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 8.8,
+    "fused": 17.9
+   },
+   "similarity": {
+    "best": 0.757,
+    "answer": 0.752
+   }
+  },
+  {
+   "id": "fd-051",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.5,
+    "meaning": 22.7,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 20.4,
+    "fused": 16.8
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "fd-052",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.1,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.2,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.841,
+    "answer": 0.841
+   }
+  },
+  {
+   "id": "fd-053",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 8,
+    "fused": 8
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 7,
+    "fused": 25.5
+   },
+   "fileRank": {
+    "words": 10,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.759,
+    "answer": 0.712
+   }
+  },
+  {
+   "id": "fd-054",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.3,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 0.6,
+    "meaning": 22.7,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.728,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "fd-055",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 23.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 22.9,
+    "fused": 14.1
+   },
+   "similarity": {
+    "best": 0.798,
+    "answer": 0.798
+   }
+  },
+  {
+   "id": "fd-056",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 4,
+    "fused": 4
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 5.7,
+    "fused": 6.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 7,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.767,
+    "answer": 0.756
+   }
+  },
+  {
+   "id": "fd-057",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.3,
+    "fused": 23.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 24.9,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.812,
+    "answer": 0.807
+   }
+  },
+  {
+   "id": "fd-058",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 15.8,
+    "fused": 5.6
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 23.2,
+    "fused": 21.8
+   },
+   "similarity": {
+    "best": 0.751,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-059",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23,
+    "fused": 25.4
+   },
+   "fileRank": {
+    "words": 15,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 0.7,
+    "meaning": 23,
+    "fused": 26.1
+   },
+   "similarity": {
+    "best": 0.774,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-060",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 16.5,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 25,
+    "fused": 24.9
+   },
+   "similarity": {
+    "best": 0.764,
+    "answer": 0.731
+   }
+  },
+  {
+   "id": "fd-061",
+   "repo": "fd",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 20,
+    "fused": 20
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 18.7,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 8,
+    "fused": 8
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 25,
+    "fused": 24.4
+   },
+   "similarity": {
+    "best": 0.692,
+    "answer": 0.657
+   }
+  },
+  {
+   "id": "fd-062",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 24.4,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1,
+    "meaning": 11.1,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.731,
+    "answer": 0.731
+   }
+  },
+  {
+   "id": "fd-063",
+   "repo": "fd",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 12.6,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 6,
+    "fused": 6
+   },
+   "fileMs": {
+    "words": 1.1,
+    "meaning": 23.8,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.808,
+    "answer": null
+   }
+  },
+  {
+   "id": "fd-064",
+   "repo": "fd",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.6,
+    "fused": 22.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 0.9,
+    "meaning": 9.1,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.768,
+    "answer": 0.756
+   }
+  },
+  {
+   "id": "vue-docs-001",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 23.7,
+    "fused": 9.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 26.1,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.807,
+    "answer": 0.807
+   }
+  },
+  {
+   "id": "vue-docs-002",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 25.5,
+    "fused": 25.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 8.8,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": null
+   }
+  },
+  {
+   "id": "vue-docs-003",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 6.7,
+    "fused": 7.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 8.3,
+    "fused": 9
+   },
+   "similarity": {
+    "best": 0.83,
+    "answer": null
+   }
+  },
+  {
+   "id": "vue-docs-004",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.7,
+    "meaning": 24.9,
+    "fused": 27
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 3.3,
+    "meaning": 27,
+    "fused": 19.8
+   },
+   "similarity": {
+    "best": 0.801,
+    "answer": 0.801
+   }
+  },
+  {
+   "id": "vue-docs-005",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 26.3,
+    "fused": 26.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.9,
+    "meaning": 27.3,
+    "fused": 27.2
+   },
+   "similarity": {
+    "best": 0.774,
+    "answer": 0.774
+   }
+  },
+  {
+   "id": "vue-docs-006",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 25.3,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 26.7,
+    "fused": 27.3
+   },
+   "similarity": {
+    "best": 0.743,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "vue-docs-007",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.8,
+    "meaning": 25.9,
+    "fused": 25.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.7,
+    "meaning": 9.4,
+    "fused": 28
+   },
+   "similarity": {
+    "best": 0.843,
+    "answer": 0.843
+   }
+  },
+  {
+   "id": "vue-docs-008",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 26,
+    "fused": 26.7
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.1,
+    "fused": 8.8
+   },
+   "similarity": {
+    "best": 0.799,
+    "answer": 0.799
+   }
+  },
+  {
+   "id": "vue-docs-009",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 25.2,
+    "fused": 26.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.8,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.816,
+    "answer": 0.816
+   }
+  },
+  {
+   "id": "vue-docs-010",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 6.8,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 26.4,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.827,
+    "answer": 0.782
+   }
+  },
+  {
+   "id": "vue-docs-011",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 14,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 25.4,
+    "fused": 27.8
+   },
+   "similarity": {
+    "best": 0.837,
+    "answer": 0.837
+   }
+  },
+  {
+   "id": "vue-docs-012",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 25.4,
+    "fused": 26.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 3.1,
+    "meaning": 10.9,
+    "fused": 26.5
+   },
+   "similarity": {
+    "best": 0.791,
+    "answer": 0.777
+   }
+  },
+  {
+   "id": "vue-docs-013",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 24.6,
+    "fused": 10.3
+   },
+   "fileRank": {
+    "words": 13,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 25.2,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.825,
+    "answer": 0.825
+   }
+  },
+  {
+   "id": "vue-docs-014",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 25,
+    "fused": 26.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2,
+    "meaning": 25.4,
+    "fused": 12.8
+   },
+   "similarity": {
+    "best": 0.835,
+    "answer": 0.835
+   }
+  },
+  {
+   "id": "vue-docs-015",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 25.6,
+    "fused": 26.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.8,
+    "meaning": 24.9,
+    "fused": 27.5
+   },
+   "similarity": {
+    "best": 0.751,
+    "answer": 0.751
+   }
+  },
+  {
+   "id": "vue-docs-016",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.7,
+    "meaning": 24.4,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 23.3,
+    "fused": 27.2
+   },
+   "similarity": {
+    "best": 0.808,
+    "answer": 0.808
+   }
+  },
+  {
+   "id": "vue-docs-017",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 24.7,
+    "fused": 20.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 25.1,
+    "fused": 27.2
+   },
+   "similarity": {
+    "best": 0.77,
+    "answer": 0.762
+   }
+  },
+  {
+   "id": "vue-docs-018",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 24.7,
+    "fused": 13.4
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.9,
+    "fused": 25.9
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.81
+   }
+  },
+  {
+   "id": "vue-docs-019",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 25.2,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 4,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.1,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.807,
+    "answer": 0.806
+   }
+  },
+  {
+   "id": "vue-docs-020",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 10,
+    "fused": 6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 6.5,
+    "fused": 6.7
+   },
+   "similarity": {
+    "best": 0.821,
+    "answer": 0.785
+   }
+  },
+  {
+   "id": "vue-docs-021",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 24.5,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 25.2,
+    "fused": 21.9
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": 0.781
+   }
+  },
+  {
+   "id": "vue-docs-022",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 14,
+    "fused": 14
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.9,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 9,
+    "fused": 9
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.4,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.782,
+    "answer": 0.73
+   }
+  },
+  {
+   "id": "vue-docs-023",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 10,
+    "fused": 1
+   },
+   "ms": {
+    "words": 2.1,
+    "meaning": 24.2,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 25.1,
+    "fused": 12.4
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.746
+   }
+  },
+  {
+   "id": "vue-docs-024",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 25.8,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 13,
+    "fused": 13
+   },
+   "fileMs": {
+    "words": 2.6,
+    "meaning": 25.4,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": null
+   }
+  },
+  {
+   "id": "vue-docs-025",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.6,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 7.3,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": 0.781
+   }
+  },
+  {
+   "id": "vue-docs-026",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 25.5,
+    "fused": 21.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.6,
+    "meaning": 21.9,
+    "fused": 24
+   },
+   "similarity": {
+    "best": 0.797,
+    "answer": 0.797
+   }
+  },
+  {
+   "id": "vue-docs-027",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 6,
+    "fused": 6
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 25.6,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 4,
+    "fused": 4
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 25.4,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.7,
+    "answer": 0.684
+   }
+  },
+  {
+   "id": "vue-docs-028",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 10.6,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 24.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.777,
+    "answer": 0.77
+   }
+  },
+  {
+   "id": "vue-docs-029",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.8,
+    "fused": 11.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.2,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.807,
+    "answer": 0.805
+   }
+  },
+  {
+   "id": "vue-docs-030",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 24.9,
+    "fused": 24.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.5,
+    "meaning": 25.9,
+    "fused": 22
+   },
+   "similarity": {
+    "best": 0.781,
+    "answer": 0.767
+   }
+  },
+  {
+   "id": "vue-docs-031",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 23.1,
+    "fused": 11.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.4,
+    "meaning": 26.3,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.818,
+    "answer": 0.817
+   }
+  },
+  {
+   "id": "vue-docs-032",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.6,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 25.3,
+    "fused": 7.9
+   },
+   "similarity": {
+    "best": 0.821,
+    "answer": 0.821
+   }
+  },
+  {
+   "id": "vue-docs-033",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.4,
+    "fused": 6.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 25.5,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-034",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.8,
+    "meaning": 24.4,
+    "fused": 25.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.5,
+    "fused": 26.1
+   },
+   "similarity": {
+    "best": 0.832,
+    "answer": 0.832
+   }
+  },
+  {
+   "id": "vue-docs-035",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 24.9,
+    "fused": 25
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.3,
+    "fused": 15.2
+   },
+   "similarity": {
+    "best": 0.845,
+    "answer": 0.845
+   }
+  },
+  {
+   "id": "vue-docs-036",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 5,
+    "fused": 5
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 5.3,
+    "fused": 6.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 6.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.761,
+    "answer": 0.741
+   }
+  },
+  {
+   "id": "vue-docs-037",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 22.1,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.714,
+    "answer": 0.714
+   }
+  },
+  {
+   "id": "vue-docs-038",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.4,
+    "fused": 6.1
+   },
+   "fileRank": {
+    "words": 2,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.4,
+    "fused": 21.8
+   },
+   "similarity": {
+    "best": 0.794,
+    "answer": 0.794
+   }
+  },
+  {
+   "id": "vue-docs-039",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 18.6,
+    "fused": 22.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.3,
+    "meaning": 23.3,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.772,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "vue-docs-040",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 6.5,
+    "fused": 24
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 24.2,
+    "fused": 28.2
+   },
+   "similarity": {
+    "best": 0.855,
+    "answer": 0.855
+   }
+  },
+  {
+   "id": "vue-docs-041",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 23.9,
+    "fused": 26.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.7,
+    "fused": 11.1
+   },
+   "similarity": {
+    "best": 0.8,
+    "answer": 0.8
+   }
+  },
+  {
+   "id": "vue-docs-042",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.2,
+    "meaning": 23.7,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.5,
+    "meaning": 25.2,
+    "fused": 19.1
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.795
+   }
+  },
+  {
+   "id": "vue-docs-043",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 24.7,
+    "fused": 24.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 7,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.794,
+    "answer": 0.793
+   }
+  },
+  {
+   "id": "vue-docs-044",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 4,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 24.7,
+    "fused": 10.8
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.1,
+    "fused": 24.7
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.806
+   }
+  },
+  {
+   "id": "vue-docs-045",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.6,
+    "fused": 24.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 2.3,
+    "meaning": 24.5,
+    "fused": 26.4
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.795
+   }
+  },
+  {
+   "id": "vue-docs-046",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 25.3,
+    "fused": 22
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.6,
+    "fused": 27
+   },
+   "similarity": {
+    "best": 0.796,
+    "answer": 0.793
+   }
+  },
+  {
+   "id": "vue-docs-047",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 24.6,
+    "fused": 24.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.4,
+    "fused": 6.6
+   },
+   "similarity": {
+    "best": 0.829,
+    "answer": 0.829
+   }
+  },
+  {
+   "id": "vue-docs-048",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 0,
+    "fused": 0
+   },
+   "ms": {
+    "words": 1,
+    "meaning": 6.2,
+    "fused": 26.5
+   },
+   "fileRank": {
+    "words": 19,
+    "meaning": 0,
+    "fused": 0
+   },
+   "fileMs": {
+    "words": 3.4,
+    "meaning": 8.5,
+    "fused": 27.4
+   },
+   "similarity": {
+    "best": 0.759,
+    "answer": null
+   }
+  },
+  {
+   "id": "vue-docs-049",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 2,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 24,
+    "fused": 10.6
+   },
+   "fileRank": {
+    "words": 3,
+    "meaning": 3,
+    "fused": 3
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 25.1,
+    "fused": 25.1
+   },
+   "similarity": {
+    "best": 0.79,
+    "answer": 0.786
+   }
+  },
+  {
+   "id": "vue-docs-050",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.3,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.7,
+    "meaning": 9.2,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "vue-docs-051",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 23.8,
+    "fused": 24.5
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.2,
+    "fused": 16.3
+   },
+   "similarity": {
+    "best": 0.823,
+    "answer": 0.823
+   }
+  },
+  {
+   "id": "vue-docs-052",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.6,
+    "fused": 20.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 25.7,
+    "fused": 25.5
+   },
+   "similarity": {
+    "best": 0.746,
+    "answer": 0.746
+   }
+  },
+  {
+   "id": "vue-docs-053",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 24.3,
+    "fused": 24.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.2,
+    "meaning": 25.7,
+    "fused": 25.3
+   },
+   "similarity": {
+    "best": 0.759,
+    "answer": 0.749
+   }
+  },
+  {
+   "id": "vue-docs-054",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.6,
+    "meaning": 12.6,
+    "fused": 24.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 25.5,
+    "fused": 25.4
+   },
+   "similarity": {
+    "best": 0.777,
+    "answer": 0.777
+   }
+  },
+  {
+   "id": "vue-docs-055",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 11,
+    "fused": 11
+   },
+   "ms": {
+    "words": 0.7,
+    "meaning": 24.6,
+    "fused": 25.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.4,
+    "meaning": 7.7,
+    "fused": 25
+   },
+   "similarity": {
+    "best": 0.757,
+    "answer": 0.728
+   }
+  },
+  {
+   "id": "vue-docs-056",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.9,
+    "meaning": 23.6,
+    "fused": 23.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 8.8,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.784,
+    "answer": 0.784
+   }
+  },
+  {
+   "id": "vue-docs-057",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 0.8,
+    "meaning": 20.5,
+    "fused": 25.6
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.1,
+    "meaning": 25.5,
+    "fused": 27.4
+   },
+   "similarity": {
+    "best": 0.801,
+    "answer": 0.801
+   }
+  },
+  {
+   "id": "vue-docs-058",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 2,
+    "meaning": 23,
+    "fused": 27
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 3,
+    "meaning": 26.2,
+    "fused": 27.6
+   },
+   "similarity": {
+    "best": 0.765,
+    "answer": 0.764
+   }
+  },
+  {
+   "id": "vue-docs-059",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 6,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 31.7,
+    "fused": 32.9
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 2,
+    "fused": 2
+   },
+   "fileMs": {
+    "words": 1.6,
+    "meaning": 29.6,
+    "fused": 31.8
+   },
+   "similarity": {
+    "best": 0.78,
+    "answer": 0.76
+   }
+  },
+  {
+   "id": "vue-docs-060",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "dev",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1.5,
+    "meaning": 21.1,
+    "fused": 17.3
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.4,
+    "fused": 25.7
+   },
+   "similarity": {
+    "best": 0.799,
+    "answer": 0.772
+   }
+  },
+  {
+   "id": "vue-docs-061",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "dev",
+   "rank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.4,
+    "meaning": 25.1,
+    "fused": 25.4
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.8,
+    "meaning": 25.1,
+    "fused": 27.1
+   },
+   "similarity": {
+    "best": 0.811,
+    "answer": 0.811
+   }
+  },
+  {
+   "id": "vue-docs-062",
+   "repo": "vue-docs",
+   "style": "multi-hop",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 2,
+    "fused": 2
+   },
+   "ms": {
+    "words": 1.3,
+    "meaning": 7.2,
+    "fused": 26.2
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.5,
+    "meaning": 24,
+    "fused": 24.8
+   },
+   "similarity": {
+    "best": 0.795,
+    "answer": 0.781
+   }
+  },
+  {
+   "id": "vue-docs-063",
+   "repo": "vue-docs",
+   "style": "plain",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 3,
+    "fused": 3
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 23.2,
+    "fused": 6.1
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 1.9,
+    "meaning": 7.4,
+    "fused": 7.3
+   },
+   "similarity": {
+    "best": 0.835,
+    "answer": 0.806
+   }
+  },
+  {
+   "id": "vue-docs-064",
+   "repo": "vue-docs",
+   "style": "vague",
+   "split": "test",
+   "rank": {
+    "words": 0,
+    "meaning": 1,
+    "fused": 1
+   },
+   "ms": {
+    "words": 1.1,
+    "meaning": 8.8,
+    "fused": 24.7
+   },
+   "fileRank": {
+    "words": 1,
+    "meaning": 1,
+    "fused": 1
+   },
+   "fileMs": {
+    "words": 2.2,
+    "meaning": 25.6,
+    "fused": 25.2
+   },
+   "similarity": {
+    "best": 0.803,
+    "answer": 0.803
+   }
+  }
+ ]
+}

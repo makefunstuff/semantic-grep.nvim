@@ -62,7 +62,10 @@ async function settled(meaning, root) {
 
 test('the notes entry: off unless asked; the profile\'s writer; never the code to another machine without sendCode', () => {
   assert.equal(profileConfig({}).notes, null, 'off by default');
-  assert.equal(profileConfig({profile: 'beefy'}).notes, null, 'a profile alone writes none');
+  assert.equal(profileConfig({profile: 'beefy'}).notes.model, 'qwen3-4b-instruct-2507', 'a local profile writes them unless told not to');
+  assert.equal(profileConfig({profile: 'laptop'}).notes.model, 'qwen3.5-2b');
+  assert.equal(profileConfig({profile: 'laptop', notes: false}).notes, null);
+  assert.equal(profileConfig({profile: 'cloud'}).notes, null, 'the cloud\'s writer costs money: only when asked');
   const laptop = profileConfig({notes: true}).notes;
   assert.equal(laptop.baseUrl, 'http://127.0.0.1:18122/v1', 'without a profile, the laptop\'s writer');
   assert.equal(laptop.sendCode, false);

@@ -13,9 +13,9 @@ import {existsSync} from 'node:fs';
 import {mkdir, readFile, rm, stat, writeFile} from 'node:fs/promises';
 import {isAbsolute, join, relative} from 'node:path';
 import {apiKeyOf} from './config.mjs';
-import {HttpEmbedder, tuningOf} from './embedder.mjs';
+import {HttpEmbedder, TUNING, tuningOf} from './embedder.mjs';
 import {IndexStore, indexPlace, PROJECT_DIR, removeIndex, removeLearned} from './index-store.mjs';
-import {importLines, piecesOf, TreeSitter, withoutImports} from './pieces.mjs';
+import {contextOf, fileSummary, importLines, piecesOf, sentence, TreeSitter, withoutImports} from './pieces.mjs';
 import {NO_NOTE, NotesWriter} from './notes.mjs';
 import {pieceText, SNIPPET_CHARS} from './rerank.mjs';
 
@@ -29,21 +29,23 @@ const NOTES_TICK_MS = 15_000; // how often the notes writer looks whether it may
 const NOTES_REST_MS = 5 * 60_000; // after a writer failed for a whole batch, how long it rests
 const NOTES_BATCH = 4; // pieces a writer's lane takes at a time: a search waits for one piece at most
 const NOTES_TRIES = 3; // a piece the writer fails on this often is left for the session
+const VISITS = 20; // the files someone was in last: the notes writer starts near them
 // A writer's failure that is not the piece's: nothing answers, the key is refused, too many requests, the server's error.
 const OUTAGE = /: no key in |: (401|403|429|5\d\d) |: (ECONNREFUSED|ENOTFOUND|EHOSTUNREACH|ECONNRESET|UND_ERR_CONNECT|UND_ERR_SOCKET)$|: fetch failed$/;
 const PARSE_GROUP = 200; // files per headless Neovim of tree-sitter
 const PROGRESS_MS = 2000; // how often a build in progress tells the editors how far it is
 const HEAD_CHARS = 100;
-const RRF_K = 60;
-const LIST = 50; // of each ranking, how many go into the fusion
+const RRF_K = 60; // a fusion's k where the model's `fusion` does not say (a note's words with the code's)
 // Meaning hits further below the best than the model's `band` are left out (unrelated code scores close, too); a search
 // kept (someone opened a piece for it) whose words mean at least the model's `pickNear` close to a new search's: the
-// piece goes first. Both are the model's own, measured on the bench (see embedder.mjs, tuningOf).
+// piece is fused as a list of its own (first in meaning's list alone). How many of each list are fused, at what k and
+// with the words at what weight, is the model's `fusion` (the files view's, its `files`). All the model's own, measured
+// on the bench (see embedder.mjs, tuningOf; bench/tune.mjs).
 const PICKED_PER_SEARCH = 3;
 // The files view: a file is ranked by the pieces it has among a search's first FILE_PIECES, each worth 1/(FILE_K +
 // rank), its best in full and each next one FILE_DECAY of the one before: the best piece first, and a small bonus for
-// several. Tuned on the bench's dev questions (docs/benchmark.md, "Files"); meaning's list there is not cut by the band,
-// the depth is, and the words alone take the pieces with any of them.
+// several (the defaults; the model's `files` has its own depth, k and decay). Tuned on the bench's dev questions (docs/benchmark.md, "Files"); meaning's list
+// there is not cut by the band, the depth is, and the words alone take the pieces with any of them.
 export const FILE_PIECES = 60;
 const FILE_K = 5;
 const FILE_DECAY = 0.5;
@@ -81,6 +83,30 @@ export async function projectFiles(root, projectDir = PROJECT_DIR) {
 export const pieceHash = (file, text, name = null) => createHash('sha1').update(name ? `${file}\n${name}\n${text}` : `${file}\n${text}`).digest('hex');
 
 /**
+ * What a piece's vector is known by: its hash, with what its title says of its file and of what encloses it (`context`,
+ * see contextFor). A class's doc changed embeds its methods again; a note, known by the hash alone, stays theirs.
+ */
+export const pieceKey = (hash, context = '') => (context ? createHash('sha1').update(`${hash}\n${context}`).digest('hex') : hash);
+
+// A piece this small (without its imports) says little of what it is for: its title says what encloses it and what
+// its file is for. A bigger one says enough itself; on the bench, context on every piece cost the multi-hop questions
+// (docs/benchmark.md, "Context").
+export const SMALL_CHARS = 400;
+
+/** Whether `piece` (`{text}`) is small enough for its title to carry its context. */
+export const isSmall = piece => withoutImports(piece.text ?? '').length < SMALL_CHARS;
+
+/**
+ * A small piece's context for its title: what its file is for (`summary`: its own, see fileSummary, else a note on
+ * the file) and the heads of what encloses the piece (contextOf), on two lines; '' for a bigger piece, or with neither.
+ */
+export function contextFor(lines, file, piece, summary = fileSummary(lines, file)) {
+  if (!isSmall(piece)) return '';
+  const within = contextOf(lines, piece.within ?? []);
+  return summary || within ? `${summary ?? ''}\n${within}` : '';
+}
+
+/**
  * The words of `text` for the word search: lower case, with identifiers split too (removeUserFromTeam, retry_count:
  * remove, user, from, team; retry, count). Comments and strings are words like any other.
  */
@@ -98,10 +124,13 @@ export function words(text) {
 /** The words of a search that say where to look: its own and its identifiers' parts, without a question's small words. */
 export const searchTerms = query => [...new Set(words(query))].filter(term => !STOPWORDS.has(term));
 
-/** Reciprocal rank fusion of ranked lists of keys: each key scores 1/(k + rank) in every list it is in. */
-export function fuse(lists, k = RRF_K) {
+/**
+ * Reciprocal rank fusion of ranked lists of keys: each key scores weight/(k + rank) in every list it is in, the
+ * list's weight from `weights` (1 where it has none).
+ */
+export function fuse(lists, k = RRF_K, weights = []) {
   const scores = new Map();
-  for (const list of lists) list.forEach((key, rank) => scores.set(key, (scores.get(key) ?? 0) + 1 / (k + rank + 1)));
+  lists.forEach((list, n) => list.forEach((key, rank) => scores.set(key, (scores.get(key) ?? 0) + (weights[n] ?? 1) / (k + rank + 1))));
   return [...scores].sort((a, b) => b[1] - a[1]).map(([key]) => key);
 }
 
@@ -199,6 +228,16 @@ export class ProjectIndex {
     const rows = this.store.extras();
     this.extrasById = new Map(rows.map(row => [row.id, row]));
     this.notesByHash = new Map(rows.filter(row => row.kind === 'note').map(row => [row.hash, row]));
+    // A file's note titles its small pieces where the file says nothing of itself: one new, changed or gone, and the
+    // file is read again (see step), its small pieces embedded again where their title changed.
+    const before = this.fileNotes;
+    this.fileNotes = new Map(rows.filter(row => row.kind === 'file').map(row => [row.file, row]));
+    this.reread ??= new Set();
+    if (before) {
+      for (const file of new Set([...before.keys(), ...this.fileNotes.keys()])) {
+        if (before.get(file)?.text !== this.fileNotes.get(file)?.text && this.byFile.has(file)) this.reread.add(file);
+      }
+    }
     this.picks = rows.filter(row => row.kind === 'pick');
     this.learnedVectors = this.store.learnedVectors(this.model);
     this.matrix = null;
@@ -230,7 +269,11 @@ export class ProjectIndex {
   async stepLearned() {
     const todo = this.learnedPending().slice(0, 16);
     if (!todo.length) return false;
-    const texts = todo.map(row => (row.kind === 'pick' ? this.embedder.query(row.text) : this.embedder.document(row.file, row.text, this.pieceOfExtra(row).name)));
+    const texts = todo.map(row => {
+      if (row.kind === 'pick') return this.embedder.query(row.text);
+      const piece = this.pieceOfExtra(row);
+      return this.embedder.document(row.file, row.text, piece.name, piece.context);
+    });
     const vectors = await this.embed(texts);
     if (this.closed) return false;
     const entries = todo.map((row, i) => [this.extraKey(row), vectors[i]]);
@@ -244,8 +287,8 @@ export class ProjectIndex {
 
   /** The vectors of texts the project no longer has leave memory too (the file keeps those other worktrees have). */
   trim() {
-    const hashes = new Set(this.pieces.map(piece => piece.hash));
-    for (const hash of [...this.vectors.keys()]) if (!hashes.has(hash)) this.vectors.delete(hash);
+    const keys = new Set(this.pieces.map(piece => piece.key));
+    for (const key of [...this.vectors.keys()]) if (!keys.has(key)) this.vectors.delete(key);
     this.matrix = null;
   }
 
@@ -324,19 +367,24 @@ export class ProjectIndex {
         const found = await this.treeSitter.definitions(texts.map(({file}) => join(this.root, file)));
         if (this.closed) return; // the session ended, or the index is made again: its file is closed
         for (const {file, info, text} of texts) {
-          const pieces = piecesOf(text, found.get(join(this.root, file))).map(piece => ({
-            ...piece, hash: pieceHash(file, piece.text, piece.name), words: words(`${file} ${piece.name ?? ''} ${piece.text}`).join(' '),
-          }));
-          for (const old of this.byFile.get(file) ?? []) this.documents.delete(old.hash); // a text gone from the file
+          const lines = text.split('\n');
+          const note = this.fileNotes?.get(file)?.text;
+          const summary = fileSummary(lines, file) ?? (note ? sentence(note) : null);
+          const pieces = piecesOf(text, found.get(join(this.root, file))).map(piece => {
+            const hash = pieceHash(file, piece.text, piece.name);
+            const context = contextFor(lines, file, piece, summary);
+            return {...piece, hash, key: pieceKey(hash, context), context, words: words(`${file} ${piece.name ?? ''} ${piece.text}`).join(' ')};
+          });
+          for (const old of this.byFile.get(file) ?? []) this.documents.delete(old.key); // a text gone from the file
           const stored = this.store.putFile(this.root, file, {size: info.size, mtimeMs: info.mtimeMs}, pieces);
           this.files.set(file, {size: info.size, mtimeMs: info.mtimeMs, skipped: false});
           this.byFile.set(file, stored);
           pieces.forEach(piece => {
-            if (this.vectors.has(piece.hash)) return;
-            const shared = this.store.vector(this.model, piece.hash); // made in another worktree of the repository
-            if (shared) this.vectors.set(piece.hash, shared);
+            if (this.vectors.has(piece.key)) return;
+            const shared = this.store.vector(this.model, piece.key); // made in another worktree of the repository
+            if (shared) this.vectors.set(piece.key, shared);
             // Kept to embed soon, only while there is a model: words alone read the file again when it comes.
-            else if (this.embedder && this.embedding()) this.documents.set(piece.hash, this.document(file, piece.text, piece.name));
+            else if (this.embedder && this.embedding()) this.documents.set(piece.key, this.document(file, piece.text, piece.name, piece.context));
           });
         }
         reading.done = Math.min(total, start + PARSE_GROUP);
@@ -351,27 +399,33 @@ export class ProjectIndex {
     }
   }
 
-  /** The pieces still without a vector, one per hash, oldest file first. */
+  /** The pieces still without a vector, one per key, oldest file first. */
   pending() {
     const seen = new Set();
-    return this.pieces.filter(piece => !this.vectors.has(piece.hash) && !seen.has(piece.hash) && seen.add(piece.hash));
+    return this.pieces.filter(piece => !this.vectors.has(piece.key) && !seen.has(piece.key) && seen.add(piece.key));
   }
 
   /** The text to embed for `piece`: kept since it was read, or read again from its file (after a restart). */
   async documentOf(piece) {
-    if (this.documents.has(piece.hash)) return this.documents.get(piece.hash);
+    if (this.documents.has(piece.key)) return this.documents.get(piece.key);
     const lines = await this.lines.get(piece.file);
     if (!lines) return null;
     const text = lines.slice(piece.from - 1, piece.to).join('\n');
-    return pieceHash(piece.file, text, piece.name) === piece.hash ? this.document(piece.file, text, piece.name) : null; // changed since: the next scan reads it
+    return pieceHash(piece.file, text, piece.name) === piece.hash ? this.document(piece.file, text, piece.name, piece.context) : null; // changed since: the next scan reads it
   }
 
-  /** What the embedder reads of a piece: its text without its imports, titled by its file and name. */
-  document(file, text, name) { return this.embedder.document(file, withoutImports(text), name); }
+  /** What the embedder reads of a piece: its text without its imports, titled by its file, its context and its name. */
+  document(file, text, name, context = '') { return this.embedder.document(file, withoutImports(text), name, context); }
 
   /** Embeds the next few pieces waiting; false when none waits. The list of those is made again once it runs out, or the files change. */
   async step() {
     if (this.closed) return false;
+    if (this.reread?.size) { // a file's note changed: its pieces' titles may have
+      const file = this.reread.values().next().value;
+      this.reread.delete(file);
+      await this.saved(file, {force: true});
+      return true;
+    }
     if (await this.stepLearned()) return true;
     if (this.closed) return false;
     if (!this.waiting?.length) this.waiting = this.pending();
@@ -381,16 +435,16 @@ export class ProjectIndex {
     while (waiting.length && batch.length < (this.embedder.batch ?? BATCH)) {
       if (this.closed) return false;
       const piece = waiting.shift();
-      if (this.vectors.has(piece.hash)) continue;
-      const shared = this.store.vector(this.model, piece.hash); // another worktree embedded it meanwhile
+      if (this.vectors.has(piece.key)) continue;
+      const shared = this.store.vector(this.model, piece.key); // another worktree embedded it meanwhile
       if (shared) {
-        this.vectors.set(piece.hash, shared);
+        this.vectors.set(piece.key, shared);
         this.matrix = null;
         continue;
       }
       const document = await this.documentOf(piece);
       if (document === null) stale.add(piece.file);
-      else batch.push({hash: piece.hash, document});
+      else batch.push({key: piece.key, document});
     }
     // A file changed since it was read: read again now, its pieces wait in the next list.
     this.forced ??= new Set();
@@ -406,11 +460,11 @@ export class ProjectIndex {
     if (!batch.length) return reread;
     const vectors = await this.embed(batch.map(item => item.document));
     if (this.closed) return false; // the session ended, or the index is being made again: its file is closed
-    const entries = batch.map((item, i) => [item.hash, vectors[i]]);
+    const entries = batch.map((item, i) => [item.key, vectors[i]]);
     this.store.putVectors(this.model, entries);
-    for (const [hash, vector] of entries) {
-      this.vectors.set(hash, vector);
-      this.documents.delete(hash);
+    for (const [key, vector] of entries) {
+      this.vectors.set(key, vector);
+      this.documents.delete(key);
     }
     this.matrix = null;
     return true;
@@ -423,7 +477,7 @@ export class ProjectIndex {
    * first by BM25. A piece the store has and this index does not was read by another Neovim's backend on the same
    * worktree: what the store has is loaded again, once.
    */
-  wordRanking(query, limit = LIST, {any = false} = {}) {
+  wordRanking(query, limit = this.tuning.fusion.list, {any = false} = {}) {
     this.refreshLearned();
     const terms = searchTerms(query);
     const ids = this.store.wordSearch(this.root, terms, limit, any);
@@ -444,11 +498,11 @@ export class ProjectIndex {
   /** The vectors of the pieces that have one, in one array: compared with a search's vector in one pass. */
   matrixOf() {
     if (this.matrix) return this.matrix;
-    const pieces = this.pieces.filter(piece => this.vectors.has(piece.hash));
-    const size = pieces.length ? this.vectors.get(pieces[0].hash).length : 0;
+    const pieces = this.pieces.filter(piece => this.vectors.has(piece.key));
+    const size = pieces.length ? this.vectors.get(pieces[0].key).length : 0;
     const data = new Float32Array(pieces.length * size);
     pieces.forEach((piece, i) => {
-      const vector = this.vectors.get(piece.hash);
+      const vector = this.vectors.get(piece.key);
       if (vector.length === size) data.set(vector, i * size);
     });
     // A note's vector stands for its piece too, where it is the closer of the two.
@@ -479,7 +533,7 @@ export class ProjectIndex {
   }
 
   /** The pieces closest in meaning to the query's vector `q`, best first, within the band below the best: `[piece, similarity]`. */
-  meaningRanking(q, limit = LIST, band = this.tuning.band) {
+  meaningRanking(q, limit = this.tuning.fusion.list, band = this.tuning.band) {
     this.refreshLearned();
     const {pieces, size, data, notes} = this.matrixOf();
     if (!pieces.length || q.length !== size) return [];
@@ -498,10 +552,20 @@ export class ProjectIndex {
     for (const score of scores) if (score > best) best = score;
     const near = [];
     for (let i = 0; i < pieces.length; i++) if (scores[i] >= best - band) near.push([pieces[i], scores[i]]);
-    // Opened before for a search worded close to this one: first.
-    const picked = this.pickedFor(q);
-    const first = new Set(picked.map(([piece]) => piece));
-    return [...picked, ...near.filter(([piece]) => !first.has(piece)).sort((a, b) => b[1] - a[1])].slice(0, limit);
+    return near.sort((a, b) => b[1] - a[1]).slice(0, limit);
+  }
+
+  /**
+   * The lists a search fuses, with their weights (the words' `weight`, the model's `fusion.words` by default, see
+   * embedder.mjs): meaning's, the words' (every word; with `any`, any of them), and the pieces opened before for a search worded close to this one, a list of
+   * their own: they rise without pushing aside what this search finds (bench/tune.mjs measured both). `{lists,
+   * weights, meaning}`, `meaning` the similarity of each piece meaning ranked.
+   */
+  fusing(q, query, {list, band, any = false, weight = this.tuning.fusion.words}) {
+    const meaning = q ? this.meaningRanking(q, list, band) : [];
+    const picked = q ? this.pickedFor(q) : [];
+    const lists = [meaning.map(([piece]) => piece), this.wordRanking(query, list, {any}), picked.map(([piece]) => piece)];
+    return {lists, weights: [1, weight, 1], meaning: new Map([...picked, ...meaning])};
   }
 
   /**
@@ -548,7 +612,11 @@ export class ProjectIndex {
   async meaningSearch(query, {limit = 30} = {}) {
     if (!this.embedder) return [];
     const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
-    return Promise.all(this.meaningRanking(q, limit).map(([piece, score]) => this.result(piece, {meaning: score})));
+    // Its one list: what was opened for a search worded close to this one first.
+    const picked = this.pickedFor(q);
+    const first = new Set(picked.map(([piece]) => piece));
+    const ranked = [...picked, ...this.meaningRanking(q, limit).filter(([piece]) => !first.has(piece))].slice(0, limit);
+    return Promise.all(ranked.map(([piece, score]) => this.result(piece, {meaning: score})));
   }
 
   /** Meaning and words fused by reciprocal rank, best first. */
@@ -556,45 +624,48 @@ export class ProjectIndex {
     if (!this.embedder) return this.wordSearch(query, {limit});
     // Asked even before anything is embedded: an embedder that cannot run is found now, and said.
     const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
-    const meaning = q ? this.meaningRanking(q, Math.max(LIST, limit)) : [];
-    const keyword = this.wordRanking(query, Math.max(LIST, limit));
-    const similarity = new Map(meaning);
-    const keywordSet = new Set(keyword);
-    const ranked = fuse([meaning.map(([piece]) => piece), keyword]).slice(0, limit);
+    const {k, list} = this.tuning.fusion;
+    const {lists, weights, meaning: similarity} = this.fusing(q, query, {list: Math.max(list, limit)});
+    const keywordSet = new Set(lists[1]);
+    const ranked = fuse(lists, k, weights).slice(0, limit);
     return Promise.all(ranked.map(piece => this.result(piece, {meaning: similarity.get(piece) ?? null, words: keywordSet.has(piece)})));
   }
 
   /**
    * The pieces a search of `mode` ranks for the files view, best first: 'words' (pieces with any of the words, by BM25:
    * a sentence's words are seldom all in one piece), 'meaning' (the query's vector against every piece's, within `band`
-   * below the best, the model's by default) or 'fused' (meaning and the pieces with every word, by reciprocal rank).
-   * The words alone without an embedder.
+   * below the best, the model's by default) or 'fused' (meaning, the words and the pieces opened before, by reciprocal
+   * rank as the model's `files` says: with every word or any of them, at its k). The words alone without an embedder.
    */
-  async ranking(query, mode, {limit = LIST, band} = {}) {
+  async ranking(query, mode, {limit = this.tuning.files.depth, band} = {}) {
     if (mode === 'words' || !this.embedder) return this.wordRanking(query, limit, {any: true});
     const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
-    const meaning = q ? this.meaningRanking(q, Math.max(LIST, limit), band).map(([piece]) => piece) : [];
-    if (mode === 'meaning') return meaning.slice(0, limit);
-    return fuse([meaning, this.wordRanking(query, Math.max(LIST, limit))]).slice(0, limit);
+    const {k, any, words: weight} = this.tuning.files;
+    const {lists, weights} = this.fusing(q, query, {list: limit, band, any, weight});
+    if (mode === 'meaning') return [...new Set([...lists[2], ...lists[0]])].slice(0, limit);
+    return fuse(lists, k, weights).slice(0, limit);
   }
 
   /**
    * The files a search of `mode` (see ranking) finds, best first, each as its best piece's result with `score` and
-   * `hits` (its pieces among the first FILE_PIECES). `results` instead of a ranking: those, ranked as files.
+   * `hits` (its pieces among the first of the model's `files.depth`). `results` instead of a ranking: those, ranked as
+   * files (a reranker's order: by the default `files`, as measured with a reranker; the model's were tuned on its fused
+   * list, and with beefy's reranker did a little worse).
    */
   async fileSearch(query, {mode = 'fused', limit = 20, results = null} = {}) {
-    const ranked = results ?? await this.ranking(query, mode, {limit: FILE_PIECES, band: 2});
-    return Promise.all(filesOf(ranked).slice(0, limit).map(async ({best, score, hits}) => ({
+    const ranked = results ?? await this.ranking(query, mode, {limit: this.tuning.files.depth, band: 2});
+    const {rank, decay} = results ? TUNING.files : this.tuning.files;
+    return Promise.all(filesOf(ranked, {k: rank, decay}).slice(0, limit).map(async ({best, score, hits}) => ({
       ...(results ? best : await this.result(best)), score: Math.round(score * 10000) / 10000, hits,
     })));
   }
 
-  /** How far the index is: files, pieces (by hash), how many have vectors, the file's bytes and when it changed. */
+  /** How far the index is: files, pieces (by key), how many have vectors, the file's bytes and when it changed. */
   progress() {
-    const hashes = new Set(this.pieces.map(piece => piece.hash));
-    const embedded = [...hashes].filter(hash => this.vectors.has(hash)).length;
+    const keys = new Set(this.pieces.map(piece => piece.key));
+    const embedded = [...keys].filter(key => this.vectors.has(key)).length;
     const files = [...this.files.values()].filter(file => !file.skipped).length;
-    return {root: this.root, files, chunks: hashes.size, embedded, ...this.store.stats(), capped: this.capped, reading: this.reading};
+    return {root: this.root, files, chunks: keys.size, embedded, ...this.store.stats(), capped: this.capped, reading: this.reading};
   }
 }
 
@@ -649,6 +720,7 @@ export class Meaning {
     this.notesRestUntil = 0;
     this.notesFailed = new Set(); // pieces the writer gave no note for, this session: not asked again until the next
     this.notesTries = new Map(); // a piece's failed tries this session: after NOTES_TRIES it joins notesFailed
+    this.visits = []; // the files someone was in, absolute paths, the latest first (see visited)
     if (this.writer) {
       this.notesTimer = setInterval(() => this.writeNotes().catch(error => log(`meaning: notes: ${error.message}`)), NOTES_TICK_MS);
       this.notesTimer.unref?.();
@@ -773,7 +845,7 @@ export class Meaning {
         more = false;
         // The project searched last goes first; the others in the order their sessions came.
         projects: for (index of [...this.indexes.values()].toSorted((a, b) => (b.wantedAt ?? 0) - (a.wantedAt ?? 0))) {
-          const waiting = index.pending().length + index.learnedPending().length;
+          const waiting = index.pending().length + index.learnedPending().length + (index.reread?.size ?? 0);
           if (!waiting) continue;
           more = true;
           const build = {startedAt: this.now(), chunks: waiting, toldAt: this.now()};
@@ -1029,7 +1101,7 @@ export class Meaning {
         const rerank = mode === 'rerank' && this.reranker?.available;
         if (!rerank) answer.results = await index.fileSearch(query, {mode: mode === 'rerank' ? 'fused' : mode, limit});
         else {
-          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: FILE_PIECES, band: 2})).map(piece => index.result(piece)));
+          const pieces = await Promise.all((await index.ranking(query, 'fused', {limit: index.tuning.files.depth, band: 2})).map(piece => index.result(piece)));
           const done = await this.reranked(index, query, pieces);
           answer.rerank = done.rerank;
           answer.results = await index.fileSearch(query, {limit, results: done.results});
@@ -1077,9 +1149,43 @@ export class Meaning {
     this.work(); // its words' vector
   }
 
+  /** Someone is in the file at `path` (absolute): the notes written in the background start near it. */
+  visited(path) {
+    if (typeof path !== 'string' || !isAbsolute(path)) return;
+    this.visits = [path, ...this.visits.filter(each => each !== path)].slice(0, VISITS);
+  }
+
+  /**
+   * The pieces of `index`, those near the files someone was in first: the same file, then its folder's, then the
+   * folder above's, and so on, each visit before the last counting two steps further; else the index's order.
+   */
+  nearFirst(index) {
+    const visits = this.visits.map(path => relative(index.root, path)).filter(file => file && !file.startsWith('..') && !isAbsolute(file)).map(file => file.split('/'));
+    if (!visits.length) return index.pieces;
+    const far = new Map();
+    const farOf = file => {
+      if (far.has(file)) return far.get(file);
+      const parts = file.split('/');
+      let best = Infinity;
+      visits.forEach((visit, i) => {
+        let same = 0;
+        while (same < parts.length - 1 && same < visit.length - 1 && parts[same] === visit[same]) same++;
+        const steps = parts.join('/') === visit.join('/') ? 0 : parts.length - same + visit.length - same - 1;
+        best = Math.min(best, steps + 2 * i); // a step away from the file one is in now beats the one before it
+      });
+      far.set(file, best);
+      return best;
+    };
+    return [...index.byFile.keys()].sort((a, b) => farOf(a) - farOf(b)).flatMap(file => index.byFile.get(file));
+  }
+
   /**
    * The pieces of `root` without a note, for a coding agent to write one each (see `addNotes`): `{pieces: [{hash, file,
-   * from, to, name, text}], pending, noted}`, at most `limit` of them; `pending` counts them all.
+   * from, to, name, text}], pending, noted}`, at most `limit` of them, those near the files someone was in first
+   * (nearFirst); `pending` counts them all. Among them, once every piece of a file has a note, the file itself, `{kind:
+   * 'file', file, notes}`, for a note on what it is for, written from its pieces' notes: only a file of several pieces
+   * that says nothing of itself (fileSummary) and has small pieces for it to title (contextFor). `skip`: pieces (hashes) and files
+   * (`file:<path>`) not to list.
    */
   async pendingNotes(root, {limit = 50, quiet = false, skip = null} = {}) {
     const index = await this.indexOf(root, {quiet});
@@ -1089,22 +1195,38 @@ export class Meaning {
     const seen = new Set();
     const pieces = [];
     let pending = 0;
-    for (const piece of index.pieces) {
-      if (seen.has(piece.hash) || index.notesByHash.has(piece.hash) || skip?.has(piece.hash)) continue;
-      seen.add(piece.hash);
+    const byFile = new Map();
+    for (const piece of this.nearFirst(index)) {
+      if (!byFile.has(piece.file)) byFile.set(piece.file, []);
+      byFile.get(piece.file).push(piece);
+    }
+    for (const [file, own] of byFile) {
+      let open = 0; // its pieces still without a note (or not given up on)
+      for (const piece of own) {
+        if (seen.has(piece.hash) || index.notesByHash.has(piece.hash) || skip?.has(piece.hash)) continue;
+        seen.add(piece.hash);
+        pending += 1;
+        open += 1;
+        if (pieces.length >= limit) continue;
+        const lines = await index.lines.get(piece.file);
+        const text = lines?.slice(piece.from - 1, piece.to).join('\n');
+        if (text === undefined || pieceHash(piece.file, text, piece.name) !== piece.hash) continue; // changed since: read again first
+        pieces.push({hash: piece.hash, file: piece.file, from: piece.from, to: piece.to, name: piece.name, text});
+      }
+      if (open || own.length < 2 || index.fileNotes.has(file) || skip?.has(`file:${file}`)) continue; // one piece: its note says it
+      const notes = own.map(piece => index.notesByHash.get(piece.hash)?.text).filter(Boolean);
+      const lines = notes.length ? await index.lines.get(file) : null;
+      if (!lines || fileSummary(lines, file) || !own.some(piece => isSmall({text: lines.slice(piece.from - 1, piece.to).join('\n')}))) continue;
       pending += 1;
-      if (pieces.length >= limit) continue;
-      const lines = await index.lines.get(piece.file);
-      const text = lines?.slice(piece.from - 1, piece.to).join('\n');
-      if (text === undefined || pieceHash(piece.file, text, piece.name) !== piece.hash) continue; // changed since: read again first
-      pieces.push({hash: piece.hash, file: piece.file, from: piece.from, to: piece.to, name: piece.name, text});
+      if (pieces.length < limit) pieces.push({kind: 'file', file, notes});
     }
     return {pieces, pending, noted: index.notesByHash.size};
   }
 
   /**
-   * Notes on pieces of `root`, `{hash, note}` each (an empty note removes one): searched by their words and meaning
-   * with their piece, and read by the reranker. A hash the index does not have (its code changed) is `unknown`.
+   * Notes on pieces of `root`, `{hash, note}` each, or on its files, `{file, note}` (an empty note removes one): a
+   * piece's is searched by its words and meaning with its piece, and read by the reranker; a file's titles its small
+   * pieces. A hash the index does not have (its code changed), or a file, is `unknown`.
    */
   async addNotes(root, notes, {source = 'agent', quiet = false} = {}) {
     const index = await this.indexOf(root, {quiet});
@@ -1113,13 +1235,19 @@ export class Meaning {
     let added = 0;
     const unknown = [];
     for (const each of Array.isArray(notes) ? notes : []) {
+      if (typeof each?.hash !== 'string' && typeof each?.file === 'string' && typeof each.note === 'string') {
+        if (!index.byFile.has(each.file)) { unknown.push(each.file); continue; }
+        index.store.putFileNote({file: each.file, note: each.note, source: each.source ?? source, at: this.now()});
+        added += 1;
+        continue;
+      }
       const piece = typeof each?.hash === 'string' && typeof each.note === 'string' ? index.pieceOfExtra({kind: 'note', hash: each.hash}) : null;
       if (!piece) { unknown.push(each?.hash ?? null); continue; }
       index.store.putNote({hash: piece.hash, file: piece.file, line: piece.from, note: each.note, words: words(each.note).join(' '), source: each.source ?? source, at: this.now()});
       added += 1;
     }
     index.loadLearned();
-    this.work(); // the notes' vectors
+    this.work(); // the notes' vectors, and the files whose note changed
     return {added, unknown};
   }
 
@@ -1152,18 +1280,19 @@ export class Meaning {
             here += notes.length;
           }
           if (controller.signal.aborted) break;
-          const noted = new Set(notes.map(note => note.hash));
+          const idOf = item => item.hash ?? `file:${item.file}`; // a piece's hash, or a file's (see pendingNotes)
+          const noted = new Set(notes.map(idOf));
           // A model that answered with no note is asked of other pieces; one that did not answer rests.
           const unanswered = errors.some(error => !error.endsWith(NO_NOTE));
           // A piece the writer failed on (no usable note, too long a wait, a refusal of that piece) has a try counted, and
           // after NOTES_TRIES is left for the session; an outage (no server, a refused key, too many requests, the
           // server's own error) counts none: its pieces are asked again once it answers.
           if (!errors.every(error => OUTAGE.test(error))) {
-            for (const piece of pieces) {
-              if (noted.has(piece.hash)) continue;
-              const tries = (this.notesTries.get(piece.hash) ?? 0) + 1;
-              this.notesTries.set(piece.hash, tries);
-              if (tries >= NOTES_TRIES) this.notesFailed.add(piece.hash);
+            for (const id of pieces.map(idOf)) {
+              if (noted.has(id)) continue;
+              const tries = (this.notesTries.get(id) ?? 0) + 1;
+              this.notesTries.set(id, tries);
+              if (tries >= NOTES_TRIES) this.notesFailed.add(id);
             }
           }
           if (!notes.length && unanswered) {

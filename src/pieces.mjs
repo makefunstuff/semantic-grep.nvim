@@ -142,12 +142,13 @@ const titled = (chain, names) => {
  * Lines `a`..`b` (from 0) as pieces, `{from, to, name}` (from 1): small units together up to a piece's size, and a
  * unit too big for one cut at the units inside it, its first line going with the first of them and its closers with
  * the last. So a piece starts where something does (a key of an object, a statement), never on a closer, and is named
- * by what encloses it and what it declares: `_users: adilson, anna`. `chain` names what encloses `a`..`b`.
+ * by what encloses it and what it declares: `_users: adilson, anna`. `chain` names what encloses `a`..`b`, `within`
+ * has its first lines (from 1), outermost first: each piece's `within`.
  */
-export function split(lines, a, b, chain = [], depth = 0) {
+export function split(lines, a, b, chain = [], depth = 0, within = []) {
   const out = [];
   let piece = null;
-  const close = () => { if (piece) out.push({from: piece.from + 1, to: piece.to + 1, name: titled(chain, piece.names)}); piece = null; };
+  const close = () => { if (piece) out.push({from: piece.from + 1, to: piece.to + 1, name: titled(chain, piece.names), within}); piece = null; };
   const found = units(lines, a, b);
   for (const unit of found) {
     if (fits(lines, unit.from, unit.to)) {
@@ -165,9 +166,11 @@ export function split(lines, a, b, chain = [], depth = 0) {
     const head = unit.header ?? unit.from;
     let tail = unit.to;
     while (tail > head && (!LETTER.test(lines[tail]) || (indentOf(lines[tail]) <= indentOf(lines[head]) && GOES_ON.test(lines[tail])))) tail--;
-    const inner = depth < 8 && tail > head ? split(lines, head + 1, tail, unit.name ? [...chain, unit.name] : chain, depth + 1) : [];
+    // What declares something (a key, a function) encloses what is inside it; a paragraph of a docstring does not.
+    const inside = unit.name ? [...within, unit.from + 1] : within;
+    const inner = depth < 8 && tail > head ? split(lines, head + 1, tail, unit.name ? [...chain, unit.name] : chain, depth + 1, inside) : [];
     if (inner.length < 2) { // nothing inside to cut at: by lines
-      for (const part of cut(lines, unit.from + 1, unit.to + 1)) out.push({...part, name: titled(chain, unit.name ? [unit.name] : [])});
+      for (const part of cut(lines, unit.from + 1, unit.to + 1)) out.push({...part, name: titled(chain, unit.name ? [unit.name] : []), within: inside});
       continue;
     }
     inner[0].from = unit.from + 1;
@@ -187,7 +190,8 @@ export function blocks(lines, from = 1, to = lines.length, chain = []) {
 }
 
 /**
- * The pieces of `text`: `{from, to, kind, name, text}`, in order. `found` is tree-sitter's (see pieces.lua), or null
+ * The pieces of `text`: `{from, to, kind, name, within, text}`, in order (`within`: the first lines of what encloses
+ * the piece, outermost first; see contextOf). `found` is tree-sitter's (see pieces.lua), or null
  * without a parser: then the whole file goes in blocks. A piece too big is cut at what is inside it, each part named
  * by it. A piece with nothing of its own (imports, a closer) goes with the piece after it, or before it.
  */
@@ -195,10 +199,10 @@ export function piecesOf(text, found = null) {
   const lines = text.split('\n');
   if (lines.at(-1) === '') lines.pop();
   const out = [];
-  const add = (from, to, kind, name) => {
-    if (lines.slice(from - 1, to).join('\n').trim()) out.push({from, to, kind, name: name ?? null});
+  const add = (from, to, kind, name, within = []) => {
+    if (lines.slice(from - 1, to).join('\n').trim()) out.push({from, to, kind, name: name ?? null, within});
   };
-  const gap = (from, to) => { for (const block of blocks(lines, from, to)) add(block.from, block.to, 'block', block.name); };
+  const gap = (from, to) => { for (const block of blocks(lines, from, to)) add(block.from, block.to, 'block', block.name, block.within); };
   let next = 1;
   for (const piece of (Array.isArray(found) ? found : []).toSorted((a, b) => a.from - b.from)) {
     const from = Math.max(piece.from, next);
@@ -206,8 +210,9 @@ export function piecesOf(text, found = null) {
     if (to < from) continue;
     if (from > next) gap(next, from - 1);
     const kind = piece.kind ?? 'definition';
-    if (fits(lines, from - 1, to - 1)) add(from, to, kind, piece.name);
-    else for (const part of split(lines, from - 1, to - 1, piece.name ? [piece.name] : [])) add(part.from, part.to, kind, part.name ?? piece.name);
+    const within = Array.isArray(piece.within) ? piece.within.filter(Number.isInteger) : [];
+    if (fits(lines, from - 1, to - 1)) add(from, to, kind, piece.name, within);
+    else for (const part of split(lines, from - 1, to - 1, piece.name ? [piece.name] : [], 0, [...within, from])) add(part.from, part.to, kind, part.name ?? piece.name, part.within);
     next = to + 1;
   }
   if (next <= lines.length) gap(next, lines.length);
@@ -222,7 +227,8 @@ export function piecesOf(text, found = null) {
     out[into].to = Math.max(out[into].to, piece.to);
     out.splice(i--, 1);
   }
-  return out.map(piece => ({...piece, text: lines.slice(piece.from - 1, piece.to).join('\n')}));
+  // What encloses a piece, but not what starts where it does: its own first lines say that.
+  return out.map(piece => ({...piece, within: [...new Set(piece.within)].filter(line => line < piece.from), text: lines.slice(piece.from - 1, piece.to).join('\n')}));
 }
 
 /**
@@ -281,4 +287,104 @@ export class TreeSitter {
       child.stdin.end();
     });
   }
+}
+
+const CONTEXT_CHARS = 160; // of each line of a piece's context: a head and the first sentence of its doc
+const SUMMARY_LINES = 40; // a file's own summary is in its first lines, or not at all
+// A comment's markers: `///`, `//!`, `/**`, ` * `, `#`, `--[[`, `<!--`, and their closers.
+const MARKERS = /^\s*(?:\/\/[/!]?|\/\*+!?|\*\/|\*(?!\/)|#+!?|-{2,}(?:\[=*\[)?|<!--|"""|''')\s?|\s*(?:\*\/|\]=*\]|-->|"""|''')\s*$/g;
+const NOT_DOC = /licen[cs]e|copyright|spdx|eslint|prettier|@ts-|tslint|generated|do not edit|coding[:=]|vim:|^!/i;
+const DECORATOR = /^\s*@[\w.]+/;
+const DOCSTRING = /^\s*[rbuRBU]?("""|''')/;
+
+/** `text` cut at its first sentence's end, at most `chars` long, on one line. */
+export function sentence(text, chars = CONTEXT_CHARS) {
+  const line = text.replace(/\s+/g, ' ').trim();
+  const end = line.search(/(?<!\b(?:\d+|e\.g|i\.e|etc|vs))[.!?](\s|$)/);
+  const first = end > 0 ? line.slice(0, end + 1) : line;
+  return first.length > chars ? `${first.slice(0, chars).replace(/\s+\S*$/, '')}…` : first;
+}
+
+/** The text of comment lines `lines` without their markers, its tags (`@param`) left out: a doc's words, or ''. */
+function prose(lines) {
+  const kept = [];
+  for (const line of lines) {
+    const text = line.replace(MARKERS, '').trim().replace(/^@(?:file|fileoverview|overview|module|packageDocumentation)\b\s*/, '');
+    if (/^[@:]\w/.test(text)) break; // @param, :param: — what follows is no summary
+    kept.push(text);
+  }
+  return kept.join(' ').trim();
+}
+
+/** Lines `at`… (from 0) of a docstring opening there, up to its close, a few at most; or null. */
+function docstring(lines, at) {
+  const open = DOCSTRING.exec(lines[at] ?? '');
+  if (!open) return null;
+  const quote = open[1];
+  const body = [];
+  for (let i = at; i < Math.min(lines.length, at + 12); i++) {
+    const line = i === at ? lines[i].slice(lines[i].indexOf(quote) + 3) : lines[i];
+    const close = line.indexOf(quote);
+    body.push(close >= 0 ? line.slice(0, close) : line);
+    if (close >= 0) break;
+  }
+  return body.join(' ');
+}
+
+/**
+ * What a definition starting at line `from` (from 1, its doc comment's first line) says of itself: its head (the first
+ * line not a comment nor a decorator) and the first sentence of its doc (the comment above it, else a docstring below),
+ * `"class Flask(App): The flask object implements a WSGI application."`; or null.
+ */
+export function headOf(lines, from) {
+  const above = [];
+  let at = from - 1;
+  for (; at < lines.length && at < from + 30; at++) {
+    if (!lines[at].trim()) continue;
+    if (COMMENT.test(lines[at]) && !DOCSTRING.test(lines[at])) above.push(lines[at]);
+    else if (!DECORATOR.test(lines[at])) break;
+  }
+  if (at >= lines.length || !LETTER.test(lines[at] ?? '')) return null;
+  const head = lines[at].trim().replace(/\s*[{(:]?\s*$/, '').replace(/\s+/g, ' ').slice(0, CONTEXT_CHARS);
+  const doc = prose(above) || prose([docstring(lines, at + 1) ?? '']);
+  const said = doc && !NOT_DOC.test(doc) ? sentence(doc) : '';
+  return said ? `${head}: ${said}` : head;
+}
+
+/**
+ * The heads of what encloses a piece (its `within`), outermost first, joined by " > ": a method's class, so a small
+ * method keeps what it is part of. The outermost and the innermost at most; '' when nothing encloses it.
+ */
+export function contextOf(lines, within = []) {
+  const heads = within.map(from => headOf(lines, from)).filter(Boolean);
+  return (heads.length > 2 ? [heads[0], heads.at(-1)] : heads).join(' > ');
+}
+
+/**
+ * A file's own summary, from its first lines: a Markdown or reStructuredText title, a module docstring, or its first
+ * comment that is no licence, tool directive or shebang (Go's package comment, a JSDoc file header), to its first
+ * sentence; or null.
+ */
+export function fileSummary(lines, file = '') {
+  const first = lines.slice(0, SUMMARY_LINES);
+  if (/\.(md|markdown|mdx)$/i.test(file)) {
+    const title = first.find(line => /^#\s+\S/.test(line)) ?? first.find(line => /^title:\s*\S/.test(line));
+    return title ? sentence(title.replace(/^#\s+|^title:\s*/, '').replace(/^['"]|['"]$/g, '')) : null;
+  }
+  if (/\.rst$/i.test(file)) {
+    const at = first.findIndex((line, i) => i > 0 && /^([=\-~^*#])\1{2,}\s*$/.test(line) && LETTER.test(first[i - 1]));
+    return at > 0 ? sentence(first[at - 1].trim()) : null;
+  }
+  for (let i = 0; i < first.length; i++) {
+    if (!first[i].trim() || /^#!/.test(first[i])) continue;
+    const doc = docstring(first, i);
+    if (doc !== null) return prose([doc]) ? sentence(prose([doc])) : null;
+    if (!COMMENT.test(first[i])) return null; // code before any comment: no summary of its own
+    const block = [];
+    while (i < first.length && COMMENT.test(first[i]) && first[i].trim()) block.push(first[i++]);
+    i--; // the line after the block is looked at next
+    const text = prose(block);
+    if (text && !NOT_DOC.test(text)) return sentence(text);
+  }
+  return null;
 }
