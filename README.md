@@ -127,9 +127,20 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   For example, in Claude Code: "Run `semantic-grep-server notes pending --root . --limit 200`, write a one or two
   sentence note for each piece (what it does, what someone would be trying to do when they need it, in plain words,
   keeping its identifiers), and pipe `{hash, note}` lines into `semantic-grep-server notes put --root .`; repeat until
-  none is pending." A note holds while its piece's code does not change; `pending` then lists it again. Both
-  commands take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The code goes
-  to the agent's model.
+  none is pending."
+
+  The repo holds that loop as a Claude Code skill, [skills/semantic-grep-notes](skills/semantic-grep-notes/SKILL.md):
+  ask for "populate semantic-grep notes" and it checks the server and the index, asks for the pieces, writes the notes
+  (handing large batches to subagents), puts them back, repeats until none is pending, and tells you what to do when the
+  server or the index is missing. Link it into Claude Code once:
+
+  ```sh
+  ./skills/install.sh          # symlinks skills/* into ~/.claude/skills
+  ```
+
+  A note holds while its piece's code does not change; `pending` then lists it again. Both
+  commands, and the skill, take `--data-dir` (default Neovim's), `--index` and `--project-dir`, as `setup` has them. The
+  code goes to the agent's model.
 - **Notes written in the background.** With `notes = true` in `setup()`, a language model writes those notes itself,
   while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
   profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
