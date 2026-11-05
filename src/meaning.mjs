@@ -230,10 +230,16 @@ export class ProjectIndex {
   async stepLearned() {
     const todo = this.learnedPending().slice(0, 16);
     if (!todo.length) return false;
-    const texts = todo.map(row => (row.kind === 'pick' ? this.embedder.query(row.text) : this.embedder.document(row.file, row.text, this.pieceOfExtra(row).name)));
-    const vectors = await this.embed(texts);
+    const pick = todo.filter(row => row.kind === 'pick');
+    const note = todo.filter(row => row.kind !== 'pick');
+    const [pickVectors, noteVectors] = await Promise.all([
+      this.embed(pick.map(row => this.embedder.query(row.text)), {kind: 'query'}),
+      this.embed(note.map(row => this.embedder.document(row.file, row.text, this.pieceOfExtra(row).name)), {kind: 'document'}),
+    ]);
+    const vectors = new Map([...pick.map((row, i) => [row, pickVectors[i]]), ...note.map((row, i) => [row, noteVectors[i]])]);
+    const ordered = todo.map(row => vectors.get(row));
     if (this.closed) return false;
-    const entries = todo.map((row, i) => [this.extraKey(row), vectors[i]]);
+    const entries = todo.map((row, i) => [this.extraKey(row), ordered[i]]);
     this.store.putLearnedVectors(this.model, entries);
     for (const [key, vector] of entries) this.learnedVectors.set(key, vector);
     this.matrix = null;
@@ -547,7 +553,7 @@ export class ProjectIndex {
   /** The meaning search alone: the query embedded once, against every vector. Words only without an embedder. */
   async meaningSearch(query, {limit = 30} = {}) {
     if (!this.embedder) return [];
-    const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
+    const [q] = await this.embed([this.embedder.query(query)], {urgent: true, kind: 'query'});
     return Promise.all(this.meaningRanking(q, limit).map(([piece, score]) => this.result(piece, {meaning: score})));
   }
 
@@ -555,7 +561,7 @@ export class ProjectIndex {
   async search(query, {limit = 30} = {}) {
     if (!this.embedder) return this.wordSearch(query, {limit});
     // Asked even before anything is embedded: an embedder that cannot run is found now, and said.
-    const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
+    const [q] = await this.embed([this.embedder.query(query)], {urgent: true, kind: 'query'});
     const meaning = q ? this.meaningRanking(q, Math.max(LIST, limit)) : [];
     const keyword = this.wordRanking(query, Math.max(LIST, limit));
     const similarity = new Map(meaning);
@@ -572,7 +578,7 @@ export class ProjectIndex {
    */
   async ranking(query, mode, {limit = LIST, band} = {}) {
     if (mode === 'words' || !this.embedder) return this.wordRanking(query, limit, {any: true});
-    const [q] = await this.embed([this.embedder.query(query)], {urgent: true});
+    const [q] = await this.embed([this.embedder.query(query)], {urgent: true, kind: 'query'});
     const meaning = q ? this.meaningRanking(q, Math.max(LIST, limit), band).map(([piece]) => piece) : [];
     if (mode === 'meaning') return meaning.slice(0, limit);
     return fuse([meaning, this.wordRanking(query, Math.max(LIST, limit))]).slice(0, limit);

@@ -168,7 +168,7 @@ export function serve({input = process.stdin, output = process.stdout, meaningWi
       const embedding = missing ? {ok: false, local: missing, model: m.modelName} : m.embedder ? await (async () => {
         const started = Date.now();
         try {
-          const [vector] = await m.embedder.embed([m.embedder.query('add two numbers')], {urgent: true});
+          const [vector] = await m.embedder.embed([m.embedder.query('add two numbers')], {urgent: true, kind: 'query'});
           return {ok: true, ms: Date.now() - started, dimensions: vector.length, model: m.modelName};
         } catch (error) {
           return {ok: false, ms: Date.now() - started, error: error.message, model: m.modelName, unreachable: UNREACHABLE.test(error.message)};

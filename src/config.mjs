@@ -1,5 +1,6 @@
 // The backend's settings, as the Lua plugin's setup() passes them: the `embedding` model, the `rerank` models and
 // where the index lives. Each is checked here, with a message that names the field.
+import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 import {homedir} from 'node:os';
 
@@ -12,15 +13,27 @@ export const DECISION_CHARS = 160;
 export const RERANK_CHARS = 1200;
 export const FALLBACK_TIMEOUT_MS = 1000; // a model another follows in the list
 export const RERANK_APIS = ['system-one', 'llama-cpp', 'openai', 'rerank'];
-const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv'];
+const KEYS = ['apiKey', 'apiKeyFile', 'apiKeyEnv', 'apiKeyCommand'];
 
 const isObject = value => typeof value === 'object' && value !== null && !Array.isArray(value);
 
-/** An entry's API key: `apiKey`, the file `apiKeyFile` or the environment variable `apiKeyEnv`; or none. */
+/**
+ * An entry's API key: `apiKey`, the file `apiKeyFile`, the environment variable `apiKeyEnv`, or the command
+ * `apiKeyCommand` (its output, read at the request: a key that is kept elsewhere, never written here); or none.
+ */
 export function apiKeyOf(entry) {
   if (entry.apiKey) return entry.apiKey;
   if (entry.apiKeyFile) return readFileSync(entry.apiKeyFile.replace(/^~(?=\/)/, homedir()), 'utf8').trim();
   if (entry.apiKeyEnv) return process.env[entry.apiKeyEnv];
+  if (entry.apiKeyCommand) {
+    let out;
+    try {
+      out = execFileSync('/bin/sh', ['-c', entry.apiKeyCommand], {encoding: 'utf8', timeout: 30_000, stdio: ['ignore', 'pipe', 'ignore']});
+    } catch (error) {
+      throw new Error(`apiKeyCommand failed (${error.status ?? error.code ?? error.message}); its output is never shown`);
+    }
+    return out.trim() || undefined;
+  }
   return undefined;
 }
 
@@ -31,8 +44,10 @@ function keysOf(entry, name) {
 }
 
 /**
- * The `embedding` entry: `{api = "openai", baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, timeoutMs?, band?,
- * pickNear?, apiKey | apiKeyFile | apiKeyEnv}`; null without one (words only). band and pickNear: see embedder.mjs.
+ * The `embedding` entry: `{api = "openai", baseUrl, model, dimensions?, queryPrefix?, documentPrefix?, queryBody?,
+ * documentBody?, timeoutMs?, band?, pickNear?, apiKey | apiKeyFile | apiKeyEnv | apiKeyCommand}`; null without one
+ * (words only). queryBody and documentBody are fields added to that request's body (Voyage's `input_type`, say);
+ * band and pickNear: see embedder.mjs.
  */
 export function embeddingConfig(entry, name = 'embedding') {
   if (entry === undefined || entry === null || entry === false) return null;
@@ -43,6 +58,9 @@ export function embeddingConfig(entry, name = 'embedding') {
   keysOf(entry, name);
   for (const field of ['queryPrefix', 'documentPrefix']) {
     if (entry[field] !== undefined && typeof entry[field] !== 'string') throw new Error(`${name}.${field} must be text`);
+  }
+  for (const field of ['queryBody', 'documentBody']) {
+    if (entry[field] !== undefined && !isObject(entry[field])) throw new Error(`${name}.${field} must be a table of fields for the request's body`);
   }
   if (entry.dimensions !== undefined && !(Number.isInteger(entry.dimensions) && entry.dimensions > 0)) throw new Error(`${name}.dimensions must be a whole number above 0`);
   if (entry.timeoutMs !== undefined && !(typeof entry.timeoutMs === 'number' && entry.timeoutMs > 0)) throw new Error(`${name}.timeoutMs must be a number of milliseconds`);

@@ -93,10 +93,10 @@ export class HttpEmbedder {
 
   query(text) { return `${this.prompts.query}${text}`; }
 
-  embed(texts, {urgent = false} = {}) {
+  embed(texts, {urgent = false, kind} = {}) {
     if (!texts.length) return Promise.resolve([]);
     return new Promise((resolve, reject) => {
-      const batch = {texts, resolve, reject};
+      const batch = {texts, kind, resolve, reject};
       if (urgent) this.queue.unshift(batch);
       else this.queue.push(batch);
       this.next();
@@ -109,7 +109,7 @@ export class HttpEmbedder {
     const batch = this.queue.shift();
     try {
       const vectors = [];
-      for (let i = 0; i < batch.texts.length; i += this.batch) vectors.push(...await this.request(batch.texts.slice(i, i + this.batch)));
+      for (let i = 0; i < batch.texts.length; i += this.batch) vectors.push(...await this.request(batch.texts.slice(i, i + this.batch), batch.kind));
       batch.resolve(vectors);
     } catch (error) {
       batch.reject(error);
@@ -119,7 +119,7 @@ export class HttpEmbedder {
     }
   }
 
-  async request(input) {
+  async request(input, kind) {
     const started = Date.now();
     const key = this.apiKey();
     const url = `${this.entry.baseUrl.replace(/\/+$/, '')}/embeddings`;
@@ -128,7 +128,7 @@ export class HttpEmbedder {
       response = await this.fetch(url, {
         method: 'POST',
         headers: {'content-type': 'application/json', ...(key ? {authorization: `Bearer ${key}`} : {})},
-        body: JSON.stringify({model: this.entry.model, input, ...(this.entry.dimensions ? {dimensions: this.entry.dimensions} : {})}),
+        body: JSON.stringify({model: this.entry.model, input, ...(this.entry.dimensions ? {dimensions: this.entry.dimensions} : {}), ...(this.entry[kind === 'query' ? 'queryBody' : 'documentBody'] ?? {})}),
         signal: AbortSignal.timeout(this.timeoutMs),
       });
     } catch (error) {

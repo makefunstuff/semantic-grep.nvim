@@ -2,15 +2,17 @@
 // that search by meaning finds it in the words people search with without anyone asking a coding agent (see
 // Meaning.pendingNotes and addNotes: the same path an agent's notes take, with the writer's model as their source).
 //
-// A writer is an entry `{api, baseUrl, model, ...key, concurrency?, chars?, idleMs?, timeoutMs?, sendCode?, request?}`
-// (`request`: fields added to each request's body, such as OpenRouter's `reasoning = {enabled = false}`):
+// A writer is an entry `{api, baseUrl, model, ...key, concurrency?, chars?, idleMs?, timeoutMs?, sendCode?, request?,
+// headers?}` (`request`: fields added to each request's body; `headers`: fields added to each request's headers, such
+// as OpenCode Go's `x-opencode-session`; a key may come from `apiKeyCommand`, run at each request, and is never
+// written in the config):
 //
 // - api "openai": an OpenAI-compatible /chat/completions (llama.cpp's llama-server, Ollama, LM Studio, vLLM, a cloud
 //   API); one on this machine is asked without its thinking (chat_template_kwargs, which a cloud API may refuse);
 // - api "anthropic": Anthropic's Messages API (Claude Haiku by default), POST <baseUrl>/messages.
 //
 // The code of each piece goes to the writer's model. A model on this machine (127.0.0.1, localhost, ::1) may read it;
-// any other only with `sendCode = true` in the entry: the cloud profile says so for its writer, and a writer of one's
+// any other only with `sendCode = true` in the entry: the cloud and openrouter profiles say so for their writers, and a writer of one's
 // own elsewhere must say so itself. Without it the writer is refused, whatever its other settings.
 import {apiKeyOf} from './config.mjs';
 
@@ -49,7 +51,7 @@ export function notesConfig(entry, name = 'notes') {
   if (!NOTE_APIS.includes(api)) throw new Error(`${name}.api must be one of ${NOTE_APIS.map(each => `"${each}"`).join(', ')}`);
   if (typeof entry.baseUrl !== 'string' || !entry.baseUrl) throw new Error(`${name}.baseUrl is missing`);
   if (typeof entry.model !== 'string' || !entry.model) throw new Error(`${name}.model is missing`);
-  const keys = ['apiKey', 'apiKeyFile', 'apiKeyEnv'].filter(field => entry[field] !== undefined && entry[field] !== null);
+  const keys = ['apiKey', 'apiKeyFile', 'apiKeyEnv', 'apiKeyCommand'].filter(field => entry[field] !== undefined && entry[field] !== null);
   if (keys.length > 1) throw new Error(`${name} takes one of ${keys.join(', ')}`);
   for (const field of keys) if (typeof entry[field] !== 'string' || !entry[field]) throw new Error(`${name}.${field} must be text`);
   const whole = (field, least, most) => {
@@ -62,6 +64,10 @@ export function notesConfig(entry, name = 'notes') {
   }
   if (entry.sendCode !== undefined && typeof entry.sendCode !== 'boolean') throw new Error(`${name}.sendCode must be true or false`);
   if (entry.request !== undefined && !isObject(entry.request)) throw new Error(`${name}.request must be a table of fields for the request's body`);
+  if (entry.headers !== undefined) {
+    if (!isObject(entry.headers)) throw new Error(`${name}.headers must be a table of fields for the request's headers`);
+    for (const [field, value] of Object.entries(entry.headers)) if (typeof value !== 'string') throw new Error(`${name}.headers.${field} must be text`);
+  }
   if (!isLocal(entry.baseUrl) && entry.sendCode !== true) {
     throw new Error(`${name}: ${entry.baseUrl} is not this machine, and every piece's code would go to it; set sendCode = true in the notes entry to allow that`);
   }
@@ -142,12 +148,12 @@ export class NotesWriter {
   async ask(piece, signal) {
     const key = this.apiKey();
     // A key named but not there: no piece goes out to be refused.
-    if (!key && (this.entry.apiKeyEnv || this.entry.apiKeyFile)) throw new Error(`${this.about}: no key in ${this.entry.apiKeyEnv ? `$${this.entry.apiKeyEnv}` : 'its apiKeyFile'}`);
+    if (!key && (this.entry.apiKeyEnv || this.entry.apiKeyFile || this.entry.apiKeyCommand)) throw new Error(`${this.about}: no key in ${this.entry.apiKeyEnv ? `$${this.entry.apiKeyEnv}` : this.entry.apiKeyCommand ? 'its apiKeyCommand' : 'its apiKeyFile'}`);
     const base = this.entry.baseUrl.replace(/\/+$/, '');
     const prompt = notePrompt(piece, this.entry.chars);
     const anthropic = this.entry.api === 'anthropic';
     const url = anthropic ? `${base}/messages` : `${base}/chat/completions`;
-    const headers = {'content-type': 'application/json', ...(anthropic
+    const headers = {'content-type': 'application/json', ...(this.entry.headers ?? {}), ...(anthropic
       ? {'anthropic-version': ANTHROPIC_VERSION, ...(key ? {'x-api-key': key} : {})}
       : key ? {authorization: `Bearer ${key}`} : {})};
     // Haiku 5.5 thinks by default: off, at low effort, for a sentence. A Qwen3.5 on llama-server thinks unless told not to.

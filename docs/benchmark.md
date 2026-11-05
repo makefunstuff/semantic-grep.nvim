@@ -187,12 +187,24 @@ the end. A server already answering there is used as it is.
   `queryPrefix`/`documentPrefix`. Also **cloud-openai** (`text-embedding-3-large` at 1024 dimensions, Cohere
   `rerank-v3.5`) and **cloud-gemini** (`gemini-embedding-001` through Gemini's OpenAI-compatible endpoint, Jina's
   reranker). A key is named, never written: `apiKeyEnv`.
+- **openrouter**: everything through [OpenRouter](https://openrouter.ai), the key in `$OPENROUTER_API_KEY`:
+  `qwen/qwen3-embedding-8b` embeddings and Voyage's `mongodb/rerank-3` (top 10, 800 characters). Run it with
+  `OPENROUTER_API_KEY=… npm run bench -- --profile openrouter`.
 
 The cloud profiles are configured, checked as valid configs with their keys named by environment variable
 (`test/bench.test.mjs`), and the /rerank answers of llama.cpp, Cohere, Jina and Voyage are tested against fakes
 (`test/rerank.test.mjs`); embeddings use the same OpenAI-shaped `/v1/embeddings` the local profiles do. They have not
 been measured yet, for want of a key. With one:
 `VOYAGE_API_KEY=… npm run bench -- --profile cloud`, and add the numbers below.
+
+The openrouter profile is the one hosted profile measured so far: on hono's 28 `test` questions its fused list has
+MRR 0.671 against beefy's 0.638, and its reranked list 0.780 against 0.645
+([run](../bench/results/openrouter-2026-11-05-test-hono-meaning+fused+rerank.json): 20 of the 28 reranked before a
+burst met OpenRouter's tokens-a-minute limit and rested the model; the others kept the fused order). Voyage's
+`voyage-code-4` through OpenRouter, with the `input_type` it needs, was measured on fd's 41 `test` questions and not
+kept: pieces fused MRR 0.303 and files 0.666, against beefy's 0.656 and 0.868
+([run](../bench/results/profiles-2026-11-05/voyage-code-4-input-type-fd.json)); without `input_type` it is 0.259.
+See [profiles.md](profiles.md#openrouter-openrouter).
 
 ## Notes
 
@@ -289,5 +301,5 @@ What it says:
 - 21 to 24 questions had nothing to rerank: meaning keeps only the pieces within 0.1 of the best, and those lists were
   one piece long (a right one for all but 3 or 4 of them).
 
-Not measured yet: the cloud profiles (no key). Every candidate model since, and the three profiles that came of it,
+Not measured yet: the cloud profiles (no key). Every candidate model since, and the profiles that came of it,
 are in [profiles.md](profiles.md).
