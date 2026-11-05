@@ -26,6 +26,14 @@ test('a profile fills the models; the config\'s own fields go over it, another m
   assert.equal(other.embedding.apiKeyEnv, 'VOYAGE_API_KEY', 'the same server: its key stays');
   const own = profileConfig({profile: 'cloud', embedding: {apiKeyFile: '~/.voyage'}, rerank: {apiKey: 'k'}});
   assert.deepEqual([own.embedding.apiKeyFile, own.embedding.apiKeyEnv, own.rerank[0].apiKey, own.rerank[0].apiKeyEnv], ['~/.voyage', undefined, 'k', undefined], 'a key of its own replaces the profile\'s');
+  const openrouter = profileConfig({profile: 'openrouter'});
+  assert.deepEqual([openrouter.embedding.baseUrl, openrouter.embedding.model, openrouter.embedding.apiKeyEnv], ['https://openrouter.ai/api/v1', 'qwen/qwen3-embedding-8b', 'OPENROUTER_API_KEY'], 'one endpoint, one key, the best code model its embeddings serve');
+  assert.deepEqual([openrouter.rerank[0].api, openrouter.rerank[0].model, openrouter.rerank[0].top, openrouter.rerank[0].chars, openrouter.rerank[0].timeoutMs], ['rerank', 'mongodb/rerank-3', 10, 800, 8000], 'the rerank API of OpenRouter\'s /rerank');
+  assert.equal(openrouter.notes, null, 'notes only when the config asks for them');
+  const noted = profileConfig({profile: 'openrouter', notes: true}).notes;
+  assert.deepEqual([noted.model, noted.sendCode, noted.apiKeyEnv], ['anthropic/claude-haiku-5.5', true, 'OPENROUTER_API_KEY'], 'the profile\'s writer, and the code may go to it');
+  const keys = profileConfig({profile: 'openrouter', embedding: {apiKeyFile: '~/.key'}, rerank: {apiKeyFile: '~/.key'}, notes: {apiKeyFile: '~/.key'}});
+  assert.deepEqual([keys.embedding.apiKeyFile, keys.embedding.apiKeyEnv, keys.rerank[0].apiKeyFile, keys.rerank[0].apiKeyEnv, keys.notes.apiKeyFile, keys.notes.apiKeyEnv], ['~/.key', undefined, '~/.key', undefined, '~/.key', undefined], 'a key file for every model of the profile');
   assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'http://127.0.0.1:9000/v1', model: 'm'}}).embedding.apiKeyEnv, undefined, 'the profile\'s key never goes to another server');
   assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'https://api.voyageai.com/v1/'}}).embedding.apiKeyEnv, 'VOYAGE_API_KEY', 'the same server, written with a slash');
   const d1 = profileConfig({profile: 'beefy', rerank: {api: 'system-one', model: 'd1-2B'}}).rerank[0];
@@ -34,7 +42,7 @@ test('a profile fills the models; the config\'s own fields go over it, another m
   assert.equal(profileConfig({profile: 'beefy', rerank: false}).rerank, null);
   const list = profileConfig({profile: 'beefy', rerank: [{api: 'system-one', baseUrl: 'http://h/v1', model: 'd1-2B'}]});
   assert.deepEqual(list.rerank.map(entry => entry.model), ['d1-2B'], 'a list is the config\'s own');
-  assert.throws(() => profileConfig({profile: 'huge'}), /profile must be one of "laptop", "beefy", "cloud"/);
+  assert.throws(() => profileConfig({profile: 'huge'}), /profile must be one of "laptop", "beefy", "cloud", "openrouter"/);
   assert.throws(() => profileConfig({profile: 'laptop', embedding: {band: 0}}), /embedding\.band must be a number above 0/);
 });
 
@@ -64,6 +72,54 @@ test('a model\'s band and pickNear: the config\'s, else the model\'s measured on
     assert.ok(band > 0 && band < 1 && pickNear > 0 && pickNear < 1, model);
   }
   assert.equal(new HttpEmbedder({entry: embeddingConfig({baseUrl: 'http://h/v1', model: 'm', band: 0.05})}).tuning.band, 0.05);
+});
+
+test('the openrouter profile\'s key: read from the file, and sent with the model\'s own prompt to its /embeddings', async () => {
+  const server = await fakeEmbeddingServer();
+  const keyFile = join(scratch('openrouter-key-'), 'openrouter.key');
+  writeFileSync(keyFile, 'sk-test\n');
+  try {
+    const {embedding} = profileConfig({profile: 'openrouter', embedding: {baseUrl: server.baseUrl, apiKeyFile: keyFile}});
+    assert.deepEqual([embedding.model, embedding.apiKeyEnv, embedding.dimensions], ['qwen/qwen3-embedding-8b', undefined, undefined], 'the profile\'s model, the key from the file instead of the environment');
+    const embedder = new HttpEmbedder({entry: embedding, batch: 4});
+    const [vector] = await embedder.embed([embedder.query('try again with backoff')]);
+    const asked = server.requests.at(-1);
+    assert.deepEqual([asked.model, asked.authorization], ['qwen/qwen3-embedding-8b', 'Bearer sk-test'], 'the file\'s key, as the bearer token');
+    assert.equal(asked.input[0], 'Instruct: Given a question, find the code that answers it\nQuery: try again with backoff', 'the prompt Qwen3-Embedding was trained with');
+    assert.equal(vector.length, 256, 'as many numbers as the server answered');
+    assert.equal(embedder.tuning.band, 0.12, 'the band measured for that model');
+  } finally {
+    await server.stop();
+  }
+});
+
+test('switching the model (local to OpenRouter, or back) re-embeds every piece in the same data folder, and the search still finds it', async () => {
+  const first = await fakeEmbeddingServer();
+  const second = await fakeEmbeddingServer();
+  const root = realpathSync(scratch('profiles-switch-'));
+  writeFileSync(join(root, 'deliver.js'), 'export function deliver(job) {\n  retry(job, {attempts: 5, backoff: 2})\n}\n');
+  execFileSync('git', ['init', '-q'], {cwd: root});
+  const dataDir = scratch('profiles-switch-data-');
+  const found = async baseUrl => {
+    const meaning = new Meaning({dataDir, embedding: {api: 'openai', baseUrl, model: `model-${new URL(baseUrl).port}`}});
+    try {
+      meaning.open(root);
+      await until(async () => (await meaning.meaningOnly(root, 'try again with backoff')).results.length > 0, 'meaning');
+      return (await meaning.meaningOnly(root, 'try again with backoff')).results.map(result => result.file);
+    } finally {
+      await meaning.close();
+    }
+  };
+  try {
+    assert.deepEqual(await found(first.baseUrl), ['deliver.js']);
+    const firstAsked = first.requests.length;
+    assert.deepEqual(await found(second.baseUrl), ['deliver.js'], 'the new model\'s vectors are made: the old ones are not read as its own');
+    assert.ok(second.requests.length > 0, 'the new model embedded the piece');
+    assert.equal(first.requests.length, firstAsked, 'the model before is not asked again');
+  } finally {
+    await first.stop();
+    await second.stop();
+  }
 });
 
 test('the band is the model\'s: a wide one lists every piece by meaning, a narrow one only those close to the best', async () => {

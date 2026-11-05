@@ -4,7 +4,7 @@
 //   semantic-grep-server notes pending [--root DIR] [--limit N]   pieces without a note, one JSON line each:
 //                                                                {hash, file, from, to, name, text}
 //   semantic-grep-server notes put [--root DIR] [--source NAME]   notes from stdin, one JSON line each: {hash, note}
-//   semantic-grep-server notes write [--root DIR] [--profile laptop|beefy|cloud] [--model NAME] [--base-url URL]
+//   semantic-grep-server notes write [--root DIR] [--profile laptop|beefy|cloud|openrouter] [--model NAME] [--base-url URL]
 //                       [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N] [--limit N]
 //                                                                a note for each piece without one, by a language model
 //                                                                (src/notes.mjs; the profile's writer, laptop's by default)
@@ -48,7 +48,7 @@ async function notes(action, args) {
   }
   if (!['pending', 'put', 'write'].includes(action)) {
     process.stderr.write('usage: semantic-grep-server notes pending|put|write [--root DIR] [--data-dir DIR] [--index data|project] [--project-dir NAME] [--limit N] [--source NAME]\n'
-      + '  write: [--profile laptop|beefy|cloud] [--model NAME] [--base-url URL] [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N]\n');
+      + '  write: [--profile laptop|beefy|cloud|openrouter] [--model NAME] [--base-url URL] [--api openai|anthropic] [--api-key-env VAR] [--send-code] [--concurrency N] [--chars N]\n');
     return 2;
   }
   let writer = null;

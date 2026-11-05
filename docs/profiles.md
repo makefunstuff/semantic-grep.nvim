@@ -12,11 +12,14 @@ The laptop profile has no reranker: a `rerank` there is a whole entry of your ow
 | `laptop` | EmbeddingGemma 2 (Q8_0), 4 CPU threads | none | 0.600 | 15 / 19 ms | 0.8 GB RAM |
 | `beefy` | Qwen3-Embedding-8B (Q5_K_M), GPU | Qwen3-Reranker-0.6B (Q8_0), GPU, top 20 | 0.657 (fused 0.610)¹ | 114 / 215 ms | 9.6 GB GPU |
 | `cloud` | Voyage `voyage-code-3` | Voyage `rerank-2.5`, top 30 | not measured yet | | |
+| `openrouter` | Qwen `qwen3-embedding-8b` (OpenRouter) | Voyage `rerank-3` (OpenRouter), top 10 | 0.671 (fused)⁵ | 744 / 10 559 ms⁶ | no GPU, no server |
 
 ⁰ laptop: the fused list over all 372 questions, nothing left out by the band (with its band, 0.005 less: see
 "Each model's thresholds"). ¹ On hono, cobra and fd (171 questions), with the model's band, where the fused list
 alone has 0.610; over all 372 questions the 8B's fused list has 0.628 against EmbeddingGemma 2's 0.600 and the old
-beefy (Qwen3-Embedding-4B) 0.615.
+beefy (Qwen3-Embedding-4B) 0.615. ⁵ hono's 28 test questions through OpenRouter (its 113-question run was stopped by
+another run sharing the bench cache): fused MRR 0.671 against beefy's 0.638 on the same questions; ⁶ meaning's p50 and
+p95 over those 28, the tail being OpenRouter's rather than the machine's.
 
 With no profile and no `embedding`, the plugin runs the laptop's model itself: it downloads
 `embeddinggemma-2-Q8_0.gguf` once (asked first; pinned by commit and SHA-256) into Neovim's data folder and starts the
@@ -27,7 +30,7 @@ profile is the same model on a server you run.
 The local profiles expect llama.cpp's `llama-server` on this machine: the embedding model at
 `http://127.0.0.1:18120/v1`, the reranker at `http://127.0.0.1:18121/v1`. With `notes = true` (off by default), each profile's notes writer is used too
 (Qwen3.5-2B on the laptop's CPU, Qwen3-4B-Instruct-2507 on beefy's GPU, both at `http://127.0.0.1:18122/v1`; Claude
-Haiku 5.5 in the cloud): [notes.md](notes.md). `:checkhealth semantic-grep` names the
+Haiku 5.5 in the cloud and on OpenRouter): [notes.md](notes.md). `:checkhealth semantic-grep` names the
 profile and each model nothing answers for ("unreachable"), with where it looked.
 
 ## Running the models
@@ -80,6 +83,56 @@ is never written in the config). `cloud-openai` and `cloud-gemini` in `bench/pro
 OpenAI's `text-embedding-3-large` and Cohere's `rerank-v3.5`, or Gemini's embeddings and Jina's reranker: copy their
 entries into `setup()`. They are checked as configs and their /rerank answers against fakes; their numbers are to come,
 `VOYAGE_API_KEY=… npm run bench -- --profile cloud`.
+
+openrouter: nothing to run: an [OpenRouter](https://openrouter.ai/keys) key in `$OPENROUTER_API_KEY` (or an
+`apiKeyFile`), and one endpoint serves the embeddings, the rerank and the notes writer. The profile is the same on a
+laptop and on a workstation, and the only model it runs on this machine is none.
+
+```sh
+OPENROUTER_API_KEY=… npm run bench -- --profile openrouter
+```
+
+## OpenRouter (`openrouter`)
+
+What it serves today, read from `GET /api/v1/models`, `GET /api/v1/embeddings/models` and the
+[rerank API](https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request) (November 2026):
+`POST /api/v1/embeddings` is OpenAI-compatible (`{model, input, dimensions?}` → `{data: [{index, embedding}]}`);
+`POST /api/v1/rerank` takes `{model, query, documents}` and answers `{results: [{index, relevance_score}]}`, exactly
+the cross-encoder shape the `rerank` api speaks, so no new client was needed; `/chat/completions` serves the notes
+writer. 40 embedding models were listed.
+
+| role | model | why | price / million tokens |
+| --- | --- | --- | --- |
+| embeddings | `qwen/qwen3-embedding-8b` (4096 dimensions, 32K context) | CoIR 79.86 on the [MTEB code-retrieval leaderboard](https://leaderboard.mteb.org/benchmark/CoIR), the best of the models OpenRouter's embeddings list holds (`voyage-code-3` there scores 78.53, `gemini-embedding-001` 73.90) | $0.01 |
+| rerank | `mongodb/rerank-3` | Voyage's quality tier: 2.14% over Cohere Rerank v4 Pro and 3.31% over Qwen3-Reranker-8B across 93 datasets, with code gains over voyage-3-large and voyage-4-large | $0.05 |
+| notes (off by default) | `anthropic/claude-haiku-5.5` | the cloud profile's writer, measured through OpenRouter (docs/notes.md) | $0.10 in, $0.50 out |
+
+- **Embeddings: Qwen3-Embedding-8B.** It is beefy's own model, so its quality is already known here, and the bench
+  through OpenRouter on hono's 28 test questions gave meaning MRR 0.629 and fused 0.671 against beefy's local 0.613 and
+  0.638 (bf16 there, Q5_K_M here). It is 12 times cheaper than voyage-code-4 and has the public CoIR number;
+  voyage-code-4 has none, and on this bench it found the right file much less often, and far fewer of the right
+  pieces: hono files MRR 0.658 against Qwen's 0.779, pieces 0.406 (fused 0.451) against 0.629 (0.671). It builds 5
+  times faster and answers a query 4 times faster, and is worth trying where its prompts can be sent as Voyage's own
+  `input_type` (the plugin sends the profile's text prompts): a whole-file search may suit it, a picker of pieces less.
+- **Rerank: rerank-3, top 10, 800 characters.** On hono's 28 questions it lifted the fused list's MRR from 0.671 to
+  0.780 (20 reranked before a burst met the tokens-a-minute limit and rested it; a paced run reranked all 28 for
+  0.756), where beefy's Qwen3-Reranker-0.6B gets 0.645 on the same questions. Ten pieces of 800
+  characters are what a picker shows, and half the tokens of beefy's twenty of 1200: OpenRouter's reranking has a
+  tokens-a-minute limit, and a burst of searches can meet it (`429`). A refused rerank is not a lost search: the
+  plugin keeps the search's order and asks again a minute later, as it does for any reranker that is down.
+- **What a month costs.** Assumptions: a 10 000-piece index at about 350 tokens a piece (3.5 M tokens for a full
+  build), rebuilt once a month; 100 searches a day, each a 20-token query and a rerank of 10 pieces of 800 characters
+  (about 2 000 tokens); notes off. That is 3.5 M embedding tokens ($0.04), 60 000 query tokens (under a cent) and
+  6 M rerank tokens ($0.30): **about $0.35 a month**. The notes writer, turned on, writes 3 500 pieces for about 1.4 M
+  tokens in and 0.2 M out: $0.24 once, and again only for the pieces that changed.
+- **What it costs in time.** A query is embedded in 0.4–3 s (median 1.3 s; beefy's local model takes 26 ms), so
+  meaning arrives later than with a GPU; the first build goes at about 230 s a thousand pieces through the Nebius
+  endpoint (beefy builds 1 000 in 62 s), and later builds only embed what changed.
+- **Switching back to local is one setting.** `setup({profile = 'beefy'})` (or `'laptop'`), then
+  `systemctl --user start semantic-grep-embeddings semantic-grep-rerank` for the two llama-servers. Vectors are kept
+  per model, so a switch re-embeds every piece into the same data folder as you search, and the old model's vectors
+  are dropped; nothing of the other model's is read as its own. `:SemanticGrep rebuild` forces it at once.
+
 
 ## How they were chosen
 

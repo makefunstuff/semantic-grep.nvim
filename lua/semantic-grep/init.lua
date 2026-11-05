@@ -1,7 +1,7 @@
 -- semantic-grep: search a project's code by its words and by what they mean, in a live picker.
 --
 --   require('semantic-grep').setup({
---     profile = 'laptop', -- or 'beefy', 'cloud': the embedding and rerank models measured for it (docs/profiles.md)
+--     profile = 'laptop', -- or 'beefy', 'cloud', 'openrouter': the embedding and rerank models measured for it (docs/profiles.md)
 --     embedding = {baseUrl = 'http://127.0.0.1:8092/v1'}, -- over the profile's; or a whole entry of your own
 --     rerank = false,     -- the profile's reranker off
 --     picker = 'auto',    -- or 'telescope', 'snacks', 'fzf-lua', 'select'

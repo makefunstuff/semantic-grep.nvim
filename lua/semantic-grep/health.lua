@@ -56,7 +56,14 @@ function M.check()
   else
     local profile = checked.profile ~= vim.NIL and checked.profile or nil
     if profile then health.info(('profile: %s (docs/profiles.md says how to run its models)'):format(profile)) end
-    local start_it = profile and ('Start it: docs/profiles.md, "%s"'):format(profile) or 'Start its server, or set its baseUrl in setup()'
+    local start_it
+    if profile == 'openrouter' then
+      start_it = 'Its models are on OpenRouter: the key in $OPENROUTER_API_KEY, or apiKeyFile in setup() (docs/profiles.md, "OpenRouter")'
+    elseif profile then
+      start_it = ('Start it: docs/profiles.md, "%s"'):format(profile)
+    else
+      start_it = 'Start its server, or set its baseUrl in setup()'
+    end
     local e = checked.embedding
     local own = checked['local'] ~= vim.NIL and checked['local'] or nil
     if own then

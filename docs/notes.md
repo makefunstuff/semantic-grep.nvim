@@ -26,7 +26,7 @@ require('semantic-grep').setup({
   is left until the next session.
 - **Where the code goes.** To the writer's model, a piece at a time (its first `chars` characters). A writer on this
   machine (127.0.0.1, localhost, ::1) gets it; any other only with `sendCode = true` in its entry, else the config is
-  refused. The cloud profile's writer says so (that profile sends the code to hosted models already); a writer of your
+  refused. The cloud and openrouter profiles' writers say so (those profiles send the code to hosted models already); a writer of your
   own elsewhere has to say so itself, and the profile's leave does not follow its `baseUrl` to another server.
 - **All at once.** `semantic-grep-server notes write --root . --profile beefy` (or `--model`, `--base-url`,
   `--api`, `--api-key-env`, `--send-code`, `--concurrency`, `--chars`, `--limit`) writes them now, printing how far
@@ -47,6 +47,7 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
 | **beefy: Qwen3-4B-Instruct-2507** (Q4_K_M, 2.5 GB) | a GPU | 0.431 | 0.571 (0.606) | 0.606 | 0.753 (0.785) | 3.4 min on a GPU, four at a time; 72 min on 4 CPU threads |
 | Qwen3-30B-A3B-Instruct-2507 | OpenRouter | 0.394 | 0.538 (0.565) | 0.569 | 0.721 (0.754) | $0.04, 4.6 min |
 | **cloud: Claude Haiku 5.5** | Anthropic (here through OpenRouter) | 0.474 | 0.605 (0.609) | 0.613 | 0.760 (0.787) | **$0.10**, 2.8 min |
+| **openrouter: Claude Haiku 5.5** | OpenRouter (the measured run above) | 0.474 | 0.605 (0.609) | 0.613 | 0.760 (0.787) | **$0.10**, 2.8 min |
 | Claude Sonnet 5.5, low effort | OpenRouter | 0.533 | 0.633 (0.629) | 0.635 | 0.773 (0.798) | $1.92, 4.3 min |
 
 - **Notes help, more so the better the writer.** The pieces' list gains most (Sonnet's notes: MRR 0.544 to 0.633,
@@ -67,9 +68,9 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
   code) the notes' gain is not measured: that run was stopped before its questions were asked. Its baseline with no
   notes, on the same 137 questions, is pieces MRR 0.603 fused and 0.643 reranked, files 0.780 and 0.808
   ([run](../bench/results/notes-2026-11-03/test-none-beefy.json)): a stronger embedder and a reranker may leave
-  notes less to add. The cloud profile's models (Voyage's embedder and reranker) are not measured with notes either,
-  for want of a key. Notes stay off by default in every profile; with beefy's or the cloud's models, `notes = true`
-  is a choice to check on your own searches (`npm run bench:export`).
+  notes less to add. The cloud's and OpenRouter's models (Voyage's and Qwen's embedders, rerank-2.5 and rerank-3) are
+  not measured with notes either. Notes stay off by default in every profile; with beefy's, the cloud's or
+  OpenRouter's models, `notes = true` is a choice to check on your own searches (`npm run bench:export`).
 - **Dropped:** Qwen3-30B-A3B (no better than no notes, a little worse), and Qwen3.5-9B, whose run was stopped before
   it was measured: on this machine it would not fit whole in the GPU memory free beside other work, and wrote about
   45 pieces a minute half on the CPU.
@@ -116,8 +117,10 @@ GGUF files: [unsloth/Qwen3.5-2B-GGUF](https://huggingface.co/unsloth/Qwen3.5-2B-
 (`chat_template_kwargs: {enable_thinking: false}`, which Qwen3.5 needs).
 
 The cloud writer needs a key from [Anthropic](https://console.anthropic.com/) in `$ANTHROPIC_API_KEY`; it is asked
-with thinking off at low effort. Any OpenAI-compatible `/chat/completions` works as a writer, with `sendCode = true`
-when it is not on this machine; `request` adds fields to each request's body. Through OpenRouter, for example:
+with thinking off at low effort. The openrouter profile's writer is Claude Haiku 5.5 through OpenRouter, the key in
+`$OPENROUTER_API_KEY` (or an `apiKeyFile`), thinking off. Any OpenAI-compatible `/chat/completions` works as a writer,
+with `sendCode = true` when it is not on this machine; `request` adds fields to each request's body. Through
+OpenRouter, for example:
 
 ```lua
 notes = {api = 'openai', baseUrl = 'https://openrouter.ai/api/v1', model = 'anthropic/claude-haiku-5.5',

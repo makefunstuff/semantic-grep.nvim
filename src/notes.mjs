@@ -10,7 +10,7 @@
 // - api "anthropic": Anthropic's Messages API (Claude Haiku by default), POST <baseUrl>/messages.
 //
 // The code of each piece goes to the writer's model. A model on this machine (127.0.0.1, localhost, ::1) may read it;
-// any other only with `sendCode = true` in the entry: the cloud profile says so for its writer, and a writer of one's
+// any other only with `sendCode = true` in the entry: the cloud and openrouter profiles say so for their writers, and a writer of one's
 // own elsewhere must say so itself. Without it the writer is refused, whatever its other settings.
 import {apiKeyOf} from './config.mjs';
 

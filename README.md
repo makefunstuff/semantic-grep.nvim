@@ -29,9 +29,11 @@ place, and the piece you are on stays selected.
 
 The words work with no model at all (SQLite FTS5, BM25, stemming). Meaning needs an embedding model: the small local
 one by default, or any behind an OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Ollama,
-LM Studio, vLLM, a cloud API). Three profiles name the models measured best for a machine: `laptop` (CPU only, the
-default's model on a server of your own), `beefy` (a GPU) and `cloud` (hosted APIs);
-[docs/profiles.md](docs/profiles.md) has their numbers and how to run each model's server.
+LM Studio, vLLM, a cloud API). Four profiles name the models measured best for a machine: `laptop` (CPU only, the
+default's model on a server of your own), `beefy` (a GPU), `cloud` (hosted APIs) and `openrouter` (every model through
+[OpenRouter](https://openrouter.ai), no GPU and no server: Qwen3-Embedding-8B, Voyage's rerank-3, Claude Haiku for the
+notes, one key); [docs/profiles.md](docs/profiles.md) has their numbers, their prices, and how to run each local
+model's server.
 
 ## Requirements
 
@@ -55,8 +57,15 @@ default's model on a server of your own), `beefy` (a GPU) and `cloud` (hosted AP
     {'<M-s>', '<cmd>SemanticGrep<cr>', desc = 'Search by meaning'},
     {'<M-s>', function() require('semantic-grep').find(require('semantic-grep').selected()) end, mode = 'x', desc = 'Search the selection by meaning'},
   },
-  opts = {}, -- or {profile = 'beefy'} ('laptop', 'cloud'): models of your own, see docs/profiles.md to start them
+  opts = {}, -- or {profile = 'beefy'} ('laptop', 'cloud', 'openrouter'): models of your own, see docs/profiles.md to start them
 }
+```
+
+`cloud` reads its keys from `$VOYAGE_API_KEY` (or `$ANTHROPIC_API_KEY` for its notes), `openrouter` from
+`$OPENROUTER_API_KEY`; an `apiKeyFile` in the entry takes the key from a file instead, and is never written in the
+config. Switching back to local is one setting, `profile = 'beefy'` (or `'laptop'`), plus the two llama-servers
+running (docs/profiles.md, "OpenRouter"); the index keeps a vector per model, so the next search re-embeds the project
+for the model chosen.
 ```
 
 The plugin sets no keymaps; these are suggestions. As a Telescope extension:
@@ -66,7 +75,8 @@ The plugin sets no keymaps; these are suggestions. As a Telescope extension:
 
 ```lua
 require('semantic-grep').setup({
-  -- The embedding and rerank models measured for a machine (docs/profiles.md): 'laptop', 'beefy' or 'cloud'. What
+  -- The embedding and rerank models measured for a machine (docs/profiles.md): 'laptop', 'beefy', 'cloud' or
+  -- 'openrouter'. What
   -- `embedding` and `rerank` set goes over the profile's (embedding = {baseUrl = ...} moves it; another model drops
   -- the profile's settings for its own); rerank = false turns its reranker off.
   profile = nil,
@@ -134,7 +144,7 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
   while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
   profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
   cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
-  that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud profile's does). How to
+  that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud and openrouter profiles' do). How to
   run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku 5.5's notes
   (measured through OpenRouter, with the laptop's embedding model) take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760,
   for 10 cents a thousand pieces.
@@ -168,7 +178,7 @@ Tests: `npm test` (unit), `npm run test:nvim` (headless Neovim, Telescope), `npm
 
 ## Benchmark
 
-`npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`): six public
+`npm run bench:fetch`, then `npm run bench -- --profile laptop` (or `words`, `beefy`, `cloud`, `openrouter`): six public
 repositories pinned by commit, 372 questions written the way people search, each asked by words, by meaning, fused
 and reranked, scored by recall@1/5/10, MRR and latency, of the pieces and of the files view. Your own searches and the pieces you opened run through the
 same bench, privately (`npm run bench:export`). See [docs/benchmark.md](docs/benchmark.md) for how, and the results.
