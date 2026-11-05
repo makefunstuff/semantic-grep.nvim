@@ -198,13 +198,13 @@ been measured yet, for want of a key. With one:
 `VOYAGE_API_KEY=… npm run bench -- --profile cloud`, and add the numbers below.
 
 The openrouter profile is the one hosted profile measured so far: on hono's 28 `test` questions its fused list has
-MRR 0.671 against beefy's 0.638, and its reranked list 0.756 against 0.645
+MRR 0.671 against beefy's 0.638, and its reranked list 0.780 against 0.645
 ([run](../bench/results/openrouter-2026-11-05-test-hono-meaning+fused+rerank.json): 20 of the 28 reranked before a
-burst met OpenRouter's tokens-a-minute limit and rested the model; a paced run reranked all 28 for MRR 0.756). Its
-113-question run over hono, cobra and fd was stopped by another run sharing the bench's cache. Voyage's
-`voyage-code-4` through OpenRouter was measured and not kept (fused 0.451 on hono:
-[run](../bench/results/profiles-2026-11-05/voyage-code-4-hono+cobra+fd.json)): see
-[profiles.md](profiles.md#openrouter-openrouter).
+burst met OpenRouter's tokens-a-minute limit and rested the model; the others kept the fused order). Voyage's
+`voyage-code-4` through OpenRouter, with the `input_type` it needs, was measured on fd's 41 `test` questions and not
+kept: pieces fused MRR 0.303 and files 0.666, against beefy's 0.656 and 0.868
+([run](../bench/results/profiles-2026-11-05/voyage-code-4-input-type-fd.json)); without `input_type` it is 0.259.
+See [profiles.md](profiles.md#openrouter-openrouter).
 
 ## Notes
 

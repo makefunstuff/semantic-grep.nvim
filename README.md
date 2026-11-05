@@ -30,10 +30,10 @@ place, and the piece you are on stays selected.
 The words work with no model at all (SQLite FTS5, BM25, stemming). Meaning needs an embedding model: the small local
 one by default, or any behind an OpenAI-compatible `/v1/embeddings` (llama.cpp's `llama-server --embeddings`, Ollama,
 LM Studio, vLLM, a cloud API). Four profiles name the models measured best for a machine: `laptop` (CPU only, the
-default's model on a server of your own), `beefy` (a GPU), `cloud` (hosted APIs) and `openrouter` (every model through
-[OpenRouter](https://openrouter.ai), no GPU and no server: Qwen3-Embedding-8B, Voyage's rerank-3, Claude Haiku for the
-notes, one key); [docs/profiles.md](docs/profiles.md) has their numbers, their prices, and how to run each local
-model's server.
+default's model on a server of your own), `beefy` (a GPU), `cloud` (hosted APIs) and `openrouter` (hosted, no GPU and
+no server: Voyage's voyage-code-4 for meaning and rerank-3 for the rerank, both on
+[OpenRouter](https://openrouter.ai), and DeepSeek V4.1 Flash for notes on OpenCode Go);
+[docs/profiles.md](docs/profiles.md) has their numbers, their prices, and how to run each local model's server.
 
 ## Requirements
 
@@ -62,10 +62,12 @@ model's server.
 ```
 
 `cloud` reads its keys from `$VOYAGE_API_KEY` (or `$ANTHROPIC_API_KEY` for its notes), `openrouter` from
-`$OPENROUTER_API_KEY`; an `apiKeyFile` in the entry takes the key from a file instead, and is never written in the
-config. Switching back to local is one setting, `profile = 'beefy'` (or `'laptop'`), plus the two llama-servers
-running (docs/profiles.md, "OpenRouter"); the index keeps a vector per model, so the next search re-embeds the project
-for the model chosen.
+`$OPENROUTER_API_KEY` for meaning and the rerank, and its notes writer's key from `apiKeyCommand =
+'pi auth print-api-key --provider opencode-go'`, read at each request; an `apiKeyFile` in the entry takes the key from
+a file instead, and a key is never written in the config. Switching back to local is one setting, `profile = 'beefy'`
+(or `'laptop'`), plus the two llama-servers running (docs/profiles.md, "OpenRouter"); the index keeps a vector per
+model, so the next search re-embeds the project for the model chosen, and the old model's vectors are not read as the
+new one's.
 ```
 
 The plugin sets no keymaps; these are suggestions. As a Telescope extension:
@@ -76,9 +78,8 @@ The plugin sets no keymaps; these are suggestions. As a Telescope extension:
 ```lua
 require('semantic-grep').setup({
   -- The embedding and rerank models measured for a machine (docs/profiles.md): 'laptop', 'beefy', 'cloud' or
-  -- 'openrouter'. What
-  -- `embedding` and `rerank` set goes over the profile's (embedding = {baseUrl = ...} moves it; another model drops
-  -- the profile's settings for its own); rerank = false turns its reranker off.
+  -- 'openrouter'. What `embedding` and `rerank` set goes over the profile's (embedding = {baseUrl = ...} moves it;
+  -- another model drops the profile's settings for its own); rerank = false turns its reranker off.
   profile = nil,
   -- With no `embedding` and no profile: the small local model, EmbeddingGemma 2 Q8_0, downloaded once when you say so
   -- (or `gguf`, a file of your own) and served by `llama_server` (default the one on PATH) on `threads` CPU threads
@@ -143,7 +144,7 @@ quickfix list sent before the rerank came is reordered in place when it comes (u
 - **Notes written in the background.** With `notes = true` in `setup()`, a language model writes those notes itself,
   while nothing is searched (for 30 s, or 2 minutes on the laptop), a few pieces at a time, and stops at the next search: the
   profile's writer, a small model on the CPU for the laptop, a bigger one on the GPU for beefy, Claude Haiku for the
-  cloud. Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
+  cloud, DeepSeek V4.1 Flash on OpenCode Go for openrouter (its key read from `pi` at each request). Off by default. `semantic-grep-server notes write --root . --profile beefy` writes them all at once. A writer
   that is not on this machine gets no code unless its entry says `sendCode = true` (the cloud and openrouter profiles' do). How to
   run each, what they cost and what they gain: [docs/notes.md](docs/notes.md). On the bench, Claude Haiku 5.5's notes
   (measured through OpenRouter, with the laptop's embedding model) take the pieces' MRR from 0.544 to 0.605 and the files view's from 0.725 to 0.760,

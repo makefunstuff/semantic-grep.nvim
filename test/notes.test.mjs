@@ -3,7 +3,7 @@
 // them too. The models are fakes: an OpenAI-compatible /chat/completions, and Anthropic's /messages.
 import assert from 'node:assert/strict';
 import {execFile, execFileSync} from 'node:child_process';
-import {mkdirSync, realpathSync, writeFileSync} from 'node:fs';
+import {mkdirSync, readFileSync, realpathSync, writeFileSync} from 'node:fs';
 import {createServer} from 'node:http';
 import {join} from 'node:path';
 import {test} from 'node:test';
@@ -139,6 +139,36 @@ test('the writer asks an OpenAI-compatible server without thinking, and Anthropi
     assert.match(failed.errors[0], /500/);
   } finally {
     delete process.env.SEMANTIC_GREP_TEST_KEY;
+    await server.close();
+  }
+});
+
+test('a writer\'s key can come from a command run at each request, and its own headers go with the request', async () => {
+  const server = await fakeWriterServer();
+  const runs = join(scratch('notes-key-'), 'runs');
+  try {
+    const piece = {hash: 'h1', file: 'src/cart.js', from: 1, name: 'total', text: 'export function total(cart) {}'};
+    const entry = notesConfig({
+      baseUrl: server.baseUrl, model: 'deepseek-v4.1-flash', apiKeyCommand: `printf x >> '${runs}'; printf command-key`,
+      headers: {'x-opencode-session': 'semantic-grep-notes'}, request: {reasoning_effort: 'none'},
+    });
+    const writer = new NotesWriter({entry});
+    const {notes} = await writer.write([piece, {...piece, hash: 'h2'}]);
+    assert.equal(notes.length, 2);
+    assert.equal(readFileSync(runs, 'utf8'), 'xx', 'the command ran for each piece, and its output never shown');
+    const asked = server.requests.at(-1);
+    assert.equal(asked.headers.authorization, 'Bearer command-key', 'its output is the key');
+    assert.equal(asked.headers['x-opencode-session'], 'semantic-grep-notes', 'the entry\'s headers are sent');
+    assert.equal(asked.body.reasoning_effort, 'none');
+
+    const before = server.requests.length;
+    const empty = new NotesWriter({entry: notesConfig({baseUrl: server.baseUrl, model: 'm', apiKeyCommand: 'true'})});
+    assert.match((await empty.write([piece])).errors[0], /no key in its apiKeyCommand/);
+    const broken = new NotesWriter({entry: notesConfig({baseUrl: server.baseUrl, model: 'm', apiKeyCommand: 'exit 3'})});
+    assert.match((await broken.write([piece])).errors[0], /apiKeyCommand failed \(3\)/, 'a command that fails is told, its output never shown');
+    assert.equal(server.requests.length, before, 'no code sent without a key');
+    assert.throws(() => notesConfig({baseUrl: server.baseUrl, model: 'm', headers: {session: 3}}), /notes\.headers\.session must be text/);
+  } finally {
     await server.close();
   }
 });

@@ -56,7 +56,7 @@ const served = await serveProfile({embedding: profile.embedding, serve: profile.
 let vectors;
 try {
   const embedder = new HttpEmbedder({entry: embedding});
-  vectors = await embedder.embed(questions.map(question => embedder.query(question.query)));
+  vectors = await embedder.embed(questions.map(question => embedder.query(question.query)), {kind: 'query'});
 } finally {
   await served.stop();
 }

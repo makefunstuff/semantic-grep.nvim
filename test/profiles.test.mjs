@@ -28,17 +28,20 @@ test('a profile fills the models; the config\'s own fields go over it, another m
   assert.deepEqual([own.embedding.apiKeyFile, own.embedding.apiKeyEnv, own.rerank[0].apiKey, own.rerank[0].apiKeyEnv], ['~/.voyage', undefined, 'k', undefined], 'a key of its own replaces the profile\'s');
   const openrouter = profileConfig({profile: 'openrouter'});
   assert.deepEqual([openrouter.embedding.baseUrl, openrouter.embedding.model, openrouter.embedding.apiKeyEnv], ['https://openrouter.ai/api/v1', 'qwen/qwen3-embedding-8b', 'OPENROUTER_API_KEY'], 'one endpoint, one key, the best code model its embeddings serve');
+  assert.equal(openrouter.embedding.queryBody, undefined, 'its prompts are text, not body fields');
   assert.deepEqual([openrouter.rerank[0].api, openrouter.rerank[0].model, openrouter.rerank[0].top, openrouter.rerank[0].chars, openrouter.rerank[0].timeoutMs], ['rerank', 'mongodb/rerank-3', 10, 800, 8000], 'the rerank API of OpenRouter\'s /rerank');
   assert.equal(openrouter.notes, null, 'notes only when the config asks for them');
   const noted = profileConfig({profile: 'openrouter', notes: true}).notes;
-  assert.deepEqual([noted.model, noted.sendCode, noted.apiKeyEnv], ['anthropic/claude-haiku-5.5', true, 'OPENROUTER_API_KEY'], 'the profile\'s writer, and the code may go to it');
+  assert.deepEqual([noted.model, noted.sendCode, noted.baseUrl, noted.apiKeyCommand, noted.request, noted.headers], ['deepseek-v4.1-flash', true, 'https://opencode.ai/inference/go/openai/v1', 'pi auth print-api-key --provider opencode-go', {reasoning_effort: 'none'}, {'x-opencode-session': 'semantic-grep-notes'}], 'the profile\'s writer on OpenCode Go, its key read at the request, thinking off, the session header');
   const keys = profileConfig({profile: 'openrouter', embedding: {apiKeyFile: '~/.key'}, rerank: {apiKeyFile: '~/.key'}, notes: {apiKeyFile: '~/.key'}});
-  assert.deepEqual([keys.embedding.apiKeyFile, keys.embedding.apiKeyEnv, keys.rerank[0].apiKeyFile, keys.rerank[0].apiKeyEnv, keys.notes.apiKeyFile, keys.notes.apiKeyEnv], ['~/.key', undefined, '~/.key', undefined, '~/.key', undefined], 'a key file for every model of the profile');
+  assert.deepEqual([keys.embedding.apiKeyFile, keys.embedding.apiKeyEnv, keys.rerank[0].apiKeyFile, keys.rerank[0].apiKeyEnv, keys.notes.apiKeyFile, keys.notes.apiKeyEnv, keys.notes.apiKeyCommand], ['~/.key', undefined, '~/.key', undefined, '~/.key', undefined, undefined], 'a key file for every model of the profile, and none of its commands');
   assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'http://127.0.0.1:9000/v1', model: 'm'}}).embedding.apiKeyEnv, undefined, 'the profile\'s key never goes to another server');
   assert.equal(profileConfig({profile: 'cloud', embedding: {baseUrl: 'https://api.voyageai.com/v1/'}}).embedding.apiKeyEnv, 'VOYAGE_API_KEY', 'the same server, written with a slash');
   const d1 = profileConfig({profile: 'beefy', rerank: {api: 'system-one', model: 'd1-2B'}}).rerank[0];
   assert.deepEqual([d1.baseUrl, d1.top, d1.timeoutMs, d1.chars], [PROFILES.beefy.rerank.baseUrl, 10, 3000, 160], 'another reranker: the defaults for it, not the profile\'s top and wait');
   assert.throws(() => profileConfig({profile: 'laptop', rerank: {timeoutMs: 500}}), /rerank: profile "laptop" has none to change; give a whole entry/);
+  const body = profileConfig({profile: 'openrouter', embedding: {model: 'mongodb/voyage-code-4', queryBody: {input_type: 'query'}, documentBody: {input_type: 'document'}}});
+  assert.deepEqual([body.embedding.queryBody, body.embedding.documentBody], [{input_type: 'query'}, {input_type: 'document'}], 'a model that takes body fields of its own (Voyage\'s input_type) may name them');
   assert.equal(profileConfig({profile: 'beefy', rerank: false}).rerank, null);
   const list = profileConfig({profile: 'beefy', rerank: [{api: 'system-one', baseUrl: 'http://h/v1', model: 'd1-2B'}]});
   assert.deepEqual(list.rerank.map(entry => entry.model), ['d1-2B'], 'a list is the config\'s own');
@@ -58,7 +61,7 @@ test('each profile is a valid config, its cloud keys named by environment variab
     }
     const measured = bench[name];
     assert.equal(measured.embedding.model, embedding.model, `${name}: the bench measures its embedding model`);
-    for (const field of ['dimensions', 'queryPrefix', 'documentPrefix', 'band', 'pickNear']) assert.equal(measured.embedding[field], embedding[field], `${name}.embedding.${field}`);
+    for (const field of ['dimensions', 'queryPrefix', 'documentPrefix', 'queryBody', 'documentBody', 'band', 'pickNear']) assert.deepEqual(measured.embedding[field], embedding[field], `${name}.embedding.${field}`);
     assert.equal(measured.rerank?.model ?? null, rerank?.[0].model ?? null, `${name}: the bench measures its reranker`);
     for (const field of ['api', 'top', 'chars']) assert.equal(measured.rerank?.[field], PROFILES[name].rerank?.[field], `${name}.rerank.${field}`);
   }
@@ -82,7 +85,7 @@ test('the openrouter profile\'s key: read from the file, and sent with the model
     const {embedding} = profileConfig({profile: 'openrouter', embedding: {baseUrl: server.baseUrl, apiKeyFile: keyFile}});
     assert.deepEqual([embedding.model, embedding.apiKeyEnv, embedding.dimensions], ['qwen/qwen3-embedding-8b', undefined, undefined], 'the profile\'s model, the key from the file instead of the environment');
     const embedder = new HttpEmbedder({entry: embedding, batch: 4});
-    const [vector] = await embedder.embed([embedder.query('try again with backoff')]);
+    const [vector] = await embedder.embed([embedder.query('try again with backoff')], {kind: 'query'});
     const asked = server.requests.at(-1);
     assert.deepEqual([asked.model, asked.authorization], ['qwen/qwen3-embedding-8b', 'Bearer sk-test'], 'the file\'s key, as the bearer token');
     assert.equal(asked.input[0], 'Instruct: Given a question, find the code that answers it\nQuery: try again with backoff', 'the prompt Qwen3-Embedding was trained with');

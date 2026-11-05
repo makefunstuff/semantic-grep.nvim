@@ -44,7 +44,7 @@
     "rerank": {"api": "rerank", "baseUrl": "https://api.voyageai.com/v1", "model": "rerank-2.5", "apiKeyEnv": "VOYAGE_API_KEY", "top": 30, "timeoutMs": 10000}
   },
   "openrouter": {
-    "about": "OpenRouter: Qwen3-Embedding-8B (CoIR 79.86, the best on its public code-retrieval board among the embedding models OpenRouter serves) and the rerank-3 cross-encoder, the key in $OPENROUTER_API_KEY; no GPU, no local server. The profile of the same name in src/profiles.mjs.",
+    "about": "OpenRouter for meaning and rerank: Qwen3-Embedding-8B (CoIR 79.86) and Voyage's rerank-3 cross-encoder, the key in $OPENROUTER_API_KEY; DeepSeek V4.1 Flash on OpenCode Go for notes; no GPU, no local server. The profile of the same name in src/profiles.mjs.",
     "embedding": {"api": "openai", "baseUrl": "https://openrouter.ai/api/v1", "model": "qwen/qwen3-embedding-8b", "apiKeyEnv": "OPENROUTER_API_KEY"},
     "rerank": {"api": "rerank", "baseUrl": "https://openrouter.ai/api/v1", "model": "mongodb/rerank-3", "apiKeyEnv": "OPENROUTER_API_KEY", "top": 10, "chars": 800, "timeoutMs": 8000}
   },

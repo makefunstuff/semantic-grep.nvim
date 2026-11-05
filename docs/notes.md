@@ -47,7 +47,7 @@ fused is the list the picker shows once meaning came, files the files view (`:Se
 | **beefy: Qwen3-4B-Instruct-2507** (Q4_K_M, 2.5 GB) | a GPU | 0.431 | 0.571 (0.606) | 0.606 | 0.753 (0.785) | 3.4 min on a GPU, four at a time; 72 min on 4 CPU threads |
 | Qwen3-30B-A3B-Instruct-2507 | OpenRouter | 0.394 | 0.538 (0.565) | 0.569 | 0.721 (0.754) | $0.04, 4.6 min |
 | **cloud: Claude Haiku 5.5** | Anthropic (here through OpenRouter) | 0.474 | 0.605 (0.609) | 0.613 | 0.760 (0.787) | **$0.10**, 2.8 min |
-| **openrouter: Claude Haiku 5.5** | OpenRouter (the measured run above) | 0.474 | 0.605 (0.609) | 0.613 | 0.760 (0.787) | **$0.10**, 2.8 min |
+| Claude Haiku 5.5, again | OpenRouter (the measured run above) | 0.474 | 0.605 (0.609) | 0.613 | 0.760 (0.787) | **$0.10**, 2.8 min |
 | Claude Sonnet 5.5, low effort | OpenRouter | 0.533 | 0.633 (0.629) | 0.635 | 0.773 (0.798) | $1.92, 4.3 min |
 
 - **Notes help, more so the better the writer.** The pieces' list gains most (Sonnet's notes: MRR 0.544 to 0.633,
@@ -117,10 +117,14 @@ GGUF files: [unsloth/Qwen3.5-2B-GGUF](https://huggingface.co/unsloth/Qwen3.5-2B-
 (`chat_template_kwargs: {enable_thinking: false}`, which Qwen3.5 needs).
 
 The cloud writer needs a key from [Anthropic](https://console.anthropic.com/) in `$ANTHROPIC_API_KEY`; it is asked
-with thinking off at low effort. The openrouter profile's writer is Claude Haiku 5.5 through OpenRouter, the key in
-`$OPENROUTER_API_KEY` (or an `apiKeyFile`), thinking off. Any OpenAI-compatible `/chat/completions` works as a writer,
-with `sendCode = true` when it is not on this machine; `request` adds fields to each request's body. Through
-OpenRouter, for example:
+with thinking off at low effort. The openrouter profile's writer is DeepSeek V4.1 Flash on OpenCode Go
+(`https://opencode.ai/inference/go/openai/v1`, $0.15 in and $0.60 out a million tokens): its key is pi's, read at
+each request with `apiKeyCommand = 'pi auth print-api-key --provider opencode-go'` and never written in a config, its
+gateway wants the `x-opencode-session` header, and the model thinks unless told `reasoning_effort = 'none'`. Its notes
+are not on the bench above yet: they are unmeasured, so check them on your own searches.
+Any OpenAI-compatible `/chat/completions` works as a writer, with `sendCode = true` when it is not on this machine;
+`request` adds fields to each request's body and `headers` to its headers. For example, a writer of your own through
+OpenRouter:
 
 ```lua
 notes = {api = 'openai', baseUrl = 'https://openrouter.ai/api/v1', model = 'anthropic/claude-haiku-5.5',
