@@ -205,6 +205,20 @@ test('notes written in the background while nothing is searched: found by their 
   }
 });
 
+test('notes pending keeps every JSON line when many pieces make an output larger than stdout\'s buffer', async () => {
+  const root = realpathSync(scratch('notes-many-'));
+  const comment = `/** ${'A cart total for the customer; someone shows what an order costs. '.repeat(6)} */`;
+  for (let i = 0; i < 400; i++) writeFileSync(join(root, `cart-${i}.js`), `${comment}\nexport function total${i}(cart) {\n  return cart.items.reduce((sum, item) => sum + item.cents, 0);\n}\n`);
+  execFileSync('git', ['init', '-q'], {cwd: root});
+  const dataDir = scratch('notes-data-');
+  const listed = await new Promise((resolve, reject) => {
+    execFile(process.execPath, [BIN, 'notes', 'pending', '--root', root, '--data-dir', dataDir, '--limit', '1000'], {timeout: 120_000, maxBuffer: 64 * 1024 * 1024}, (error, stdout, stderr) => (error ? reject(new Error(`${error.message}\n${stderr}`)) : resolve({stdout, stderr})));
+  });
+  const pieces = listed.stdout.trim().split('\n').map(line => JSON.parse(line));
+  assert.equal(pieces.length, 400, 'every line, not only what fit in stdout\'s buffer before exit');
+  assert.match(listed.stderr, /400 shown of 400 pieces without a note/);
+});
+
 test('the notes command writes a note on each piece with none, and refuses a writer elsewhere without --send-code', async () => {
   const root = project();
   const dataDir = scratch('notes-data-');

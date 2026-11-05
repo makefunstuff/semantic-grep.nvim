@@ -32,13 +32,15 @@ if (!process.getBuiltinModule?.('node:sqlite') || major < 22 || (major === 22 &&
 
 const [command, action, ...rest] = process.argv.slice(2);
 if (command === 'notes') {
-  process.exit(await notes(action, rest));
+  // exitCode, not exit(): process.exit() would cut the JSON lines of a large `notes pending` still in stdout's buffer.
+  process.exitCode = await notes(action, rest);
+} else {
+  // Stopped by a signal: exit as by the end of stdin, so the llama-server it started (local.mjs) stops with it.
+  for (const signal of ['SIGTERM', 'SIGINT', 'SIGHUP']) process.on(signal, () => process.exit(128 + {SIGHUP: 1, SIGINT: 2, SIGTERM: 15}[signal]));
+  const {serve} = await import('../src/server.mjs');
+  await serve();
+  process.exit(0);
 }
-// Stopped by a signal: exit as by the end of stdin, so the llama-server it started (local.mjs) stops with it.
-for (const signal of ['SIGTERM', 'SIGINT', 'SIGHUP']) process.on(signal, () => process.exit(128 + {SIGHUP: 1, SIGINT: 2, SIGTERM: 15}[signal]));
-const {serve} = await import('../src/server.mjs');
-await serve();
-process.exit(0);
 
 async function notes(action, args) {
   const options = {};
